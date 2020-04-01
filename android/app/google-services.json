@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "756033135438",
+    "firebase_url": "https://store-rahisi.firebaseio.com",
+    "project_id": "store-rahisi",
+    "storage_bucket": "store-rahisi.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:756033135438:android:b8d91ec3b45f08c908f41f",
+        "android_client_info": {
+          "package_name": "com.apprahisi.store"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "756033135438-ipvinh9mdfec8866fefj3t8iqrgh5kni.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCJGljlHbVBQ5MIq6fhNYiiCnlB2NXorLM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "756033135438-ipvinh9mdfec8866fefj3t8iqrgh5kni.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
