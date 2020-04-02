@@ -18,8 +18,22 @@ class Api {
     return ref.getDocuments();
   }
 
-  Stream<QuerySnapshot> streamDataCollection() {
-    return ref.snapshots();
+  streamDataCollection() {
+    try {
+      ref.snapshots().listen((snapShot) {
+        if (snapShot.documents.isNotEmpty) {
+          return snapShot.documents;
+             
+        }
+        return 'Nothing Found';
+      });
+    } catch (e) {
+      if (e is PlatformException) {
+        return e.message;
+      }
+
+      return e.toString();
+    }
   }
 
   Future<DocumentSnapshot> getDocumentById(String id) {
@@ -31,7 +45,7 @@ class Api {
       await ref.document(id).delete();
       return true;
     } catch (e) {
-        if (e is PlatformException) {
+      if (e is PlatformException) {
         return e.message;
       }
 

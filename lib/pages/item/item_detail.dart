@@ -15,7 +15,6 @@ class ItemDetail extends StatefulWidget {
 
 class _ItemDetailState extends State<ItemDetail> {
   TextEditingController salePriceController;
-  ItemModel _itemModel;
   void _showToast(String message, Color backGroundColor, IconData icon) {
     Toast.show(
       message: message,
@@ -37,8 +36,6 @@ class _ItemDetailState extends State<ItemDetail> {
 
   @override
   Widget build(BuildContext context) {
-    _itemModel = Provider.of<ItemModel>(context, listen: true);
-
     return Scaffold(
       appBar: AppBar(
         title: widget.item.name == null
@@ -57,7 +54,6 @@ class _ItemDetailState extends State<ItemDetail> {
               children: <Widget>[
                 chipDesign("Purchase History", Color(0xFF4fc3f7)),
                 chipDesign("Sale History", Color(0xFFffb74d)),
-                chipDesign("Update Price", Color(0xFFff8a65)),
                 chipDesign("Print Barcode", Color(0xFF9575cd)),
                 chipDesign("Edit", Color(0xFF4db6ac)),
                 chipDesign("Delete", Color(0xFFf06292)),
@@ -108,125 +104,37 @@ class _ItemDetailState extends State<ItemDetail> {
     );
   }
 
-  Widget chipDesign(String label, Color color) => GestureDetector(
-        onTap: () {
-          label == 'Update Price'
-              ? updatePrice()
-              : label == 'Delete'
-                  ? deleteItem()
-                  : label == 'Edit'
-                      ? _showModalSheetAppBar(
-                          context,
-                          'Edit Product',
-                          ItemForm(
-                            item: widget.item,
-                          ),
-                          0.81)
-                      : _showToast(
-                          label + ' Selected', color, Icons.error_outline);
-        },
-        child: Container(
-          child: Chip(
-            label: Text(
-              label,
-              style: TextStyle(
-                color: Colors.white,
-              ),
+  Widget chipDesign(String label, Color color) {
+    ItemModel itemModel = Provider.of<ItemModel>(context, listen: false);
+    return GestureDetector(
+      onTap: () {
+        label == 'Delete'
+            ? itemModel.removeItem(widget.item.id)
+            : label == 'Edit'
+                ? _showModalSheetAppBar(
+                    context,
+                    'Edit Product',
+                    ItemForm(
+                      item: widget.item,
+                    ),
+                    0.81)
+                : _showToast(label + ' Selected', color, Icons.error_outline);
+      },
+      child: Container(
+        child: Chip(
+          label: Text(
+            label,
+            style: TextStyle(
+              color: Colors.white,
             ),
-            backgroundColor: color,
-            elevation: 4,
-            shadowColor: Colors.grey[50],
-            padding: EdgeInsets.all(4),
           ),
-          margin: EdgeInsets.only(left: 12, right: 12, top: 2, bottom: 2),
+          backgroundColor: color,
+          elevation: 4,
+          shadowColor: Colors.grey[50],
+          padding: EdgeInsets.all(4),
         ),
-      );
-
-  deleteItem() {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('Delete ${widget.item.name}'),
-            content: Text('Are You Sure?'),
-            actions: <Widget>[
-              _itemModel.busy
-                  ? Center(
-                      child: CircularProgressIndicator(),
-                    )
-                  : Row(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: <Widget>[
-                        FlatButton(
-                            child: Text('Cancel'),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            }),
-                        Container(
-                          color: Colors.grey,
-                          width: 1.0,
-                          height: 24.0,
-                        ),
-                        FlatButton(
-                            child: Text('Okay'),
-                            onPressed: () async {
-                              await _itemModel.removeItem(widget.item.id);
-                              Navigator.of(context).pop();
-                              Navigator.of(context).pop();
-                            })
-                      ],
-                    ),
-            ],
-          );
-        });
-  }
-
-  updatePrice() {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('Update Price'),
-            content: TextFormField(
-              decoration:
-                  InputDecoration(labelText: 'New Price', hintText: ""),
-              controller: salePriceController,
-              keyboardType: TextInputType.numberWithOptions(),
-              validator: (value) {
-                return null;
-              },
-            ),
-            actions: <Widget>[
-              _itemModel.busy
-                  ? Center(
-                      child: CircularProgressIndicator(),
-                    )
-                  : Row(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: <Widget>[
-                        FlatButton(
-                            child: Text('Cancel'),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            }),
-                        Container(
-                          color: Colors.grey,
-                          width: 1.0,
-                          height: 24.0,
-                        ),
-                        FlatButton(
-                            child: Text('Okay'),
-                            onPressed: () async {
-                              await _itemModel.removeItem(widget.item.id);
-                              Navigator.of(context).pop();
-                              Navigator.of(context).pop();
-                            })
-                      ],
-                    ),
-            ],
-          );
-        });
+        margin: EdgeInsets.only(left: 12, right: 12, top: 2, bottom: 2),
+      ),
+    );
   }
 }

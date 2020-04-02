@@ -26,6 +26,7 @@ class ItemForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var isEditing = item != null;
+
     // Build a Form widget using the _formKey created above.
     return BaseView<ItemModel>(
       onModelReady: (model) {
@@ -61,7 +62,9 @@ class ItemForm extends StatelessWidget {
                     isReadOnly: model.busy,
                     items: [
                       'Beer',
+                      'Cider',
                       'Spirits',
+                      'Wine',
                       'Bottled Water',
                       'Soft Drinks',
                       'Juice',
@@ -120,7 +123,12 @@ class ItemForm extends StatelessWidget {
                     onPressed: () async {
                       if (_formKey.currentState.validate()) {
                         // If the form is valid, display a Snackbar.
-                        Item item = Item(
+
+                        model.saveItem(
+                            data: Item(
+                          id: item?.id ?? '',
+                          category: item?.category ?? '',
+                          unit: item?.unit ?? '',
                           alertQty: int.parse(alertQtyController.text),
                           description: descriptionController.text,
                           name: nameController.text,
@@ -129,21 +137,7 @@ class ItemForm extends StatelessWidget {
                           purchasePrice:
                               double.parse(purchasePriceController.text),
                           userId: null,
-                        );
-                        isEditing
-                            ? model.saveItem(data: item, id: item.id)
-                            : model.saveItem(data: item);
-                        // if (!model.busy && !isEditing) {
-                        //   if (model.documentID != null) {
-                        //     _showToast('Successful', Colors.green,
-                        //         Icons.check_circle_outline);
-                        //   } else {
-                        //     _showToast('Failed', Colors.red, Icons.error_outline);
-                        //   }
-                        // } else if (!model.busy && isEditing) {
-                        //   Navigator.pop(context);
-                        //   // Navigator.pop(context);
-                        // }
+                        ));
                       }
                     },
                   ),

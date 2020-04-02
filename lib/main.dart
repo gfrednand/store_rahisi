@@ -7,6 +7,7 @@ import 'package:storeRahisi/managers/dialog_manager.dart';
 import 'package:storeRahisi/providers/auth_model.dart';
 import 'package:storeRahisi/providers/fab_model.dart';
 import 'package:storeRahisi/providers/item_model.dart';
+import 'package:storeRahisi/providers/purchase_model.dart';
 import 'package:storeRahisi/providers/supplier_model.dart';
 import 'package:storeRahisi/router.dart';
 import 'package:storeRahisi/services/dialog_service.dart';
@@ -40,6 +41,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => locator<AuthModel>()),
         ChangeNotifierProvider(create: (_) => locator<SupplierModel>()),
         ChangeNotifierProvider(create: (_) => locator<ItemModel>()),
+        ChangeNotifierProvider(create: (_) => locator<PurchaseModel>()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -51,7 +53,7 @@ class MyApp extends StatelessWidget {
         ),
         theme: lightAppTheme,
         navigatorKey: locator<NavigationService>().navigatorKey,
-        initialRoute: AppRoutes.splash,
+        initialRoute: AppRoutes.layout,
         onGenerateRoute: Router.generateRoute,
       ),
     );

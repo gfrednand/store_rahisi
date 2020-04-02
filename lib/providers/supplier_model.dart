@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:storeRahisi/locator.dart';
 import 'package:storeRahisi/providers/base_model.dart';
 import 'package:storeRahisi/services/api.dart';
 import 'package:storeRahisi/models/supplier.dart';
+import 'package:storeRahisi/services/dialog_service.dart';
 
 class SupplierModel extends BaseModel {
   // Api _api = locator<Api>();
@@ -15,7 +17,7 @@ class SupplierModel extends BaseModel {
 
   Supplier _supplier;
   Supplier get supplier => _supplier;
-
+  final DialogService _dialogService = locator<DialogService>();
   fetchSuppliers() async {
     setBusy(true);
     var result = await _api.getDataCollection();
@@ -25,8 +27,23 @@ class SupplierModel extends BaseModel {
     setBusy(false);
   }
 
-  Stream<QuerySnapshot> fetchSuppliersAsStream() {
-    return _api.streamDataCollection();
+  listenToSuppliers() async {
+    setBusy(true);
+    var result = _api.streamDataCollection();
+    setBusy(false);
+
+    if (result is String) {
+      await _dialogService.showDialog(
+        title: 'Error',
+        description: result,
+      );
+    } else if (result != null) {
+      _supplier = result
+          .map((snapshot) =>
+              Supplier.fromMap(snapshot.data, snapshot.documentID))
+          .toList();
+      ;
+    }
   }
 
   getSupplierById(String id) async {

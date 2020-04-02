@@ -38,7 +38,7 @@ class AuthModel extends BaseModel {
 
     if (result is bool) {
       if (result) {
-        _navigationService.navigateTo(routeName: AppRoutes.home);
+        _navigationService.navigateTo(routeName: AppRoutes.layout);
       } else {
         await _dialogService.showDialog(
           title: 'Login Failure',
@@ -88,6 +88,16 @@ class AuthModel extends BaseModel {
         title: 'Sign Up Failure',
         description: result,
       );
+    }
+  }
+
+    Future handleStartUpLogic() async {
+    var hasLoggedInUser = await _authService.isUserLoggedIn();
+
+    if (hasLoggedInUser) {
+      _navigationService.navigateTo(routeName: AppRoutes.layout);
+    } else {
+      _navigationService.navigateTo(routeName: AppRoutes.login);
     }
   }
 

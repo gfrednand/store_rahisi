@@ -9,6 +9,8 @@ import 'package:storeRahisi/pages/home_page.dart';
 import 'package:storeRahisi/pages/item/item_form.dart';
 import 'package:storeRahisi/pages/item/item_list.dart';
 import 'package:storeRahisi/pages/item/item_search_delegate.dart';
+import 'package:storeRahisi/pages/purchase/purchase_form.dart';
+import 'package:storeRahisi/pages/purchase/purchase_list.dart';
 import 'package:storeRahisi/pages/supplier/supplier_form.dart';
 import 'package:storeRahisi/pages/supplier/supplier_list.dart';
 import 'package:storeRahisi/providers/auth_model.dart';
@@ -96,40 +98,41 @@ class _LayoutPageState extends State<LayoutPage> with TickerProviderStateMixin {
                     new BorderRadius.all(const Radius.circular(10.0))),
             child: Column(
               children: <Widget>[
-                model.user != null
+                model.currentUser != null
                     ? ListTile(
                         leading: Icon(Icons.person),
-                        title: Text('${model.user.fname} ${model.user.lname}'),
+                        title: Text(
+                            '${model.currentUser.fname} ${model.currentUser.lname}'),
                         subtitle: Text('Username'),
                       )
                     : Container(),
-                model.user != null
+                model.currentUser != null
                     ? ListTile(
                         leading: Icon(Icons.email),
-                        title: Text("${model.user.email}"),
+                        title: Text("${model.currentUser.email}"),
                         subtitle: Text('Email'),
                       )
                     : Container(),
 
-                model.user != null
+                model.currentUser != null
                     ? ListTile(
                         leading: Icon(Icons.person_pin),
-                        title: Text("${model.user.designation}"),
+                        title: Text("${model.currentUser.designation}"),
                         subtitle: Text('Designation'),
                       )
                     : Container(),
-                model.user != null
+                model.currentUser != null
                     ? ListTile(
                         leading: Icon(Icons.phone),
-                        title: Text("${model.user.phoneNumber}"),
+                        title: Text("${model.currentUser.phoneNumber}"),
                         subtitle: Text('Phone Number'),
                       )
                     : Container(),
 
-                model.user != null
+                model.currentUser != null
                     ? ListTile(
                         leading: Icon(Icons.label_important),
-                        title: Text("${model.user.id}"),
+                        title: Text("${model.currentUser.id}"),
                         subtitle: Text('Reference Number'),
                       )
                     : Container(),
@@ -238,7 +241,9 @@ class _LayoutPageState extends State<LayoutPage> with TickerProviderStateMixin {
   Widget _buildTransitionsStack() {
     return _currentIndex == 0
         ? ItemList()
-        : _currentIndex == 1 ? SupplierList() : Container();
+        : _currentIndex == 1
+            ? SupplierList()
+            : _currentIndex == 2 ? PurchaseList() : Container();
   }
 
   @override
@@ -272,7 +277,7 @@ class _LayoutPageState extends State<LayoutPage> with TickerProviderStateMixin {
                                     SupplierForm(), 0.7)
                                 : _currentIndex == 2
                                     ? _showModalSheetAppBar(context,
-                                        'Add Purchase', Container(), 0.5)
+                                        'Add Purchase', PurchaseForm(), 0.81)
                                     : _currentIndex == 3
                                         ? _showModalSheetAppBar(context,
                                             'Add Expense', Container(), 0.5)

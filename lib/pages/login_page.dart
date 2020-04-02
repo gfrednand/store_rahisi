@@ -1,39 +1,17 @@
 import 'package:flutter/material.dart';
-
-import 'package:storeRahisi/constants/routes.dart';
 import 'package:storeRahisi/constants/ui_helpers.dart';
-import 'package:storeRahisi/locator.dart';
-
 import 'package:storeRahisi/pages/base_view.dart';
 import 'package:storeRahisi/providers/auth_model.dart';
-import 'package:storeRahisi/services/shared_pref_util.dart';
 import 'package:storeRahisi/widgets/busy_button.dart';
 import 'package:storeRahisi/widgets/input_field.dart';
 
-class LoginPage extends StatefulWidget {
+class LoginPage extends StatelessWidget {
   LoginPage({Key key}) : super(key: key);
 
-  @override
-  _LoginPageState createState() => _LoginPageState();
-}
-
-class _LoginPageState extends State<LoginPage> {
   final GlobalKey<FormState> _loginFormKey = GlobalKey<FormState>();
-  TextEditingController emailInputController;
-  TextEditingController pwdInputController;
-  String errMsg;
-  getLastEmail() async {
-    emailInputController.text =
-        await locator.get<SharedPrefsUtil>().getLastLoginEmail();
-  }
-
-  @override
-  initState() {
-    emailInputController = new TextEditingController();
-    pwdInputController = new TextEditingController();
-    getLastEmail();
-    super.initState();
-  }
+  final TextEditingController emailInputController =
+      new TextEditingController();
+  final TextEditingController pwdInputController = new TextEditingController();
 
   String emailValidator(String value) {
     Pattern pattern =

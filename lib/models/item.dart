@@ -53,7 +53,7 @@ class Item {
       );
 
   Map<String, dynamic> toMap() => {
-        'id': id,
+        // 'id': id,
         'userId': userId,
         'name': name,
         'category': category,

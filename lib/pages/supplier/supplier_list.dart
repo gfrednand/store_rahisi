@@ -1,60 +1,63 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:storeRahisi/constants/routes.dart';
-import 'package:storeRahisi/models/supplier.dart';
 import 'package:storeRahisi/providers/supplier_model.dart';
+import 'package:storeRahisi/pages/base_view.dart';
 
 class SupplierList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final supplierProvider = Provider.of<SupplierModel>(context);
     return Scrollbar(
-      child: StreamBuilder(
-          stream: supplierProvider.fetchSuppliersAsStream(),
-          builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-            if (snapshot.hasData) {
-              List<Supplier> suppliers = snapshot.data.documents
-                  .map((doc) => Supplier.fromMap(doc.data, doc.documentID))
-                  .toList();
-              return ListView.builder(
-                itemCount: suppliers.length,
-                itemBuilder: (buildContext, index) => Card(
-                  child: ListTile(
-                    leading: ExcludeSemantics(
-                      child: CircleAvatar(
-                        radius: 30.0,
-                        backgroundColor: Theme.of(context).primaryColor,
-                        child: Text(
-                          suppliers[index].name.substring(0, 2).toUpperCase(),
-                          style:
-                              TextStyle(color: Theme.of(context).accentColor),
-                        ),
+        child: BaseView<SupplierModel>(
+            onModelReady: (model) => model.listenToSuppliers(),
+            builder: (context, model, child) {
+              return !model.busy
+                  ? model.suppliers == null
+                      ? Center(
+                          child: Text('Nothing Found'),
+                        )
+                      : ListView.builder(
+                          itemCount: model.suppliers.length,
+                          itemBuilder: (buildContext, index) => Card(
+                            child: ListTile(
+                              leading: ExcludeSemantics(
+                                child: CircleAvatar(
+                                  radius: 30.0,
+                                  backgroundColor:
+                                      Theme.of(context).primaryColor,
+                                  child: Text(
+                                    model.suppliers[index].name
+                                        .substring(0, 2)
+                                        .toUpperCase(),
+                                    style: TextStyle(
+                                        color: Theme.of(context).accentColor),
+                                  ),
+                                ),
+                              ),
+                              title: Hero(
+                                tag: '${model.suppliers[index].id}__heroTag',
+                                child: Text(
+                                  '${model.suppliers[index].name}',
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                              subtitle: Text(
+                                '${model.suppliers[index].phoneNumber}',
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              onTap: () {
+                                Navigator.pushNamed(
+                                    context, AppRoutes.supplier_detail,
+                                    arguments: model.suppliers[index]);
+                              },
+                            ),
+                          ),
+                        )
+                  : Center(
+                      child: CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation(
+                            Theme.of(context).primaryColor),
                       ),
-                    ),
-                    title: Hero(
-                      tag: '${suppliers[index].id}__heroTag',
-                      child: Text(
-                        '${suppliers[index].name}',
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                    subtitle: Text(
-                      '${suppliers[index].phoneNumber}',
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    onTap: () {
-                      Navigator.pushNamed(
-                          context, AppRoutes.supplier_detail,
-                          arguments: suppliers[index]);
-                    },
-                  ),
-                ),
-              );
-            } else {
-              return Text('fetching...');
-            }
-          }),
-    );
+                    );
+            }));
   }
 }

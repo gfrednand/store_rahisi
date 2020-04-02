@@ -1,4 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:storeRahisi/locator.dart';
 import 'package:storeRahisi/models/item.dart';
@@ -12,8 +13,9 @@ class ItemModel extends BaseModel {
   static String _unitConst = 'Select a Product Unit';
   static String _categoryConst = 'Select a Product Category';
   Api _api = Api(path: 'items', companyId: '1');
-  String _documentID;
-  String get documentID => _documentID;
+
+  final StreamController<List<Item>> _itemsController =
+      StreamController<List<Item>>.broadcast();
 
   List<Item> _items;
   List<Item> _searchItems;
@@ -25,6 +27,7 @@ class ItemModel extends BaseModel {
   Item _item;
   // Item get item => _item;
   bool get _editting => _item != null;
+
   String _selectedCategory = _categoryConst;
   String get selectedCategory => _selectedCategory;
   void setSelectedCategory(dynamic category) {
@@ -48,8 +51,21 @@ class ItemModel extends BaseModel {
     setBusy(false);
   }
 
-  Stream<QuerySnapshot> fetchItemsAsStream() {
-    return _api.streamDataCollection();
+  listenToItems() async {
+    setBusy(true);
+    var result = _api.streamDataCollection();
+    setBusy(false);
+
+    if (result is String) {
+      await _dialogService.showDialog(
+        title: 'Error',
+        description: result,
+      );
+    } else if (result != null) {
+      _item = result
+          .map((snapshot) => Item.fromMap(snapshot.data, snapshot.documentID))
+          .toList();
+    }
   }
 
   getItemById(String id) async {
@@ -67,13 +83,12 @@ class ItemModel extends BaseModel {
       cancelTitle: 'No',
     );
     if (dialogResponse.confirmed) {
-      setBusy(true);
       await _api.removeDocument(id);
-      setBusy(false);
+      _navigationService.pop();
     }
   }
 
-  saveItem({@required Item data, String id}) async {
+  saveItem({@required Item data}) async {
     setBusy(true);
     var result;
     if (_selectedUnit != _unitConst) {
@@ -87,20 +102,22 @@ class ItemModel extends BaseModel {
     if (!_editting) {
       result = await _api.addDocument(data.toMap());
     } else {
-      result = await _api.updateDocument(data.toMap(), id);
+      print('*********************${data.toMap()}');
+
+      result = await _api.updateDocument(data.toMap(), data.id);
     }
 
     setBusy(false);
 
-       if (result is String) {
+    if (result is String) {
       await _dialogService.showDialog(
-        title: 'Cound not create post',
+        title: 'Cound not create item',
         description: result,
       );
     } else {
       await _dialogService.showDialog(
-        title: 'Product successfully Added',
-        description: 'Product has been created',
+        title: 'Item successfully Added',
+        description: 'Item has been created',
       );
     }
 
@@ -145,8 +162,11 @@ class ItemModel extends BaseModel {
     // }
   }
 
-    void setEdittingItem(Item edittingItem) {
+  void setEdittingItem(Item edittingItem) {
     _item = edittingItem;
+    // _selectedCategory = edittingItem.category;
+    // _selectedUnit = edittingItem.unit;
+    // notifyListeners();
   }
 
   checkItem(String name) async {

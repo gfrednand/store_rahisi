@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:storeRahisi/constants/routes.dart';
-import 'package:storeRahisi/models/item.dart';
-import 'package:storeRahisi/models/supplier.dart';
+
 import 'package:storeRahisi/pages/home_page.dart';
 import 'package:storeRahisi/pages/item/item_detail.dart';
 import 'package:storeRahisi/pages/layout_page.dart';
 import 'package:storeRahisi/pages/login_page.dart';
+import 'package:storeRahisi/pages/purchase/purchase_detail.dart';
 import 'package:storeRahisi/pages/register_page.dart';
 import 'package:storeRahisi/pages/splash_page.dart';
 import 'package:storeRahisi/pages/supplier/supplier_detail.dart';
 import 'package:storeRahisi/pages/supplier/supplier_list.dart';
+
+import 'models/index.dart';
 
 class Router {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -49,6 +51,13 @@ class Router {
         return MaterialPageRoute(
             builder: (_) => ItemDetail(
                   item: item,
+                ));
+        break;
+      case AppRoutes.purchase_detail:
+        var purchase = settings.arguments as Purchase;
+        return MaterialPageRoute(
+            builder: (_) => PurchaseDetail(
+                  purchase: purchase,
                 ));
         break;
       default:
