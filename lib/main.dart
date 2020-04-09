@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:storeRahisi/constants/routes.dart';
@@ -37,6 +38,7 @@ class MyApp extends StatelessWidget {
         //     return cart;
         //   },
         // ),
+        // StreamProvider<FirebaseUser>.value(value:  FirebaseAuth.instance.onAuthStateChanged),
         ChangeNotifierProvider(create: (_) => locator<AuthModel>()),
         ChangeNotifierProvider(create: (_) => locator<SupplierModel>()),
         ChangeNotifierProvider(create: (_) => locator<ItemModel>()),

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:storeRahisi/locator.dart';
 import 'package:storeRahisi/models/index.dart';
 import 'package:storeRahisi/providers/base_model.dart';
+import 'package:storeRahisi/providers/supplier_model.dart';
 import 'package:storeRahisi/services/api.dart';
 import 'package:storeRahisi/services/dialog_service.dart';
 import 'package:storeRahisi/services/navigation_service.dart';
@@ -19,6 +20,8 @@ class PaymentModel extends BaseModel {
   List<Payment> get payments => _payments;
 
   Payment _payment;
+
+
   // Item get item => _payment;
   bool get _editting => _payment != null;
 
@@ -28,6 +31,10 @@ class PaymentModel extends BaseModel {
     _payments = result.documents
         .map((doc) => Payment.fromMap(doc.data, doc.documentID))
         .toList();
+    
+
+          
+
     setBusy(false);
   }
 

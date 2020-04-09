@@ -5,7 +5,9 @@ import 'package:storeRahisi/models/index.dart';
 import 'package:storeRahisi/models/item.dart';
 import 'package:storeRahisi/pages/item/item_form.dart';
 import 'package:storeRahisi/providers/item_model.dart';
+import 'package:storeRahisi/providers/payment_model.dart';
 import 'package:storeRahisi/providers/purchase_model.dart';
+import 'package:storeRahisi/providers/supplier_model.dart';
 import 'package:storeRahisi/widgets/custom_modal_sheet.dart';
 import 'package:storeRahisi/widgets/toast.dart';
 
@@ -44,6 +46,7 @@ class _ItemDetailState extends State<ItemDetail> {
     PurchaseModel purchaseModel = Provider.of<PurchaseModel>(context);
     List<Purchase> purchases =
         purchaseModel.getPurchaseHistoryByItemId(widget.item.id);
+
     return DefaultTabController(
       length: tabs.length,
       child: Scaffold(
@@ -86,20 +89,31 @@ class _ItemDetailState extends State<ItemDetail> {
                     thickness: 10.0,
                   ),
                   ListTile(
-                    title: Text('${widget.item.purchasePrice}'),
-                    subtitle: Text('Purchase Price'),
-                  ),
-                  ListTile(
-                    title: Text('${widget.item.salePrice}'),
-                    subtitle: Text('Sale Price'),
-                  ),
-                  Divider(
-                    thickness: 10.0,
-                  ),
-                  ListTile(
+                    leading: Icon(Icons.add_to_queue),
                     title:
                         Text('${widget.item.openingStock} ${widget.item.unit}'),
                     subtitle: Text('Opening Stock'),
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.add_to_queue),
+                    title: Text(
+                        '${widget.item.totalPurchase ?? 0} ${widget.item.unit}'),
+                    subtitle: Text('Total Purchase'),
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.remove_from_queue),
+                    title:
+                        Text('${widget.item.sales ?? 0} ${widget.item.unit}'),
+                    subtitle: Text('Total Sales'),
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.inbox),
+                    title: Text(
+                        '${widget.item.inStock ?? 0}  ${widget.item.unit}'),
+                    subtitle: Text('In Stock'),
+                  ),
+                  Divider(
+                    thickness: 10.0,
                   ),
                   ListTile(
                     title: Text('${widget.item.alertQty} ${widget.item.unit}'),
@@ -121,44 +135,60 @@ class _ItemDetailState extends State<ItemDetail> {
             ListView.builder(
                 itemCount: purchases.length,
                 itemBuilder: (buildContext, index) {
-                  return ListTile(
-                    leading: ExcludeSemantics(
-                      child: CircleAvatar(
-                        radius: 30.0,
-                        backgroundColor: Theme.of(context).primaryColor,
-                        child: Text(
-                          'P',
-                          style:
-                              TextStyle(color: Theme.of(context).accentColor),
+                  SupplierModel supplierModel =
+                      Provider.of<SupplierModel>(context);
+                  purchases[index].supplier = supplierModel
+                      .getSupplierById(purchases[index].supplierId)
+                      ?.name;
+
+                  PaymentModel paymentModel =
+                      Provider.of<PaymentModel>(context);
+                  List<Payment> payments =
+                      paymentModel.getPaymentsByPurchaseId(purchases[index].id);
+                  purchases[index].paidAmount = 0.0;
+                  payments.forEach((payment) {
+                    purchases[index].paidAmount  =  purchases[index].paidAmount + payment.amount;
+                  });
+                  return Card(
+                    child: ListTile(
+                      leading: ExcludeSemantics(
+                        child: CircleAvatar(
+                          radius: 25.0,
+                          backgroundColor: Theme.of(context).primaryColor,
+                          child: Text(
+                            'P',
+                            style:
+                                TextStyle(color: Theme.of(context).accentColor),
+                          ),
                         ),
                       ),
+                      title: Text(
+                        '${purchases[index]?.purchaseDate}',
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Supplier ${purchases[index]?.supplier}',
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          Text(
+                            'Paid ${purchases[index]?.paidAmount}',
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
+                      ),
+                      trailing: Text('${purchases[index]?.grandTotalAmount}'),
+                      onTap: () {
+                        // var arguments = {
+                        //   'purchase': purchases[index],
+                        //   'purchaseModel': purchaseModel,
+                        // };
+                        // Navigator.pushNamed(context, AppRoutes.purchase_detail,
+                        //     arguments: arguments);
+                      },
                     ),
-                    title: Text(
-                      '${purchases[index]?.purchaseDate}',
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Supplier ${purchases[index]?.supplier}',
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        Text(
-                          'Paid ${purchases[index]?.paidAmount}',
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ],
-                    ),
-                    trailing: Text('${purchases[index]?.grandTotalAmount}'),
-                    onTap: () {
-                      // var arguments = {
-                      //   'purchase': purchases[index],
-                      //   'purchaseModel': purchaseModel,
-                      // };
-                      // Navigator.pushNamed(context, AppRoutes.purchase_detail,
-                      //     arguments: arguments);
-                    },
                   );
                 }),
             Container()

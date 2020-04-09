@@ -55,7 +55,7 @@ class ItemModel extends BaseModel {
     _api.streamDataCollection().listen((postsSnapshot) {
       if (postsSnapshot.documents.isNotEmpty) {
         var posts = postsSnapshot.documents
-            .map((snapshot) => Item.fromMap(snapshot.data, snapshot.documentID))
+            .map((doc) => Item.fromFirestore(doc))
             .toList();
 
         // Add the posts onto the controller

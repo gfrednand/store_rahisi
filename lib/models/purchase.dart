@@ -52,6 +52,7 @@ class Purchase {
         active: json["active"],
         supplierId: json["supplierId"],
         purchaseDate: json["purchaseDate"],
+        updatedAt: json["updatedAt"],
         items:
             List<Item>.from(json["items"].map((x) => Item.fromMap(x, x['id']))),
         grandTotalAmount: json["grandTotalAmount"],
@@ -65,6 +66,7 @@ class Purchase {
         "active": active,
         "supplierId": supplierId,
         "purchaseDate": purchaseDate,
+        "updatedAt": updatedAt,
         "items": List<dynamic>.from(items.map((x) => x.toMapPurchase())),
         "grandTotalAmount": grandTotalAmount,
         "dueAmount": dueAmount,

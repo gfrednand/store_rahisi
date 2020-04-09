@@ -30,11 +30,13 @@ class PurchaseModel extends BaseModel {
 
   final DialogService _dialogService = locator<DialogService>();
   NavigationService _navigationService = locator<NavigationService>();
+  SupplierModel _supplierModel = locator<SupplierModel>();
+  PaymentModel _paymentModel = locator<PaymentModel>();
+
   Purchase _purchase;
   bool get _editting => _purchase != null;
 
   // SupplierModel _supplierModel = SupplierModel();
-  PaymentModel _paymentModel = PaymentModel();
 
   // getSuppliers() {
   //   _supplierModel.fetchSuppliers();
@@ -62,9 +64,9 @@ class PurchaseModel extends BaseModel {
   }
 
   listenToPurchases() async {
-    _api.streamDataCollection().listen((postsSnapshot) {
-      if (postsSnapshot.documents.isNotEmpty) {
-        var posts = postsSnapshot.documents
+    _api.streamDataCollection().listen((snapshot) {
+      if (snapshot.documents.isNotEmpty) {
+        var posts = snapshot.documents
             .map((snapshot) =>
                 Purchase.fromMap(snapshot.data, snapshot.documentID))
             .toList();
@@ -78,6 +80,19 @@ class PurchaseModel extends BaseModel {
       List<Purchase> updatedPurchases = purchaseData;
       if (updatedPurchases != null && updatedPurchases.length > 0) {
         _purchases = updatedPurchases;
+
+        // _purchases.map((purchase) {
+        //   purchase.supplier =
+        //       _supplierModel.getSupplierById(purchase.supplierId)?.name;
+
+        //   List<Payment> payments =
+        //       _paymentModel.getPaymentsByPurchaseId(purchase.id);
+        //   purchase.paidAmount = 0.0;
+        //   payments.forEach((payment) {
+        //     purchase.paidAmount = purchase.paidAmount + payment.amount;
+        //   });
+        //   return purchase;
+        // });
         notifyListeners();
       }
     });
@@ -94,6 +109,19 @@ class PurchaseModel extends BaseModel {
     });
 
     return pur;
+  }
+
+  int getTotalPurchaseByItemId(String id) {
+    int total = 0;
+    _purchases.forEach((purchase) {
+      purchase.items.forEach((item) {
+        if (item.id == id) {
+          total += item.openingStock + item.quantity;
+        }
+      });
+    });
+
+    return total;
   }
 
   List<Item> getUnPaidItems(String id) {
