@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:storeRahisi/constants/routes.dart';
-import 'package:storeRahisi/providers/fab_model.dart';
 
 class AppBottonNavBar extends StatefulWidget {
   const AppBottonNavBar({
@@ -75,11 +74,10 @@ class _AppBottonNavBarState extends State<AppBottonNavBar>
 
   @override
   Widget build(BuildContext context) {
-    FabModel model = Provider.of<FabModel>(context, listen: false);
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
     setState(() {
-      _currentIndex = model.index;
+      // _currentIndex = model.index;
     });
     var bottomNavigationBarItems = _navigationViews
         .map<BottomNavigationBarItem>((navigationView) => navigationView.item)
@@ -98,7 +96,7 @@ class _AppBottonNavBarState extends State<AppBottonNavBar>
         index == 0
             ? Navigator.pushNamed(context, AppRoutes.home)
             : index == 1 ? Navigator.pushNamed(context, AppRoutes.supplier) : null;
-        model.setCurrentIndex(index);
+        // model.setCurrentIndex(index);
         _navigationViews[_currentIndex].controller.forward();
         // });
       },

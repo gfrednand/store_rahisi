@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:storeRahisi/locator.dart';
 import 'package:storeRahisi/providers/base_model.dart';
@@ -12,12 +14,19 @@ class SupplierModel extends BaseModel {
   String _documentID;
   String get documentID => _documentID;
 
-  List<Supplier> _suppliers;
+  List<Supplier> _suppliers = [];
   List<Supplier> get suppliers => _suppliers;
 
   Supplier _supplier;
   Supplier get supplier => _supplier;
   final DialogService _dialogService = locator<DialogService>();
+
+  final StreamController<List<Supplier>> _supplierController =
+      StreamController<List<Supplier>>.broadcast();
+
+  Supplier getById(String id) =>
+      _suppliers.firstWhere((supplier) => supplier.id == id);
+
   fetchSuppliers() async {
     setBusy(true);
     var result = await _api.getDataCollection();
@@ -28,25 +37,38 @@ class SupplierModel extends BaseModel {
   }
 
   listenToSuppliers() async {
-    setBusy(true);
-    var result = _api.streamDataCollection();
-    setBusy(false);
+    _api.streamDataCollection().listen((postsSnapshot) {
+      if (postsSnapshot.documents.isNotEmpty) {
+        var posts = postsSnapshot.documents
+            .map((snapshot) =>
+                Supplier.fromMap(snapshot.data, snapshot.documentID))
+            .toList();
 
-    if (result is String) {
-      await _dialogService.showDialog(
-        title: 'Error',
-        description: result,
-      );
-    } else if (result != null) {
-      _supplier = result
-          .map((snapshot) =>
-              Supplier.fromMap(snapshot.data, snapshot.documentID))
-          .toList();
-      ;
-    }
+        // Add the posts onto the controller
+        _supplierController.add(posts);
+      }
+    });
+
+    _supplierController.stream.listen((purchaseData) {
+      List<Supplier> updatedSuppliers = purchaseData;
+      if (updatedSuppliers != null && updatedSuppliers.length > 0) {
+        _suppliers = updatedSuppliers;
+        notifyListeners();
+      }
+    });
   }
 
-  getSupplierById(String id) async {
+  Supplier getSupplierById(String id) {
+    if (_suppliers.length == 0) {
+      listenToSuppliers();
+    }
+    return _suppliers.firstWhere(
+      (item) => item.id == id,
+      orElse: () => null,
+    );
+  }
+
+  getSupplierByIdFromServer(String id) async {
     setBusy(true);
     var doc = await _api.getDocumentById(id);
     _supplier = Supplier.fromMap(doc.data, doc.documentID);

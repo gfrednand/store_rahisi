@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:storeRahisi/constants/routes.dart';
+import 'package:storeRahisi/models/index.dart';
 import 'package:storeRahisi/pages/base_view.dart';
 import 'package:storeRahisi/providers/purchase_model.dart';
+import 'package:storeRahisi/providers/supplier_model.dart';
 
 class PurchaseList extends StatelessWidget {
   @override
@@ -17,41 +20,61 @@ class PurchaseList extends StatelessWidget {
                       )
                     : ListView.builder(
                         itemCount: model.purchases.length,
-                        itemBuilder: (buildContext, index) => Card(
-                          child: ListTile(
-                            leading: ExcludeSemantics(
-                              child: CircleAvatar(
-                                radius: 30.0,
-                                backgroundColor: Theme.of(context).primaryColor,
-                                child: Text(
-                                  'P',
-                                  style: TextStyle(
-                                      color: Theme.of(context).accentColor),
+                        itemBuilder: (buildContext, index) {
+                          SupplierModel supplierModel =
+                              Provider.of<SupplierModel>(context);
+                          Supplier supplier = supplierModel.getSupplierById(
+                              model.purchases[index].supplierId);
+                          model.purchases[index].supplier = supplier?.name;
+                          return Card(
+                            child: ListTile(
+                              leading: ExcludeSemantics(
+                                child: CircleAvatar(
+                                  radius: 30.0,
+                                  backgroundColor:
+                                      Theme.of(context).primaryColor,
+                                  child: Text(
+                                    'P',
+                                    style: TextStyle(
+                                        color: Theme.of(context).accentColor),
+                                  ),
                                 ),
                               ),
+                              title: Text(
+                                '${model.purchases[index].purchaseDate}',
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              subtitle: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Supplier: ${model.purchases[index]?.supplier}',
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  Text(
+                                    'Paid: ${model.purchases[index]?.paidAmount}',
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ],
+                              ),
+                              trailing:
+                                  Text('${model.purchases[index].grandTotalAmount}'),
+                              onTap: () {
+                                var arguments = {
+                                  'purchase': model.purchases[index],
+                                  'purchaseModel': model,
+                                };
+                                Navigator.pushNamed(
+                                    context, AppRoutes.purchase_detail,
+                                    arguments: arguments);
+                              },
                             ),
-                            title: Text(
-                              '${model.purchases[index].purchaseDate}',
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            subtitle: Text(
-                              '${model.purchases[index].grandTotalAmount}',
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            trailing:
-                                Text('${model.purchases[index].paidAmount}}'),
-                            onTap: () {
-                              Navigator.pushNamed(
-                                  context, AppRoutes.purchase_detail,
-                                  arguments: model.purchases[index]);
-                            },
-                          ),
-                        ),
-                      )
+                          );
+                        })
                 : Center(
                     child: CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation(
-                          Theme.of(context).primaryColor),
+                      valueColor:
+                          AlwaysStoppedAnimation(Theme.of(context).accentColor),
                     ),
                   ));
       },

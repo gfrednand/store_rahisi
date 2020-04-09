@@ -141,7 +141,7 @@ class _LayoutPageState extends State<LayoutPage> with TickerProviderStateMixin {
                   width: double.infinity,
                   child: FlatButton(
                       color: Theme.of(context).primaryColor,
-                      child: Text('Logout'),
+                      child: Text('Logout',style: TextStyle(color:Theme.of(context).accentColor ),),
                       onPressed: () async {
                         bool loggedOut = await model.logout();
                         if (loggedOut) {
@@ -174,7 +174,7 @@ class _LayoutPageState extends State<LayoutPage> with TickerProviderStateMixin {
                 ItemModel itemModel =
                     Provider.of<ItemModel>(context, listen: false);
                 await itemModel.fetchItems();
-                items = itemModel.items;
+                items = await itemModel.items;
                 final List<Item> history = await showSearch(
                     context: context, delegate: ItemSearchDelegate(items));
                 items = history;
@@ -276,8 +276,9 @@ class _LayoutPageState extends State<LayoutPage> with TickerProviderStateMixin {
                                 ? _showModalSheetAppBar(context, 'Add Supplier',
                                     SupplierForm(), 0.7)
                                 : _currentIndex == 2
-                                    ? _showModalSheetAppBar(context,
-                                        'Add Purchase', PurchaseForm(), 0.81)
+                                    ? Navigator.pushNamed(
+                                        context, AppRoutes.purchase_add,
+                                        arguments: 'Add Purchase')
                                     : _currentIndex == 3
                                         ? _showModalSheetAppBar(context,
                                             'Add Expense', Container(), 0.5)

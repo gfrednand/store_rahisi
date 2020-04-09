@@ -52,23 +52,43 @@ class ItemModel extends BaseModel {
   }
 
   listenToItems() async {
-    setBusy(true);
-    var result = _api.streamDataCollection();
-    setBusy(false);
+    _api.streamDataCollection().listen((postsSnapshot) {
+      if (postsSnapshot.documents.isNotEmpty) {
+        var posts = postsSnapshot.documents
+            .map((snapshot) => Item.fromMap(snapshot.data, snapshot.documentID))
+            .toList();
 
-    if (result is String) {
-      await _dialogService.showDialog(
-        title: 'Error',
-        description: result,
-      );
-    } else if (result != null) {
-      _item = result
-          .map((snapshot) => Item.fromMap(snapshot.data, snapshot.documentID))
-          .toList();
-    }
+        // Add the posts onto the controller
+        _itemsController.add(posts);
+      }
+    });
+
+    _itemsController.stream.listen((purchaseData) {
+      List<Item> updatedSuppliers = purchaseData;
+      if (updatedSuppliers != null && updatedSuppliers.length > 0) {
+        _items = updatedSuppliers;
+        notifyListeners();
+      }
+    });
   }
 
-  getItemById(String id) async {
+  List<Item> getItemByIds(List<String> ids) {
+    return ids
+        .map((id) => _items.firstWhere(
+              (item) => item.id == id,
+              orElse: () => null,
+            ))
+        .toList();
+  }
+
+  Item getItemById(String id) {
+    return _items.firstWhere(
+      (item) => item.id == id,
+      orElse: () => null,
+    );
+  }
+
+  getItemByIdFromServer(String id) async {
     setBusy(true);
     var doc = await _api.getDocumentById(id);
     _item = Item.fromMap(doc.data, doc.documentID);
@@ -122,51 +142,12 @@ class ItemModel extends BaseModel {
     }
 
     _navigationService.pop();
-    // print('***********$id');
-    // var result;
-    // setBusy(true);
 
-    // if (_selectedUnit != _unitConst) {
-    //   data.unit = _selectedUnit;
-    // }
-
-    // if (_selectedCategory != _categoryConst) {
-    //   data.category = _selectedCategory;
-    // }
-    // if (id == null) {
-    //   result = await _api.addDocument(data.toMap());
-    //   _documentID = result.documentID;
-    // } else {
-    //   print('***********$result');
-    //   result = await _api.updateDocument(data.toMap(), id);
-    // }
-    // setBusy(false);
-
-    // if (result is bool) {
-    //   print('***********$result');
-    //   if (result) {
-    //     _navigationService.pop();
-    //   } else {
-    //     await _dialogService.showDialog(
-    //       title: 'Failure',
-    //       description: 'General failure. Please try again later',
-    //     );
-    //   }
-    // } else {
-    //   print('***********$result');
-
-    //   await _dialogService.showDialog(
-    //     title: 'Failure',
-    //     description: result,
-    //   );
-    // }
   }
 
   void setEdittingItem(Item edittingItem) {
     _item = edittingItem;
-    // _selectedCategory = edittingItem.category;
-    // _selectedUnit = edittingItem.unit;
-    // notifyListeners();
+
   }
 
   checkItem(String name) async {

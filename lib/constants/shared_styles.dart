@@ -14,7 +14,7 @@ const double fieldHeight = 55;
 const double smallFieldHeight = 40;
 const double inputFieldBottomMargin = 30;
 const double inputFieldSmallBottomMargin = 0;
-const EdgeInsets fieldPadding = const EdgeInsets.symmetric(horizontal: 15);
+const EdgeInsets fieldPadding = const EdgeInsets.symmetric(horizontal: 10);
 const EdgeInsets largeFieldPadding =
     const EdgeInsets.symmetric(horizontal: 15, vertical: 15);
 

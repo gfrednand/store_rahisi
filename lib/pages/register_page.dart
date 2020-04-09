@@ -86,7 +86,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   InputField(
                       placeholder: 'Email',
                       controller: emailInputController,
-                      validator: emailValidator,
+               
                       textInputType: TextInputType.emailAddress),
                   verticalSpaceSmall,
                   InputField(
@@ -102,7 +102,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   InputField(
                     placeholder: 'Password',
                     controller: pwdInputController,
-                    validator: pwdValidator,
+                 
                     additionalNote:
                         'Password has to be a minimum of 8 characters.',
                     password: true,
@@ -111,7 +111,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   InputField(
                     placeholder: 'Confirm Password',
                     controller: confirmPwdInputController,
-                    validator: pwdValidator,
+             
                     password: true,
                   ),
                   verticalSpaceSmall,

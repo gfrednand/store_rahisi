@@ -31,13 +31,15 @@ class ItemForm extends StatelessWidget {
     return BaseView<ItemModel>(
       onModelReady: (model) {
         // update the text in the controller
-        nameController.text = item?.name ?? '';
-        descriptionController.text = item?.description ?? '';
-        salePriceController.text = item?.salePrice.toString() ?? '0';
-        purchasePriceController.text = item?.purchasePrice.toString() ?? '0';
-        alertQtyController.text = item?.alertQty.toString() ?? '0';
-        openingStockController.text = item?.openingStock.toString() ?? '0';
-        model.setEdittingItem(item);
+        if (isEditing) {
+          nameController.text = item?.name ?? '';
+          descriptionController.text = item?.description ?? '';
+          salePriceController.text = item?.salePrice.toString() ?? '0';
+          purchasePriceController.text = item?.purchasePrice.toString() ?? '0';
+          alertQtyController.text = item?.alertQty.toString() ?? '0';
+          openingStockController.text = item?.openingStock.toString() ?? '0';
+          model.setEdittingItem(item);
+        }
       },
       builder: (context, model, child) => Container(
         padding: const EdgeInsets.all(20.0),
@@ -48,15 +50,12 @@ class ItemForm extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 InputField(
+                    smallVersion: true,
+             
                     isReadOnly: model.busy,
                     placeholder: 'Item Name*',
                     controller: nameController,
-                    validator: (value) {
-                      if (value.isEmpty) {
-                        return "Please enter a valid Item name.";
-                      }
-                      return null;
-                    }),
+                ),
                 verticalSpaceSmall,
                 ExpansionList<String>(
                     isReadOnly: model.busy,
@@ -80,29 +79,33 @@ class ItemForm extends StatelessWidget {
                     title: isEditing ? item.unit : model.selectedUnit,
                     onItemSelected: model.setSelectedUnit),
                 verticalSpaceSmall,
-                InputField(
-                  isReadOnly: model.busy,
-                  placeholder: 'Purchase Price',
-                  controller: purchasePriceController,
-                  textInputType: TextInputType.numberWithOptions(),
-                ),
-                verticalSpaceSmall,
+                // InputField(
+                //   smallVersion: true,
+                //   isReadOnly: model.busy,
+                //   placeholder: 'Purchase Price',
+                //   controller: purchasePriceController,
+                //   textInputType: TextInputType.numberWithOptions(),
+                // ),
+                // verticalSpaceSmall,
 
+                // InputField(
+                //   smallVersion: true,
+                //   isReadOnly: model.busy,
+                //   placeholder: 'Sale Price',
+                //   controller: salePriceController,
+                //   textInputType: TextInputType.numberWithOptions(),
+                // ),
+                // verticalSpaceSmall,
+                // InputField(
+                //   smallVersion: true,
+                //   isReadOnly: model.busy,
+                //   placeholder: 'Opening Stock',
+                //   controller: openingStockController,
+                //   textInputType: TextInputType.numberWithOptions(),
+                // ),
+                // verticalSpaceSmall,
                 InputField(
-                  isReadOnly: model.busy,
-                  placeholder: 'Sale Price',
-                  controller: salePriceController,
-                  textInputType: TextInputType.numberWithOptions(),
-                ),
-                verticalSpaceSmall,
-                InputField(
-                  isReadOnly: model.busy,
-                  placeholder: 'Opening Stock',
-                  controller: openingStockController,
-                  textInputType: TextInputType.numberWithOptions(),
-                ),
-                verticalSpaceSmall,
-                InputField(
+                  smallVersion: true,
                   isReadOnly: model.busy,
                   placeholder: 'Alert Quantity',
                   controller: alertQtyController,
@@ -110,6 +113,7 @@ class ItemForm extends StatelessWidget {
                 ),
                 verticalSpaceSmall,
                 InputField(
+                  smallVersion: true,
                   isReadOnly: model.busy,
                   placeholder: 'Description',
                   controller: descriptionController,
@@ -123,7 +127,6 @@ class ItemForm extends StatelessWidget {
                     onPressed: () async {
                       if (_formKey.currentState.validate()) {
                         // If the form is valid, display a Snackbar.
-
                         model.saveItem(
                             data: Item(
                           id: item?.id ?? '',
@@ -133,11 +136,12 @@ class ItemForm extends StatelessWidget {
                           description: descriptionController.text,
                           name: nameController.text,
                           openingStock: int.parse(openingStockController.text),
-                          salePrice: int.parse(salePriceController.text),
+                          salePrice: double.parse(salePriceController.text),
                           purchasePrice:
                               double.parse(purchasePriceController.text),
                           userId: null,
                         ));
+                        _formKey.currentState.reset();
                       }
                     },
                   ),

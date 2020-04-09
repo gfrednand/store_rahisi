@@ -6,6 +6,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:storeRahisi/constants/uuid.dart';
 import 'index.dart';
 
 String purchaseToJson(Purchase data) => json.encode(data.toMap());
@@ -23,7 +24,7 @@ class Purchase {
   double dueAmount;
   String userId;
   Purchase(
-      {this.id,
+      {String id,
       @required this.userId,
       this.active,
       this.supplierId,
@@ -35,11 +36,9 @@ class Purchase {
       this.dueAmount,
       this.updatedAt})
       : this.purchaseDate = purchaseDate ??
-            new DateFormat('yyyy-MM-dd HH:mm').format(new DateTime.now());
-  // this.referenceNo = referenceNo ??
-  //     DateFormat('yyyy/MM/').format(new DateTime.now()) +
-  //         'P-' +
-  //         Uuid().generateV4();
+            new DateFormat('MMM dd, yyyy HH:mm').format(new DateTime.now()),
+        this.id = id ?? Uuid().generateV4();
+
 
   factory Purchase.fromMap(Map<String, dynamic> json, String id) => Purchase(
         id: id ?? '',
@@ -47,9 +46,9 @@ class Purchase {
         active: json["active"],
         supplierId: json["supplierId"],
         purchaseDate: json["purchaseDate"],
-        items: List<Item>.from(json["items"].map((x) => Item.fromMap(x, id))),
+        items:
+            List<Item>.from(json["items"].map((x) => Item.fromMap(x, x['id']))),
         grandTotalAmount: json["grandTotalAmount"],
-        paidAmount: json["paidAmount"],
         dueAmount: json["dueAmount"].toDouble(),
       );
 
@@ -59,9 +58,8 @@ class Purchase {
         "active": active,
         "supplierId": supplierId,
         "purchaseDate": purchaseDate,
-        "items": List<dynamic>.from(items.map((x) => x.toMap())),
+        "items": List<dynamic>.from(items.map((x) => x.toMapPurchase())),
         "grandTotalAmount": grandTotalAmount,
-        "paidAmount": paidAmount,
         "dueAmount": dueAmount,
       };
 }

@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:storeRahisi/constants/routes.dart';
+import 'package:storeRahisi/models/index.dart';
 import 'package:storeRahisi/models/item.dart';
 import 'package:storeRahisi/pages/item/item_form.dart';
 import 'package:storeRahisi/providers/item_model.dart';
+import 'package:storeRahisi/providers/purchase_model.dart';
 import 'package:storeRahisi/widgets/custom_modal_sheet.dart';
 import 'package:storeRahisi/widgets/toast.dart';
 
 class ItemDetail extends StatefulWidget {
   final Item item;
-  const ItemDetail({Key key, this.item}) : super(key: key);
+  final ItemModel itemModel;
+  const ItemDetail({Key key, this.item, this.itemModel}) : super(key: key);
   @override
   _ItemDetailState createState() => _ItemDetailState();
 }
@@ -36,68 +40,128 @@ class _ItemDetailState extends State<ItemDetail> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: widget.item.name == null
-            ? Text('Item Detail')
-            : Text(
-                '${widget.item.name.toUpperCase()}',
-                overflow: TextOverflow.ellipsis,
-              ),
-      ),
-      body: SingleChildScrollView(
-        child: Column(
+    List<String> tabs = ['Details', 'Purchase History', 'Sales History'];
+    PurchaseModel purchaseModel = Provider.of<PurchaseModel>(context);
+    List<Purchase> purchases =
+        purchaseModel.getPurchaseHistoryByItemId(widget.item.id);
+    return DefaultTabController(
+      length: tabs.length,
+      child: Scaffold(
+        appBar: AppBar(
+          title: widget.item.name == null
+              ? Text('Item Detail')
+              : Text(
+                  '${widget.item.name.toUpperCase()}',
+                  overflow: TextOverflow.ellipsis,
+                ),
+          bottom: TabBar(
+            isScrollable: true,
+            tabs: [
+              for (final tab in tabs) Tab(text: tab),
+            ],
+          ),
+        ),
+        body: TabBarView(
           children: <Widget>[
-            Wrap(
-              spacing: 0.0, // gap between adjacent chips
-              runSpacing: 0.0, // gap between lines
-              children: <Widget>[
-                chipDesign("Purchase History", Color(0xFF4fc3f7)),
-                chipDesign("Sale History", Color(0xFFffb74d)),
-                chipDesign("Print Barcode", Color(0xFF9575cd)),
-                chipDesign("Edit", Color(0xFF4db6ac)),
-                chipDesign("Delete", Color(0xFFf06292)),
-              ],
+            SingleChildScrollView(
+              child: Column(
+                children: <Widget>[
+                  Wrap(
+                    spacing: 0.0, // gap between adjacent chips
+                    runSpacing: 0.0, // gap between lines
+                    children: <Widget>[
+                      chipDesign("Print Barcode", Color(0xFF9575cd)),
+                      chipDesign("Edit", Color(0xFF4db6ac)),
+                      chipDesign("Delete", Color(0xFFf06292)),
+                    ],
+                  ),
+                  Divider(
+                    thickness: 10.0,
+                  ),
+                  ListTile(
+                    title: Text('${widget.item.category}'),
+                    subtitle: Text('Category'),
+                  ),
+                  Divider(
+                    thickness: 10.0,
+                  ),
+                  ListTile(
+                    title: Text('${widget.item.purchasePrice}'),
+                    subtitle: Text('Purchase Price'),
+                  ),
+                  ListTile(
+                    title: Text('${widget.item.salePrice}'),
+                    subtitle: Text('Sale Price'),
+                  ),
+                  Divider(
+                    thickness: 10.0,
+                  ),
+                  ListTile(
+                    title:
+                        Text('${widget.item.openingStock} ${widget.item.unit}'),
+                    subtitle: Text('Opening Stock'),
+                  ),
+                  ListTile(
+                    title: Text('${widget.item.alertQty} ${widget.item.unit}'),
+                    subtitle: Text('Alert Quantity'),
+                  ),
+                  Divider(
+                    thickness: 10.0,
+                  ),
+                  ListTile(
+                    title: Text('${widget.item.description}'),
+                    subtitle: Text('Description'),
+                  ),
+                  Divider(
+                    thickness: 10.0,
+                  ),
+                ],
+              ),
             ),
-            Divider(
-              thickness: 10.0,
-            ),
-            ListTile(
-              title: Text('${widget.item.category}'),
-              subtitle: Text('Category'),
-            ),
-            Divider(
-              thickness: 10.0,
-            ),
-            ListTile(
-              title: Text('${widget.item.purchasePrice}'),
-              subtitle: Text('Purchase Price'),
-            ),
-            ListTile(
-              title: Text('${widget.item.salePrice}'),
-              subtitle: Text('Sale Price'),
-            ),
-            Divider(
-              thickness: 10.0,
-            ),
-            ListTile(
-              title: Text('${widget.item.openingStock} ${widget.item.unit}'),
-              subtitle: Text('Opening Stock'),
-            ),
-            ListTile(
-              title: Text('${widget.item.alertQty} ${widget.item.unit}'),
-              subtitle: Text('Alert Quantity'),
-            ),
-            Divider(
-              thickness: 10.0,
-            ),
-            ListTile(
-              title: Text('${widget.item.description}'),
-              subtitle: Text('Description'),
-            ),
-            Divider(
-              thickness: 10.0,
-            ),
+            ListView.builder(
+                itemCount: purchases.length,
+                itemBuilder: (buildContext, index) {
+                  return ListTile(
+                    leading: ExcludeSemantics(
+                      child: CircleAvatar(
+                        radius: 30.0,
+                        backgroundColor: Theme.of(context).primaryColor,
+                        child: Text(
+                          'P',
+                          style:
+                              TextStyle(color: Theme.of(context).accentColor),
+                        ),
+                      ),
+                    ),
+                    title: Text(
+                      '${purchases[index]?.purchaseDate}',
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Supplier ${purchases[index]?.supplier}',
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        Text(
+                          'Paid ${purchases[index]?.paidAmount}',
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    ),
+                    trailing: Text('${purchases[index]?.grandTotalAmount}'),
+                    onTap: () {
+                      // var arguments = {
+                      //   'purchase': purchases[index],
+                      //   'purchaseModel': purchaseModel,
+                      // };
+                      // Navigator.pushNamed(context, AppRoutes.purchase_detail,
+                      //     arguments: arguments);
+                    },
+                  );
+                }),
+            Container()
           ],
         ),
       ),
@@ -105,11 +169,10 @@ class _ItemDetailState extends State<ItemDetail> {
   }
 
   Widget chipDesign(String label, Color color) {
-    ItemModel itemModel = Provider.of<ItemModel>(context, listen: false);
     return GestureDetector(
       onTap: () {
         label == 'Delete'
-            ? itemModel.removeItem(widget.item.id)
+            ? widget.itemModel.removeItem(widget.item.id)
             : label == 'Edit'
                 ? _showModalSheetAppBar(
                     context,

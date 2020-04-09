@@ -55,7 +55,7 @@ class LoginPage extends StatelessWidget {
                         'Store Rahisi',
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            color: Theme.of(context).primaryColor,
+                            color: Theme.of(context).accentColor,
                             fontSize: 25.0),
                       ),
                     ),
@@ -71,7 +71,7 @@ class LoginPage extends StatelessWidget {
                       placeholder: 'Password',
                       password: true,
                       controller: pwdInputController,
-                      validator: pwdValidator,
+              
                     ),
                     verticalSpaceMedium,
                     Row(

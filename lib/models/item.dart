@@ -16,25 +16,30 @@ class Item {
   String category;
   String unit;
   String description;
-  int salePrice;
+  double salePrice;
   double purchasePrice;
+  double paidAmount;
+  
   int alertQty;
   int openingStock;
+  int quantity;
   String userId;
 
   bool active;
 
   Item({
     this.id,
-    @required this.userId,
+    this.userId,
     @required this.name,
     this.category,
     this.unit,
     this.description,
     this.salePrice,
     this.purchasePrice,
+    this.paidAmount,
     this.alertQty,
     this.openingStock,
+    this.quantity,
     this.active,
   });
 
@@ -45,15 +50,18 @@ class Item {
         category: json['category'],
         unit: json['unit'],
         description: json['description'],
-        salePrice: json['salePrice'],
-        purchasePrice: json['purchasePrice'].toDouble(),
+        salePrice: json['salePrice']?.toDouble(),
+        purchasePrice: json['purchasePrice']?.toDouble(),
+        paidAmount: json['paidAmount']?.toDouble(),
         alertQty: json['alertQty'],
         openingStock: json['openingStock'],
+        quantity: json['quantity'],
         active: json['active'],
       );
 
+
   Map<String, dynamic> toMap() => {
-        // 'id': id,
+        'id': id,
         'userId': userId,
         'name': name,
         'category': category,
@@ -61,8 +69,18 @@ class Item {
         'description': description,
         'salePrice': salePrice,
         'purchasePrice': purchasePrice,
+        'paidAmount': paidAmount,
         'alertQty': alertQty,
         'openingStock': openingStock,
+        'quantity': quantity,
         'active': active,
+      };
+  Map<String, dynamic> toMapPurchase() => {
+        'id': id,
+        'salePrice': salePrice,
+        'purchasePrice': purchasePrice,
+        'paidAmount': paidAmount,
+        'openingStock': openingStock,
+        'quantity': quantity,
       };
 }

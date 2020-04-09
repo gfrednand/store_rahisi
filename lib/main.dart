@@ -5,8 +5,8 @@ import 'package:storeRahisi/constants/themes.dart';
 import 'package:storeRahisi/locator.dart';
 import 'package:storeRahisi/managers/dialog_manager.dart';
 import 'package:storeRahisi/providers/auth_model.dart';
-import 'package:storeRahisi/providers/fab_model.dart';
 import 'package:storeRahisi/providers/item_model.dart';
+import 'package:storeRahisi/providers/payment_model.dart';
 import 'package:storeRahisi/providers/purchase_model.dart';
 import 'package:storeRahisi/providers/supplier_model.dart';
 import 'package:storeRahisi/router.dart';
@@ -37,11 +37,19 @@ class MyApp extends StatelessWidget {
         //     return cart;
         //   },
         // ),
-        Provider(create: (context) => locator<FabModel>()),
         ChangeNotifierProvider(create: (_) => locator<AuthModel>()),
         ChangeNotifierProvider(create: (_) => locator<SupplierModel>()),
         ChangeNotifierProvider(create: (_) => locator<ItemModel>()),
         ChangeNotifierProvider(create: (_) => locator<PurchaseModel>()),
+        ChangeNotifierProvider(create: (_) => locator<PaymentModel>()),
+
+        // ChangeNotifierProxyProvider<SupplierModel, PurchaseModel>(
+        //   create: (context) => PurchaseModel(),
+        //   update: (context, supplier, purchase) {
+        //     purchase.supplier = supplier;
+        //     return purchase;
+        //   },
+        // ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -53,7 +61,7 @@ class MyApp extends StatelessWidget {
         ),
         theme: lightAppTheme,
         navigatorKey: locator<NavigationService>().navigatorKey,
-        initialRoute: AppRoutes.layout,
+        initialRoute: AppRoutes.splash,
         onGenerateRoute: Router.generateRoute,
       ),
     );

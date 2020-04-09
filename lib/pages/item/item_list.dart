@@ -37,23 +37,27 @@ class ItemList extends StatelessWidget {
                               overflow: TextOverflow.ellipsis,
                             ),
                             subtitle: Text(
-                              '${model.items[index].purchasePrice}',
+                              'Stock ${model.items[index].purchasePrice}',
                               overflow: TextOverflow.ellipsis,
                             ),
                             trailing: Text(
                                 '${model.items[index].openingStock}${model.items[index].unit}'),
                             onTap: () {
+                              var arguments = {
+                                'item': model.items[index],
+                                'itemModel': model,
+                              };
                               Navigator.pushNamed(
                                   context, AppRoutes.item_detail,
-                                  arguments: model.items[index]);
+                                  arguments: arguments);
                             },
                           ),
                         ),
                       )
                 : Center(
                     child: CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation(
-                          Theme.of(context).primaryColor),
+                      valueColor:
+                          AlwaysStoppedAnimation(Theme.of(context).accentColor),
                     ),
                   ));
       },

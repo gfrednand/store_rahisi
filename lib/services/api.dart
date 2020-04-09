@@ -18,22 +18,10 @@ class Api {
     return ref.getDocuments();
   }
 
-  streamDataCollection() {
-    try {
-      ref.snapshots().listen((snapShot) {
-        if (snapShot.documents.isNotEmpty) {
-          return snapShot.documents;
-             
-        }
-        return 'Nothing Found';
-      });
-    } catch (e) {
-      if (e is PlatformException) {
-        return e.message;
-      }
+  Stream<QuerySnapshot> streamDataCollection() {
+    
+    return  ref.snapshots();
 
-      return e.toString();
-    }
   }
 
   Future<DocumentSnapshot> getDocumentById(String id) {

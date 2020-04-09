@@ -16,9 +16,10 @@ class AuthModel extends BaseModel {
   String _selectedRole = 'Select a User Role';
   String get selectedRole => _selectedRole;
   logout() async {
-    setBusy(true);
+
     await _authService.logOut();
-    setBusy(false);
+    return true;
+ 
   }
 
   void setSelectedRole(dynamic role) {

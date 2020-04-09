@@ -14,5 +14,6 @@ static const supplier = "supplier";
 static const supplier_detail = "supplier_detail";
 static const item_detail = "item_detail";
 static const purchase_detail = "purchase_detail";
+static const purchase_add = "purchase_add";
 
 }

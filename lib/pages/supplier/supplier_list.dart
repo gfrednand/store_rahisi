@@ -45,9 +45,13 @@ class SupplierList extends StatelessWidget {
                                 overflow: TextOverflow.ellipsis,
                               ),
                               onTap: () {
+                                var arguments = {
+                                  'supplier': model.suppliers[index],
+                                  'supplierModel': model,
+                                };
                                 Navigator.pushNamed(
                                     context, AppRoutes.supplier_detail,
-                                    arguments: model.suppliers[index]);
+                                    arguments: arguments);
                               },
                             ),
                           ),
@@ -55,7 +59,7 @@ class SupplierList extends StatelessWidget {
                   : Center(
                       child: CircularProgressIndicator(
                         valueColor: AlwaysStoppedAnimation(
-                            Theme.of(context).primaryColor),
+                            Theme.of(context).accentColor),
                       ),
                     );
             }));

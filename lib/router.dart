@@ -6,6 +6,7 @@ import 'package:storeRahisi/pages/item/item_detail.dart';
 import 'package:storeRahisi/pages/layout_page.dart';
 import 'package:storeRahisi/pages/login_page.dart';
 import 'package:storeRahisi/pages/purchase/purchase_detail.dart';
+import 'package:storeRahisi/pages/purchase/purchase_add.dart';
 import 'package:storeRahisi/pages/register_page.dart';
 import 'package:storeRahisi/pages/splash_page.dart';
 import 'package:storeRahisi/pages/supplier/supplier_detail.dart';
@@ -40,24 +41,34 @@ class Router {
         return MaterialPageRoute(builder: (_) => SupplierList());
         break;
       case AppRoutes.supplier_detail:
-        var supplier = settings.arguments as Supplier;
+        var args = settings.arguments as Map<String, dynamic>;
         return MaterialPageRoute(
             builder: (_) => SupplierDetail(
-                  supplier: supplier,
+                  supplier: args['supplier'],
+                  supplierModel: args['supplierModel'],
                 ));
         break;
       case AppRoutes.item_detail:
-        var item = settings.arguments as Item;
+        var args = settings.arguments as Map<String, dynamic>;
         return MaterialPageRoute(
             builder: (_) => ItemDetail(
-                  item: item,
+                  itemModel: args['itemModel'],
+                  item: args['item'],
                 ));
         break;
       case AppRoutes.purchase_detail:
-        var purchase = settings.arguments as Purchase;
+        var args = settings.arguments as Map<String, dynamic>;
         return MaterialPageRoute(
             builder: (_) => PurchaseDetail(
-                  purchase: purchase,
+                  purchaseModel: args['purchaseModel'],
+                  purchase: args['purchase'],
+                ));
+        break;
+      case AppRoutes.purchase_add:
+        var title = settings.arguments as String;
+        return MaterialPageRoute(
+            builder: (_) => PurchaseAdd(
+                  title: title,
                 ));
         break;
       default:
