@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:storeRahisi/constants/routes.dart';
 import 'package:storeRahisi/models/index.dart';
 import 'package:storeRahisi/pages/base_view.dart';
+import 'package:storeRahisi/providers/payment_model.dart';
 import 'package:storeRahisi/providers/purchase_model.dart';
 import 'package:storeRahisi/providers/supplier_model.dart';
 
@@ -26,6 +27,16 @@ class PurchaseList extends StatelessWidget {
                           Supplier supplier = supplierModel.getSupplierById(
                               model.purchases[index].supplierId);
                           model.purchases[index].supplier = supplier?.name;
+                          PaymentModel paymentModel =
+                              Provider.of<PaymentModel>(context);
+                          List<Payment> payments =
+                              paymentModel.getPaymentsByPurchaseId(
+                                  model.purchases[index].id);
+                          double paidAmount = 0.0;
+                          payments.forEach((payment) {
+                            paidAmount = paidAmount + payment.amount;
+                          });
+                          model.purchases[index].paidAmount = paidAmount;
                           return Card(
                             child: ListTile(
                               leading: ExcludeSemantics(
@@ -57,8 +68,8 @@ class PurchaseList extends StatelessWidget {
                                   ),
                                 ],
                               ),
-                              trailing:
-                                  Text('${model.purchases[index].grandTotalAmount}'),
+                              trailing: Text(
+                                  '${model.purchases[index].grandTotalAmount}'),
                               onTap: () {
                                 var arguments = {
                                   'purchase': model.purchases[index],

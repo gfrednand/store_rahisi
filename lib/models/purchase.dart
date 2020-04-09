@@ -15,6 +15,7 @@ class Purchase {
   String id;
   String purchaseDate;
   String updatedAt;
+  String referenceNumber;
   bool active;
   String supplierId;
   String supplier;
@@ -25,6 +26,7 @@ class Purchase {
   String userId;
   Purchase(
       {String id,
+      String referenceNumber,
       @required this.userId,
       this.active,
       this.supplierId,
@@ -37,12 +39,16 @@ class Purchase {
       this.updatedAt})
       : this.purchaseDate = purchaseDate ??
             new DateFormat('MMM dd, yyyy HH:mm').format(new DateTime.now()),
-        this.id = id ?? Uuid().generateV4();
-
+        this.id = id ?? Uuid().generateV4(),
+        this.referenceNumber = referenceNumber ??
+            new DateFormat('yyyy/MM').format(new DateTime.now()) +
+                'P-' +
+                DateFormat('dd-HHmm').format(new DateTime.now());
 
   factory Purchase.fromMap(Map<String, dynamic> json, String id) => Purchase(
-        id: id ?? '',
+        id: json['id'],
         userId: json['userId'],
+        referenceNumber: json['referenceNumber'],
         active: json["active"],
         supplierId: json["supplierId"],
         purchaseDate: json["purchaseDate"],
@@ -55,6 +61,7 @@ class Purchase {
   Map<String, dynamic> toMap() => {
         "id": id,
         'userId': userId,
+        'referenceNumber': referenceNumber,
         "active": active,
         "supplierId": supplierId,
         "purchaseDate": purchaseDate,

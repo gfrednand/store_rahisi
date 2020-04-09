@@ -45,7 +45,6 @@ class _SupplierFormState extends State<SupplierForm> {
 
   @override
   Widget build(BuildContext context) {
-    SupplierModel supplierModel = Provider.of<SupplierModel>(context);
 
     // Build a Form widget using the _formKey created above.
     return BaseView<SupplierModel>(
@@ -53,7 +52,7 @@ class _SupplierFormState extends State<SupplierForm> {
         builder: (context, model, child) {
           return Container(
             padding: const EdgeInsets.all(20.0),
-            child: supplierModel.busy
+            child: model.busy
                 ? Center(
                     child: CircularProgressIndicator(),
                   )
@@ -126,7 +125,7 @@ class _SupplierFormState extends State<SupplierForm> {
                               return null;
                             },
                           ),
-                          supplierModel.busy
+                          model.busy
                               ? Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Center(
@@ -149,7 +148,7 @@ class _SupplierFormState extends State<SupplierForm> {
                                           name: nameController.text,
                                           phoneNumber:
                                               phoneNumberController.text);
-                                      supplierModel.addSupplier(supplier);
+                                      model.addSupplier(supplier);
                                
                                     }
                                   },

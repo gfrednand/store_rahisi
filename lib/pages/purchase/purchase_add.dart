@@ -5,6 +5,7 @@ import 'package:storeRahisi/pages/purchase/add_item_form.dart';
 import 'package:storeRahisi/providers/item_model.dart';
 import 'package:storeRahisi/providers/purchase_model.dart';
 import 'package:storeRahisi/models/index.dart';
+import 'package:storeRahisi/providers/supplier_model.dart';
 import 'package:storeRahisi/widgets/custom_modal_sheet.dart';
 
 class PurchaseAdd extends StatefulWidget {
@@ -23,7 +24,7 @@ class _PurchaseAddState extends State<PurchaseAdd> {
   Widget build(BuildContext context) {
     ItemModel itemModel = Provider.of<ItemModel>(context);
     return BaseView<PurchaseModel>(
-        onModelReady: (model) => model.getSuppliers(),
+        // onModelReady: (model) => model.getSuppliers(),
         builder: (context, model, child) {
           return Scaffold(
             appBar: buildAppBar(model, context),
@@ -62,6 +63,7 @@ class _PurchaseAddState extends State<PurchaseAdd> {
 
   Column buildBody(PurchaseModel model, BuildContext context) {
     var items = model.selectedItems;
+    SupplierModel supplierModel = Provider.of<SupplierModel>(context);
     return Column(
       children: <Widget>[
         Center(
@@ -72,7 +74,7 @@ class _PurchaseAddState extends State<PurchaseAdd> {
               child: new DropdownButton<Supplier>(
                 hint: Text('Select Supplier'),
                 value: _supplier,
-                items: model.suppliers.map((Supplier value) {
+                items: supplierModel.suppliers.map((Supplier value) {
                   return new DropdownMenuItem<Supplier>(
                     value: value,
                     child: new Text(value.name),

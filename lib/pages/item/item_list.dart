@@ -37,7 +37,7 @@ class ItemList extends StatelessWidget {
                               overflow: TextOverflow.ellipsis,
                             ),
                             subtitle: Text(
-                              'Stock ${model.items[index].purchasePrice}',
+                              'Stock: ${model.items[index].quantity?? 0}',
                               overflow: TextOverflow.ellipsis,
                             ),
                             trailing: Text(

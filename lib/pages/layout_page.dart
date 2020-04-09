@@ -271,7 +271,7 @@ class _LayoutPageState extends State<LayoutPage> with TickerProviderStateMixin {
                       onPressed: () {
                         _currentIndex == 0
                             ? _showModalSheetAppBar(
-                                context, 'Add Product', ItemForm(), 0.81)
+                                context, 'Add Product', ItemForm(), 0.67)
                             : _currentIndex == 1
                                 ? _showModalSheetAppBar(context, 'Add Supplier',
                                     SupplierForm(), 0.7)

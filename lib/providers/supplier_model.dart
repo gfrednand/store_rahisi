@@ -6,6 +6,7 @@ import 'package:storeRahisi/providers/base_model.dart';
 import 'package:storeRahisi/services/api.dart';
 import 'package:storeRahisi/models/supplier.dart';
 import 'package:storeRahisi/services/dialog_service.dart';
+import 'package:storeRahisi/services/navigation_service.dart';
 
 class SupplierModel extends BaseModel {
   // Api _api = locator<Api>();
@@ -19,7 +20,10 @@ class SupplierModel extends BaseModel {
 
   Supplier _supplier;
   Supplier get supplier => _supplier;
+
+  bool get _editting => _supplier != null;
   final DialogService _dialogService = locator<DialogService>();
+  NavigationService _navigationService = locator<NavigationService>();
 
   final StreamController<List<Supplier>> _supplierController =
       StreamController<List<Supplier>>.broadcast();
@@ -89,8 +93,30 @@ class SupplierModel extends BaseModel {
 
   addSupplier(Supplier data) async {
     setBusy(true);
-    var result = await _api.addDocument(data.toMap());
-    _documentID = result.documentID;
+
+    var result;
+
+    data.userId = currentUser.id;
+    if (!_editting) {
+      result = await _api.addDocument(data.toMap());
+    } else {
+      result = await _api.updateDocument(data.toMap(), data.id);
+    }
+
     setBusy(false);
+
+    if (result is String) {
+      await _dialogService.showDialog(
+        title: 'Cound not create supplier',
+        description: result,
+      );
+    } else {
+      await _dialogService.showDialog(
+        title: 'Supplier successfully Added',
+        description: 'Supplier has been created',
+      );
+    }
+
+    _navigationService.pop();
   }
 }

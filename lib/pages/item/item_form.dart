@@ -96,14 +96,14 @@ class ItemForm extends StatelessWidget {
                 //   textInputType: TextInputType.numberWithOptions(),
                 // ),
                 // verticalSpaceSmall,
-                // InputField(
-                //   smallVersion: true,
-                //   isReadOnly: model.busy,
-                //   placeholder: 'Opening Stock',
-                //   controller: openingStockController,
-                //   textInputType: TextInputType.numberWithOptions(),
-                // ),
-                // verticalSpaceSmall,
+                InputField(
+                  smallVersion: true,
+                  isReadOnly: model.busy,
+                  placeholder: 'Opening Stock',
+                  controller: openingStockController,
+                  textInputType: TextInputType.numberWithOptions(),
+                ),
+                verticalSpaceSmall,
                 InputField(
                   smallVersion: true,
                   isReadOnly: model.busy,
@@ -136,9 +136,9 @@ class ItemForm extends StatelessWidget {
                           description: descriptionController.text,
                           name: nameController.text,
                           openingStock: int.parse(openingStockController.text),
-                          salePrice: double.parse(salePriceController.text),
-                          purchasePrice:
-                              double.parse(purchasePriceController.text),
+                          // salePrice: double.parse(salePriceController.text),
+                          // purchasePrice:
+                          //     double.parse(purchasePriceController.text),
                           userId: null,
                         ));
                         _formKey.currentState.reset();

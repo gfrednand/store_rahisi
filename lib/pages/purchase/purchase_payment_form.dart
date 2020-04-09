@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:storeRahisi/constants/ui_helpers.dart';
 import 'package:storeRahisi/models/index.dart';
+import 'package:storeRahisi/providers/item_model.dart';
+import 'package:storeRahisi/providers/payment_model.dart';
+import 'package:storeRahisi/widgets/busy_button.dart';
 
 class PurchasePaymentForm extends StatefulWidget {
-  final List<Item> items;
+  final double dueAmount;
+  final Purchase purchase;
 
-  const PurchasePaymentForm({Key key, this.items}) : super(key: key);
+  const PurchasePaymentForm({Key key, this.dueAmount, this.purchase})
+      : super(key: key);
   @override
   _PurchasePaymentFormState createState() => _PurchasePaymentFormState();
 }
@@ -14,15 +20,19 @@ class _PurchasePaymentFormState extends State<PurchasePaymentForm> {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   TextEditingController paidAmountController;
-  Item _item;
+  TextEditingController descriptionController;
+  String _paymentMethod;
   @override
   void initState() {
-    paidAmountController = new TextEditingController();
+    paidAmountController =
+        new TextEditingController(text: widget.dueAmount.toString());
+    descriptionController = new TextEditingController();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    PaymentModel paymentModel = Provider.of<PaymentModel>(context);
     return Container(
       padding: const EdgeInsets.all(20.0),
       child: SingleChildScrollView(
@@ -36,23 +46,22 @@ class _PurchasePaymentFormState extends State<PurchasePaymentForm> {
                   return InputDecorator(
                     decoration: InputDecoration(
                       icon: const Icon(Icons.texture),
-                      labelText: 'Select Item',
+                      labelText: 'Payment Method',
                     ),
-                    isEmpty: widget.items == null,
                     child: new DropdownButtonHideUnderline(
                       child: new DropdownButton(
-                        value: _item,
+                        value: _paymentMethod,
                         isDense: true,
-                        onChanged: (Item newValue) {
+                        onChanged: (String newValue) {
                           setState(() {
-                            _item = newValue;
+                            _paymentMethod = newValue;
                             state.didChange(newValue);
                           });
                         },
-                        items: widget.items.map((Item value) {
+                        items: ['Cash', 'Cheque', 'Others'].map((String value) {
                           return new DropdownMenuItem(
                             value: value,
-                            child: new Text(value.name),
+                            child: new Text(value),
                           );
                         }).toList(),
                       ),
@@ -66,19 +75,38 @@ class _PurchasePaymentFormState extends State<PurchasePaymentForm> {
                 controller: paidAmountController,
                 decoration: const InputDecoration(
                   icon: const Icon(Icons.attach_money),
-                  hintText: '0',
                   labelText: 'Paid Price',
                 ),
               ),
               verticalSpaceSmall,
+              new TextFormField(
+                controller: descriptionController,
+                decoration: const InputDecoration(
+                  icon: const Icon(Icons.event_note),
+                  labelText: 'Notes',
+                ),
+              ),
+              verticalSpaceSmall,
               Center(
-                child: RaisedButton(
-                  onPressed: () {
-                    _item.paidAmount = double.parse(paidAmountController.text);
-                    _item.id = _item.id ?? '';
-                    Navigator.pop(context);
+                child: BusyButton(
+                  title: 'Submit',
+                  busy: paymentModel.busy,
+                  onPressed: () async {
+                    if (_formKey.currentState.validate()) {
+                      // If the form is valid, display a Snackbar.
+                      paymentModel.savePayment(
+                          data: Payment(
+                        amount: double.parse(paidAmountController.text),
+                        method: _paymentMethod,
+                        type: 'Debit',
+                        note: descriptionController.text,
+                        purchaseId: widget.purchase.id,
+                        supplierId: widget.purchase.id,
+                        userId: null,
+                      ));
+                      _formKey.currentState.reset();
+                    }
                   },
-                  child: Text('Submit'),
                 ),
               ),
             ],

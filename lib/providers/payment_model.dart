@@ -15,7 +15,7 @@ class PaymentModel extends BaseModel {
 
   final StreamController<List<Payment>> _paymentsController =
       StreamController<List<Payment>>.broadcast();
-  List<Payment> _payments;
+  List<Payment> _payments = [];
   List<Payment> get payments => _payments;
 
   Payment _payment;
@@ -53,6 +53,13 @@ class PaymentModel extends BaseModel {
     });
   }
 
+  List<Payment> getPaymentsByPurchaseId(String id) {
+    if (_payments.length == 0) {
+      listenToPayments();
+    }
+    return _payments.where((payment) => payment.purchaseId == id).toList();
+  }
+
   removePayment(String id) async {
     var dialogResponse = await _dialogService.showConfirmationDialog(
       title: 'Are you sure?',
@@ -76,7 +83,7 @@ class PaymentModel extends BaseModel {
 
       result = await _api.updateDocument(data.toMap(), data.id);
     }
-
+    
     // setBusy(false);
 
     // if (result is String) {
@@ -91,6 +98,6 @@ class PaymentModel extends BaseModel {
     //   );
     // }
 
-    _navigationService.pop();
+    // _navigationService.pop();
   }
 }

@@ -10,6 +10,7 @@ String supplierToJson(Supplier data) => json.encode(data.toMap());
 
 class Supplier {
   String id;
+  String userId;
   String name;
   bool active;
   String contactPerson;
@@ -20,6 +21,7 @@ class Supplier {
 
   Supplier({
     this.id,
+    this.userId,
     this.name,
     this.active,
     this.contactPerson,
@@ -32,6 +34,7 @@ class Supplier {
   factory Supplier.fromMap(Map<String, dynamic> json, String id) => Supplier(
         id: id ?? '',
         name: json["name"] ?? '',
+        userId: json["userId"] ?? '',
         active: json["active"],
         contactPerson: json["contactPerson"] ?? '',
         phoneNumber: json["phoneNumber"] ?? '',
@@ -43,6 +46,7 @@ class Supplier {
   Map<String, dynamic> toMap() => {
         "id": id,
         "name": name,
+        "userId": userId,
         "active": active,
         "contactPerson": contactPerson,
         "phoneNumber": phoneNumber,

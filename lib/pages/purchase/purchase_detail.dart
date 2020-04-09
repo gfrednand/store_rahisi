@@ -6,6 +6,7 @@ import 'package:storeRahisi/models/purchase.dart';
 import 'package:storeRahisi/pages/purchase/purchase_form.dart';
 import 'package:storeRahisi/pages/purchase/purchase_payment_form.dart';
 import 'package:storeRahisi/providers/item_model.dart';
+import 'package:storeRahisi/providers/payment_model.dart';
 import 'package:storeRahisi/providers/purchase_model.dart';
 import 'package:storeRahisi/providers/supplier_model.dart';
 import 'package:storeRahisi/widgets/custom_modal_sheet.dart';
@@ -44,7 +45,11 @@ class _PurchaseDetailState extends State<PurchaseDetail> {
   @override
   Widget build(BuildContext context) {
     List<String> tabs = ['Details', 'Items', 'Payment History', 'Make Payment'];
+    PaymentModel paymentModel = Provider.of<PaymentModel>(context);
+    List<Payment> payments =
+        paymentModel.getPaymentsByPurchaseId(widget.purchase.id);
 
+    double dueAmount = widget.purchase.grandTotalAmount - widget.purchase.paidAmount;
     return DefaultTabController(
       length: tabs.length,
       child: Scaffold(
@@ -82,6 +87,10 @@ class _PurchaseDetailState extends State<PurchaseDetail> {
                     title: Text('${widget.purchase.supplier}'),
                     subtitle: Text('Supplier'),
                   ),
+                  ListTile(
+                    title: Text('${widget.purchase.referenceNumber}'),
+                    subtitle: Text('Reference No'),
+                  ),
                   Divider(
                     thickness: 10.0,
                   ),
@@ -94,7 +103,7 @@ class _PurchaseDetailState extends State<PurchaseDetail> {
                     subtitle: Text('Paid Amount'),
                   ),
                   ListTile(
-                    title: Text('${widget.purchase.dueAmount}'),
+                    title: Text('$dueAmount'),
                     subtitle: Text('Due Amount'),
                   ),
                   Divider(
@@ -109,56 +118,92 @@ class _PurchaseDetailState extends State<PurchaseDetail> {
                   ItemModel itemModel = Provider.of<ItemModel>(context);
                   Item item =
                       itemModel.getItemById(widget.purchase.items[index].id);
-                  return ListTile(
-                    leading: ExcludeSemantics(
-                      child: CircleAvatar(
-                        radius: 30.0,
-                        backgroundColor: Theme.of(context).primaryColor,
-                        child: Text(
-                          item?.name?.substring(0, 2)?.toUpperCase(),
-                          style:
-                              TextStyle(color: Theme.of(context).accentColor),
+                  return Card(
+                    child: ListTile(
+                      leading: ExcludeSemantics(
+                        child: CircleAvatar(
+                          radius: 30.0,
+                          backgroundColor: Theme.of(context).primaryColor,
+                          child: Text(
+                            item?.name?.substring(0, 2)?.toUpperCase(),
+                            style:
+                                TextStyle(color: Theme.of(context).accentColor),
+                          ),
                         ),
                       ),
+                      title: Text(
+                        '${item?.name}',
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Purchase Price: ${widget.purchase.items[index].purchasePrice} @1',
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          Text(
+                            'Sale Price: ${widget.purchase.items[index].salePrice} @1',
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
+                      ),
+                      trailing:
+                          Text('${widget.purchase.items[index].quantity}'),
+                      onTap: () {
+                        // Navigator.pushNamed(
+                        //     context, AppRoutes.purchase_detail,
+                        //     arguments: items[index]);
+                      },
                     ),
-                    title: Text(
-                      '${item?.name}',
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Purchase Price: ${widget.purchase.items[index].purchasePrice} @1',
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        Text(
-                          'Sale Price: ${widget.purchase.items[index].salePrice} @1',
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ],
-                    ),
-                    trailing: Text('${widget.purchase.items[index].quantity}'),
-                    onTap: () {
-                      // Navigator.pushNamed(
-                      //     context, AppRoutes.purchase_detail,
-                      //     arguments: items[index]);
-                    },
                   );
                 }),
-            Container(
-              child: Center(
-                child: Text('No History'),
-              ),
-            ),
-            widget.purchase.paidAmount == 0
-                ? Container(
+            ListView.builder(
+                itemCount: payments.length,
+                itemBuilder: (buildContext, index) {
+                  SupplierModel supplierModel =
+                      Provider.of<SupplierModel>(context);
+                  Supplier supplier =
+                      supplierModel.getSupplierById(payments[index].supplierId);
+                  return Card(
+                    child: ListTile(
+                      leading: ExcludeSemantics(
+                        child: CircleAvatar(
+                          radius: 30.0,
+                          backgroundColor: Theme.of(context).primaryColor,
+                          child: Text(
+                            'P',
+                            style:
+                                TextStyle(color: Theme.of(context).accentColor),
+                          ),
+                        ),
+                      ),
+                      title: Text(
+                        '${supplier?.name}',
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      subtitle: Text(
+                        '${payments[index]?.method} | ${payments[index]?.type}',
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      trailing: Text(' ${payments[index]?.amount} /='),
+                      onTap: () {
+                        // Navigator.pushNamed(
+                        //     context, AppRoutes.purchase_detail,
+                        //     arguments: items[index]);
+                      },
+                    ),
+                  );
+                }),
+            dueAmount > 0
+                ? PurchasePaymentForm(
+                        dueAmount: dueAmount,
+                        purchase: widget.purchase,
+                  )
+                : Container(
                     child: Center(
                       child: Text('No Due'),
                     ),
-                  )
-                : PurchasePaymentForm(
-                    items: [],
                   ),
           ],
         ),

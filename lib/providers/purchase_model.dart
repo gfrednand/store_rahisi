@@ -18,8 +18,8 @@ class PurchaseModel extends BaseModel {
 
   List<Purchase> _purchases;
   List<Purchase> _searchPurchases;
-  List<Supplier> _suppliers;
-  List<Supplier> get suppliers => _suppliers;
+  // List<Supplier> _suppliers;
+  // List<Supplier> get suppliers => _suppliers;
   List<Item> _items;
   List<Item> get items => _items;
   List<Purchase> get purchases => _purchases;
@@ -33,14 +33,14 @@ class PurchaseModel extends BaseModel {
   Purchase _purchase;
   bool get _editting => _purchase != null;
 
-  SupplierModel _supplierModel = SupplierModel();
+  // SupplierModel _supplierModel = SupplierModel();
   PaymentModel _paymentModel = PaymentModel();
 
-  getSuppliers() {
-    _supplierModel.fetchSuppliers();
-    _suppliers = _supplierModel.suppliers;
-    // setBusy(false);
-  }
+  // getSuppliers() {
+  //   _supplierModel.fetchSuppliers();
+  //   _suppliers = _supplierModel.suppliers;
+  //   // setBusy(false);
+  // }
 
   Item findItemById(String id) {
     return _items.firstWhere((element) => element.id == id);
@@ -96,6 +96,24 @@ class PurchaseModel extends BaseModel {
     return pur;
   }
 
+  List<Item> getUnPaidItems(String id) {
+    List<Item> items = [];
+
+    Purchase p = _purchases.firstWhere(
+      (purchase) => purchase.id == id,
+      orElse: () => null,
+    );
+    if (p != null) {
+      p.items.forEach((item) {
+        if ((item.purchasePrice - item.paidAmount) > 0) {
+          items.add(item);
+        }
+      });
+    }
+
+    return items;
+  }
+
   getPurchaseByIdFromServer(String id) async {
     setBusy(true);
     var doc = await _api.getDocumentById(id);
@@ -123,7 +141,6 @@ class PurchaseModel extends BaseModel {
     data.userId = currentUser.id;
     if (!_editting) {
       result = await _api.addDocument(data.toMap());
-
     } else {
       result = await _api.updateDocument(data.toMap(), data.id);
     }
@@ -136,12 +153,12 @@ class PurchaseModel extends BaseModel {
         description: result,
       );
     } else {
-          await _paymentModel.savePayment(
+      await _paymentModel.savePayment(
           data: Payment(
               amount: data.paidAmount,
               method: 'Cash',
               purchaseId: data.id,
-              note: 'Paid For ${_purchase.id}',
+              note: 'Paid For ${data.id}',
               supplierId: data.supplierId,
               type: 'Debit'));
       _selectedItems = [];
