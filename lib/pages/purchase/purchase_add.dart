@@ -26,29 +26,29 @@ class _PurchaseAddState extends State<PurchaseAdd> {
     return BaseView<PurchaseModel>(
         // onModelReady: (model) => model.getSuppliers(),
         builder: (context, model, child) {
-          return Scaffold(
-            appBar: buildAppBar(model, context),
-            body: buildBody(model, context),
-            floatingActionButton: _supplier == null || model.busy
-                ? Container()
-                : FloatingActionButton.extended(
-                    onPressed: () {
-                      _showModalSheetAppBar(
-                          context,
-                          'Add Product',
-                          AddItemForm(
-                            purchaseModel: model,
-                            items: itemModel.items ?? [],
-                          ),
-                          0.70);
-                    },
-                    foregroundColor: Colors.white,
-                    label: Text('Add Item'),
-                    icon: Icon(Icons.add),
-                    backgroundColor: Theme.of(context).accentColor,
-                  ),
-          );
-        });
+      return Scaffold(
+        appBar: buildAppBar(model, context),
+        body: buildBody(model, context),
+        floatingActionButton: _supplier == null || model.busy
+            ? Container()
+            : FloatingActionButton.extended(
+                onPressed: () {
+                  _showModalSheetAppBar(
+                      context,
+                      'Add Product',
+                      AddItemForm(
+                        purchaseModel: model,
+                        items: itemModel.items ?? [],
+                      ),
+                      0.70);
+                },
+                foregroundColor: Colors.white,
+                label: Text('Add Item'),
+                icon: Icon(Icons.add),
+                backgroundColor: Theme.of(context).accentColor,
+              ),
+      );
+    });
   }
 
   _showModalSheetAppBar(
@@ -126,9 +126,20 @@ class _PurchaseAddState extends State<PurchaseAdd> {
                             'Sale Price: ${items[index].salePrice} @1',
                             overflow: TextOverflow.ellipsis,
                           ),
+                          Text(
+                            'Quantity: ${items[index].quantity}',
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ],
                       ),
-                      trailing: Text('${items[index].quantity}'),
+                      trailing: IconButton(
+                          icon: Icon(Icons.delete_outline),
+                          onPressed: () {
+                            setState(() {
+                              items.removeWhere(
+                                  (item) => item.id == items[index].id);
+                            });
+                          }),
                       onTap: () {
                         // Navigator.pushNamed(
                         //     context, AppRoutes.purchase_detail,

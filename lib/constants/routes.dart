@@ -16,5 +16,7 @@ static const item_detail = "item_detail";
 static const purchase_detail = "purchase_detail";
 static const purchase_add = "purchase_add";
 static const cart_items = "cart_items";
+static const sale_detail = "sale_detail";
+
 
 }

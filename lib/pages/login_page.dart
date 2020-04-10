@@ -4,6 +4,7 @@ import 'package:storeRahisi/pages/base_view.dart';
 import 'package:storeRahisi/providers/auth_model.dart';
 import 'package:storeRahisi/widgets/busy_button.dart';
 import 'package:storeRahisi/widgets/input_field.dart';
+import 'package:storeRahisi/widgets/busy_overlay.dart';
 
 class LoginPage extends StatelessWidget {
   LoginPage({Key key}) : super(key: key);
@@ -39,7 +40,9 @@ class LoginPage extends StatelessWidget {
         // onModelReady: (model) => model.getUserDetails(),
         builder: (context, model, child) {
       return Scaffold(
-        body: Container(
+        body: BusyOverlay(
+          show: model.busy,
+          child: Container(
           width: pageSize.width,
           height: pageSize.height,
           padding: const EdgeInsets.all(20.0),
@@ -80,7 +83,7 @@ class LoginPage extends StatelessWidget {
                       children: [
                         BusyButton(
                           title: 'Login',
-                          busy: model.busy,
+                          enabled: !model.busy,
                           onPressed: () {
                             if (_loginFormKey.currentState.validate()) {
                               model.login(
@@ -107,7 +110,7 @@ class LoginPage extends StatelessWidget {
               ),
             ),
           ),
-        ),
+        ),)
       );
     });
   }

@@ -11,23 +11,23 @@ String cartToJson(Cart data) => json.encode(data.toMap());
 class Cart {
     String itemId;
     int quantity;
-    double price;
+    double paidAmount;
 
     Cart({
         this.itemId,
         this.quantity,
-        this.price,
+        this.paidAmount,
     });
 
     factory Cart.fromMap(Map<String, dynamic> json) => Cart(
         itemId: json["itemId"],
         quantity: json["quantity"],
-        price: json["price"].toDouble(),
+        paidAmount: json["paidAmount"].toDouble(),
     );
 
     Map<String, dynamic> toMap() => {
         "itemId": itemId,
         "quantity": quantity,
-        "price": price,
+        "paidAmount": paidAmount,
     };
 }

@@ -35,12 +35,13 @@ class Sale {
     this.paymentMethod,
     String referenceNumber,
     this.userId,
-    this.saleDate,
+    String saleDate,
     this.items,
-  })  : this.referenceNumber = referenceNumber ??
+  })  :this.saleDate = saleDate ??
+            new DateFormat('MMM dd, yyyy HH:mm').format(new DateTime.now()), this.referenceNumber = referenceNumber ??
             new DateFormat('yyyy/MM').format(new DateTime.now()) +
                 'S-' +
-                DateFormat('dd-HHmm').format(new DateTime.now());
+                DateFormat('ddHHms').format(new DateTime.now());
 
   factory Sale.fromMap(Map<String, dynamic> json) => Sale(
         id: json["id"],

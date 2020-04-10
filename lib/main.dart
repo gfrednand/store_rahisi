@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:storeRahisi/constants/routes.dart';
@@ -9,9 +10,14 @@ import 'package:storeRahisi/router.dart';
 import 'package:storeRahisi/services/dialog_service.dart';
 import 'package:storeRahisi/services/navigation_service.dart';
 
-void main() {
+Future<void> main() async {
   setupLocator();
   WidgetsFlutterBinding.ensureInitialized();
+  final Firestore firestore = Firestore();
+   await firestore.settings(
+    cacheSizeBytes: 10000000,
+    persistenceEnabled: true,
+  );
   runApp(MyApp());
 }
 

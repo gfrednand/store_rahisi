@@ -59,17 +59,21 @@ class PurchaseList extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
+                                    'Bill No: ${model.purchases[index]?.referenceNumber}',
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  Text(
                                     'Supplier: ${model.purchases[index]?.supplier}',
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                   Text(
-                                    'Paid: ${model.purchases[index]?.paidAmount}',
+                                    'Paid: ${model.purchases[index]?.paidAmount}/=',
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                 ],
                               ),
                               trailing: Text(
-                                  '${model.purchases[index].grandTotalAmount}'),
+                                  '${model.purchases[index].grandTotalAmount}/='),
                               onTap: () {
                                 var arguments = {
                                   'purchase': model.purchases[index],

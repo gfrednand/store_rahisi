@@ -1,8 +1,9 @@
-
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'package:storeRahisi/models/index.dart';
 import 'package:storeRahisi/pages/pos/pos_item_list.dart';
+import 'package:storeRahisi/providers/sale_model.dart';
 
 typedef onSellCallback = Function(
     String productId, double profit, int quantity, double amount);
@@ -12,15 +13,15 @@ class POSTotalBar extends StatelessWidget {
   final Size screenSize;
   final double total;
   final double subtotal;
+  final SaleModel saleModel;
 
   final List<Cart> carts;
   POSTotalBar({
     @required this.context,
     @required this.carts,
-
     @required this.screenSize,
     @required this.total,
-    @required this.subtotal,
+    @required this.subtotal, this.saleModel,
   });
   @override
   Widget build(context) {
@@ -67,38 +68,40 @@ class POSTotalBar extends StatelessWidget {
                 ],
               ),
               //  SizedBox(height: 12.0),
-             total <= 0
-                      ? new Container()
-                      : MaterialButton(
-                          color: Theme.of(context).accentColor,
+              total <= 0
+                  ? new Container()
+                  : MaterialButton(
+                      color: Theme.of(context).accentColor,
 //                          textColor: Colors.white,
-                          child: new Text("Sell"),
-                          onPressed: () {
-                          
-                             List<Cart> c = List.from(carts);
+                      child: new Text("Sell"),
+                      onPressed: () async {
+                        List<Item> items = [];
+                        List<Cart> c = List.from(carts);
+                        c.forEach((cart) {
+                          items.add(Item(
+                              name: '',
+                              id: cart.itemId,
+                              paidAmount: cart.paidAmount,
+                              quantity: cart.quantity));
+                        });
+                        double tax = 0.0;
+                        double discount = 0.0;
 
-                            Navigator.of(context).pop();
-
-                            // await new Future.delayed(
-                            //     const Duration(seconds: 1));
-
-                            // Navigator.push(
-                            //   context,
-                            //   MaterialPageRoute(
-                            //       builder: (context) => PosItemList()),
-                            // );
-                   
-                        
-                          },
-//                          splashColor: Colors.redAccent,
-                        )
-             
+                        await saleModel.saveSale(
+                            data: Sale(
+                                discount: discount,
+                                grandTotal: (total + tax) - discount,
+                                paymentMethod: 'Cash',
+                                subTotal: total - discount,
+                                tax: tax,
+                                items: items));
+                      },
+                         splashColor: Colors.redAccent,
+                    )
             ],
           ),
         ),
       ),
     );
   }
-
-
 }

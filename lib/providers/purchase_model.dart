@@ -16,6 +16,7 @@ class PurchaseModel extends BaseModel {
   final StreamController<List<Purchase>> _purchasesController =
       StreamController<List<Purchase>>.broadcast();
 
+  int _count = 0;
   List<Purchase> _purchases = [];
   List<Purchase> _searchPurchases;
   // List<Supplier> _suppliers;
@@ -111,8 +112,19 @@ class PurchaseModel extends BaseModel {
     return pur;
   }
 
+  List<Purchase> getPurchaseHistoryBySupplierId(String id) {
+    List<Purchase> purs = [];
+    _purchases.forEach((purchase) {
+      if (purchase.supplierId == id) {
+        purs.add(purchase);
+      }
+    });
+    return purs;
+  }
+
   int getTotalPurchaseByItemId(String id) {
     int total = 0;
+
     if (_purchases.length == 0) {
       listenToPurchases();
     }
@@ -169,7 +181,7 @@ class PurchaseModel extends BaseModel {
     setBusy(true);
     var result;
 
-    data.userId = currentUser.id;
+    data.userId = currentUser?.id;
     if (!_editting) {
       result = await _api.addDocument(data.toMap());
     } else {

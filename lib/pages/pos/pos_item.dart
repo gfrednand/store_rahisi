@@ -107,10 +107,10 @@ class _PosItemState extends State<PosItem> {
                       setState(() {
                         if (_itemCount != 0) {
                           _itemCount--;
-                        }
 
-                        quantityController = new TextEditingController(
-                            text: _itemCount.toString());
+                          quantityController = new TextEditingController(
+                              text: _itemCount.toString());
+                        }
                       });
                       widget.item.salePrice = widget.currentPrice;
                       widget.item.quantity = _itemCount;
@@ -125,8 +125,10 @@ class _PosItemState extends State<PosItem> {
                     width: 40.0,
                     child: TextFormField(
                       onChanged: (val) {
-                        _itemCount = int.parse(val);
-                        setCartItem(cartModel);
+                        if (int.parse(val) < widget.quantity) {
+                          _itemCount = int.parse(val);
+                          setCartItem(cartModel);
+                        }
                       },
                       decoration: const InputDecoration(
                         contentPadding:
@@ -144,10 +146,9 @@ class _PosItemState extends State<PosItem> {
                         setState(() {
                           if (_itemCount < widget.quantity) {
                             _itemCount++;
+                            quantityController = new TextEditingController(
+                                text: _itemCount.toString());
                           }
-
-                          quantityController = new TextEditingController(
-                              text: _itemCount.toString());
                         });
                         widget.item.salePrice = widget.currentPrice;
                         widget.item.quantity = _itemCount;

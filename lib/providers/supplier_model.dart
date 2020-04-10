@@ -80,9 +80,23 @@ class SupplierModel extends BaseModel {
   }
 
   removeSupplier(String id) async {
-    setBusy(true);
-    await _api.removeDocument(id);
-    setBusy(false);
+
+     var dialogResponse = await _dialogService.showConfirmationDialog(
+      title: 'Are you sure?',
+      description: 'Do you really want to delete supplier?',
+      confirmationTitle: 'Yes',
+      cancelTitle: 'No',
+    );
+    if (dialogResponse.confirmed) {
+      await _api.removeDocument(id);
+      _navigationService.pop();
+    }
+
+  }
+
+    void setEdittingSupplier(Supplier edittingSupplier) {
+    _supplier = edittingSupplier;
+
   }
 
   updateSupplier(Supplier data, String id) async {
@@ -96,7 +110,7 @@ class SupplierModel extends BaseModel {
 
     var result;
 
-    data.userId = currentUser.id;
+    data.userId = currentUser?.id;
     if (!_editting) {
       result = await _api.addDocument(data.toMap());
     } else {

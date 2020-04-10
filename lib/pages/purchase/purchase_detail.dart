@@ -89,7 +89,7 @@ class _PurchaseDetailState extends State<PurchaseDetail> {
                   ),
                   ListTile(
                     title: Text('${widget.purchase.referenceNumber}'),
-                    subtitle: Text('Reference No'),
+                    subtitle: Text('Bill No'),
                   ),
                   Divider(
                     thickness: 10.0,
@@ -219,7 +219,7 @@ class _PurchaseDetailState extends State<PurchaseDetail> {
             : label == 'Edit'
                 ? _showModalSheetAppBar(
                     context,
-                    'Edit Product',
+                    'Edit Purchase',
                     PurchaseForm(
                       purchase: widget.purchase,
                     ),

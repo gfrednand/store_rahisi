@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 
 class Api {
   final Firestore _db = Firestore.instance;
+
   String path;
   String companyId;
 
@@ -12,25 +13,24 @@ class Api {
 
   Api({this.path, this.companyId}) {
     ref = _db.collection("companies").document(companyId).collection(path);
+    
   }
 
-  Future<QuerySnapshot> getDataCollection() {
+  getDataCollection() {
     return ref.getDocuments();
   }
 
   Stream<QuerySnapshot> streamDataCollection() {
-    
-    return  ref.snapshots();
-
+    return ref.snapshots();
   }
 
-  Future<DocumentSnapshot> getDocumentById(String id) {
+  getDocumentById(String id) {
     return ref.document(id).get();
   }
 
-  Future removeDocument(String id) async {
+  removeDocument(String id) {
     try {
-      await ref.document(id).delete();
+      ref.document(id).delete();
       return true;
     } catch (e) {
       if (e is PlatformException) {
@@ -41,10 +41,10 @@ class Api {
     }
   }
 
-  Future addDocument(Map data) async {
+  addDocument(Map data) {
     try {
-      DocumentReference docRef = await ref.add(data);
-      return docRef.documentID != null;
+      ref.add(data);
+      return true;
     } catch (e) {
       if (e is PlatformException) {
         return e.message;
@@ -54,9 +54,9 @@ class Api {
     }
   }
 
-  Future updateDocument(Map data, String id) async {
+  updateDocument(Map data, String id) {
     try {
-      await ref.document(id).updateData(data);
+      ref.document(id).updateData(data);
       return true;
     } catch (e) {
       if (e is PlatformException) {

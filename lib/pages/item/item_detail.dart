@@ -4,6 +4,7 @@ import 'package:storeRahisi/constants/routes.dart';
 import 'package:storeRahisi/models/index.dart';
 import 'package:storeRahisi/models/item.dart';
 import 'package:storeRahisi/pages/item/item_form.dart';
+import 'package:storeRahisi/providers/index.dart';
 import 'package:storeRahisi/providers/item_model.dart';
 import 'package:storeRahisi/providers/payment_model.dart';
 import 'package:storeRahisi/providers/purchase_model.dart';
@@ -46,7 +47,13 @@ class _ItemDetailState extends State<ItemDetail> {
     PurchaseModel purchaseModel = Provider.of<PurchaseModel>(context);
     List<Purchase> purchases =
         purchaseModel.getPurchaseHistoryByItemId(widget.item.id);
-
+    SaleModel saleModel = Provider.of<SaleModel>(context);
+    List<Sale> sales = saleModel.getSaleHistoryByItemId(widget.item.id);
+    Color color = widget.item.inStock == 0
+        ? Colors.red
+        : widget.item.inStock > widget.item.alertQty
+            ? Colors.green
+            : Colors.orange;
     return DefaultTabController(
       length: tabs.length,
       child: Scaffold(
@@ -75,7 +82,7 @@ class _ItemDetailState extends State<ItemDetail> {
                     children: <Widget>[
                       chipDesign("Print Barcode", Color(0xFF9575cd)),
                       chipDesign("Edit", Color(0xFF4db6ac)),
-                      chipDesign("Delete", Color(0xFFf06292)),
+                   sales.length == 0 && purchases.length == 0 ?   chipDesign("Delete", Color(0xFFf06292)): Container(),
                     ],
                   ),
                   Divider(
@@ -102,15 +109,20 @@ class _ItemDetailState extends State<ItemDetail> {
                   ),
                   ListTile(
                     leading: Icon(Icons.remove_from_queue),
-                    title:
-                        Text('${widget.item.totalSales ?? 0} ${widget.item.unit}'),
+                    title: Text(
+                        '${widget.item.totalSales ?? 0} ${widget.item.unit}'),
                     subtitle: Text('Total Sales'),
                   ),
                   ListTile(
                     leading: Icon(Icons.inbox),
                     title: Text(
-                        '${widget.item.inStock ?? 0}  ${widget.item.unit}'),
-                    subtitle: Text('In Stock'),
+                      '${widget.item.inStock ?? 0}  ${widget.item.unit}',
+                      style:
+                          TextStyle(color: color, fontWeight: FontWeight.bold),
+                    ),
+                    subtitle: Text('In Stock',
+                        style: TextStyle(
+                            color: color, fontWeight: FontWeight.bold)),
                   ),
                   Divider(
                     thickness: 10.0,
@@ -132,7 +144,7 @@ class _ItemDetailState extends State<ItemDetail> {
                 ],
               ),
             ),
-            ListView.builder(
+           purchases.length==0? Center(child: Text('No Purchases'),) :ListView.builder(
                 itemCount: purchases.length,
                 itemBuilder: (buildContext, index) {
                   SupplierModel supplierModel =
@@ -147,7 +159,8 @@ class _ItemDetailState extends State<ItemDetail> {
                       paymentModel.getPaymentsByPurchaseId(purchases[index].id);
                   purchases[index].paidAmount = 0.0;
                   payments.forEach((payment) {
-                    purchases[index].paidAmount  =  purchases[index].paidAmount + payment.amount;
+                    purchases[index].paidAmount =
+                        purchases[index].paidAmount + payment.amount;
                   });
                   return Card(
                     child: ListTile(
@@ -170,16 +183,20 @@ class _ItemDetailState extends State<ItemDetail> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Supplier ${purchases[index]?.supplier}',
+                            'Bill No: ${purchases[index]?.referenceNumber}',
                             overflow: TextOverflow.ellipsis,
                           ),
                           Text(
-                            'Paid ${purchases[index]?.paidAmount}',
+                            'Supplier: ${purchases[index]?.supplier}',
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          Text(
+                            'Paid: ${purchases[index]?.paidAmount}/=',
                             overflow: TextOverflow.ellipsis,
                           ),
                         ],
                       ),
-                      trailing: Text('${purchases[index]?.grandTotalAmount}'),
+                      trailing: Text('${purchases[index]?.grandTotalAmount}/='),
                       onTap: () {
                         // var arguments = {
                         //   'purchase': purchases[index],
@@ -191,7 +208,55 @@ class _ItemDetailState extends State<ItemDetail> {
                     ),
                   );
                 }),
-            Container()
+            sales.length == 0
+                ? Center(
+                    child: Text('No Sales'),
+                  )
+                : ListView.builder(
+                    itemCount: sales.length,
+                    itemBuilder: (buildContext, index) {
+                      return Card(
+                        child: ListTile(
+                          leading: ExcludeSemantics(
+                            child: CircleAvatar(
+                              radius: 25.0,
+                              backgroundColor: Theme.of(context).primaryColor,
+                              child: Text(
+                                'S',
+                                style: TextStyle(
+                                    color: Theme.of(context).accentColor),
+                              ),
+                            ),
+                          ),
+                          title: Text(
+                            '${sales[index]?.saleDate}',
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Ref No: ${sales[index]?.referenceNumber}',
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              Text(
+                                'Paid ${sales[index]?.grandTotal}/=',
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ],
+                          ),
+                          trailing: Text('${sales[index]?.paymentMethod}'),
+                          onTap: () {
+                            // var arguments = {
+                            //   'purchase': purchases[index],
+                            //   'purchaseModel': purchaseModel,
+                            // };
+                            // Navigator.pushNamed(context, AppRoutes.purchase_detail,
+                            //     arguments: arguments);
+                          },
+                        ),
+                      );
+                    }),
           ],
         ),
       ),

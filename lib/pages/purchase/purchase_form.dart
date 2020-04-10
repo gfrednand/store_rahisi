@@ -27,7 +27,7 @@ class PurchaseForm extends StatelessWidget {
       onModelReady: (model) {
         // update the text in the controller
         supplierController.text = purchase?.supplier ?? '';
-        paidAmountController.text = purchase?.paidAmount ?? '';
+        paidAmountController.text = purchase?.paidAmount.toString() ?? '';
 
         model.setEdittingPurchase(purchase);
       },

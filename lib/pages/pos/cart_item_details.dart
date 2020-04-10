@@ -6,17 +6,19 @@ import 'package:storeRahisi/providers/item_model.dart';
 
 class CartItemDetails extends StatelessWidget {
   final Cart cart;
+  final CartModel cartModel;
 
   CartItemDetails({
     Key key,
     @required this.cart,
+    this.cartModel,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
     ItemModel itemModel = Provider.of<ItemModel>(context);
-   Item item = itemModel.getItemById(cart.itemId);
+    Item item = itemModel.getItemById(cart.itemId);
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 10.0),
       width: screenSize.width,
@@ -33,7 +35,7 @@ class CartItemDetails extends StatelessWidget {
                   style: Theme.of(context).textTheme.headline6,
                 ),
                 subtitle: Text(
-                  'Tshs ${cart?.price?? ''}',
+                  'Tshs ${cart?.paidAmount ?? ''}',
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: Theme.of(context).textTheme.subtitle1,
@@ -51,7 +53,6 @@ class CartItemDetails extends StatelessWidget {
                       onPressed: () => showDialog(
                           context: context,
                           builder: (BuildContext context) {
-                            CartModel cartModel = Provider.of<CartModel>(context);
                             return AlertDialog(
                               title: Text('Delete Product From Cart'),
                               content: Text('Are you sure'),
@@ -72,8 +73,11 @@ class CartItemDetails extends StatelessWidget {
                                       height: 24.0,
                                     ),
                                     FlatButton(
-                                        child: Text('OK'), onPressed: () {
+                                        child: Text('OK'),
+                                        onPressed: () {
                                           cartModel.removeItem(item);
+                                             Navigator.of(context).pop();
+                                             
                                         })
                                   ],
                                 ),
@@ -82,19 +86,18 @@ class CartItemDetails extends StatelessWidget {
                           }),
                       icon: Icon(
                         Icons.delete,
-                        color: Theme.of(context).primaryColor,
+                        color: Theme.of(context).errorColor,
                       ),
                       label: Text("Remove",
                           style: TextStyle(
-                              color: Theme.of(context).primaryColor))),
-                  // Text(
-                  //   "x" +
-                  //       cart?.quantity?.toString() ,
-                  //       // +
-                  //       // "=" +
-                  //       // (cart.quantity * price.amount).toString(),
-                  //   style: Theme.of(context).textTheme.headline6,
-                  // )
+                              color: Theme.of(context).errorColor))),
+                  Text(
+                    "x" +
+                        cart?.quantity?.toString() +
+                        "=" +
+                        (cart.quantity * cart.paidAmount).toString(),
+                    style: Theme.of(context).textTheme.headline6,
+                  )
                 ],
               ),
             ],

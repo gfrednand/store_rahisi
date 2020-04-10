@@ -1,10 +1,8 @@
-
 import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:storeRahisi/locator.dart';
 import 'package:storeRahisi/models/index.dart';
-import 'package:storeRahisi/models/sale.dart';
 import 'package:storeRahisi/providers/base_model.dart';
 import 'package:storeRahisi/providers/payment_model.dart';
 import 'package:storeRahisi/services/api.dart';
@@ -12,7 +10,7 @@ import 'package:storeRahisi/services/dialog_service.dart';
 import 'package:storeRahisi/services/navigation_service.dart';
 
 class SaleModel extends BaseModel {
-Api _api = Api(path: 'sales', companyId: '1');
+  Api _api = Api(path: 'sales', companyId: '1');
 
   final StreamController<List<Sale>> _salesController =
       StreamController<List<Sale>>.broadcast();
@@ -21,23 +19,17 @@ Api _api = Api(path: 'sales', companyId: '1');
 
   List<Sale> get sales => _sales;
 
-
-
   final DialogService _dialogService = locator<DialogService>();
   NavigationService _navigationService = locator<NavigationService>();
   PaymentModel _paymentModel = locator<PaymentModel>();
 
-
   Sale _sale;
   bool get _editting => _sale != null;
-
 
   fetchSales() async {
     setBusy(true);
     var result = await _api.getDataCollection();
-    _sales = result.documents
-        .map((doc) => Sale.fromFirestore(doc))
-        .toList();
+    _sales = result.documents.map((doc) => Sale.fromFirestore(doc)).toList();
     setBusy(false);
   }
 
@@ -45,8 +37,7 @@ Api _api = Api(path: 'sales', companyId: '1');
     _api.streamDataCollection().listen((snapshot) {
       if (snapshot.documents.isNotEmpty) {
         var sals = snapshot.documents
-            .map((snapshot) =>
-                Sale.fromFirestore(snapshot))
+            .map((snapshot) => Sale.fromFirestore(snapshot))
             .toList();
 
         _salesController.add(sals);
@@ -100,9 +91,9 @@ Api _api = Api(path: 'sales', companyId: '1');
         }
       });
     });
-
     return total;
   }
+
 
 
   getSaleByIdFromServer(String id) async {
@@ -129,29 +120,26 @@ Api _api = Api(path: 'sales', companyId: '1');
     setBusy(true);
     var result;
 
-    data.userId = currentUser.id;
+    data.userId = currentUser?.id;
+
     if (!_editting) {
       result = await _api.addDocument(data.toMap());
     } else {
       result = await _api.updateDocument(data.toMap(), data.id);
     }
-
     setBusy(false);
 
     if (result is String) {
       await _dialogService.showDialog(
-        title: 'Cound not create purchase',
+        title: 'Cound not sale',
         description: result,
       );
     } else {
       await _dialogService.showDialog(
-        title: 'Purchase successfully Added',
-        description: 'Purchase has been created',
+        title: 'Successful',
+        description: 'Item Sold',
       );
     }
-
     _navigationService.pop();
   }
-
-
 }

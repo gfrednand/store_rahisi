@@ -4,51 +4,43 @@ import 'package:storeRahisi/models/supplier.dart';
 import 'package:storeRahisi/providers/supplier_model.dart';
 import 'package:storeRahisi/widgets/toast.dart';
 import 'package:storeRahisi/pages/base_view.dart';
-class SupplierForm extends StatefulWidget {
-  const SupplierForm({
-    Key key,
+class SupplierForm extends StatelessWidget {
+  final  Supplier supplier;
+  SupplierForm({
+    Key key, this.supplier,
   }) : super(key: key);
 
-  @override
-  _SupplierFormState createState() => _SupplierFormState();
-}
 
-class _SupplierFormState extends State<SupplierForm> {
-  TextEditingController nameController;
-  TextEditingController contactPersonController;
-  TextEditingController phoneNumberController;
-  TextEditingController emailController;
-  TextEditingController addressController;
-  TextEditingController descriptionController;
+  TextEditingController nameController= new TextEditingController();
+  TextEditingController contactPersonController= new TextEditingController();
+  TextEditingController phoneNumberController= new TextEditingController();
+  TextEditingController emailController= new TextEditingController();
+  TextEditingController addressController= new TextEditingController();
+  TextEditingController descriptionController= new TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
 
-  @override
-  void initState() {
-    nameController = new TextEditingController();
-    contactPersonController = new TextEditingController();
-    phoneNumberController = new TextEditingController();
-    emailController = new TextEditingController();
-    addressController = new TextEditingController();
-    descriptionController = new TextEditingController();
-    super.initState();
-  }
 
-  void _showToast(String message, Color backGroundColor, IconData icon) {
-    Toast.show(
-      message: message,
-      context: context,
-      icon: Icon(icon, color: Colors.white),
-      backgroundColor: backGroundColor,
-    );
-  }
+
+
 
   @override
   Widget build(BuildContext context) {
-
+    var isEditing = supplier != null;
     // Build a Form widget using the _formKey created above.
     return BaseView<SupplierModel>(
-        // onModelReady: (model) => model.listenToSuppliers(),
+         onModelReady: (model) {
+        // update the text in the controller
+        if (isEditing) {
+          nameController.text = supplier?.name ?? '';
+          descriptionController.text = supplier?.description ?? '';
+          contactPersonController.text = supplier?.contactPerson ?? '';
+          phoneNumberController.text = supplier?.phoneNumber ?? '';
+          emailController.text = supplier?.email ?? '';
+          addressController.text = supplier?.address ?? '';
+          model.setEdittingSupplier(supplier);
+        }
+      },
         builder: (context, model, child) {
           return Container(
             padding: const EdgeInsets.all(20.0),

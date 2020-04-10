@@ -43,7 +43,7 @@ class Purchase {
         this.referenceNumber = referenceNumber ??
             new DateFormat('yyyy/MM').format(new DateTime.now()) +
                 'P-' +
-                DateFormat('dd-HHmm').format(new DateTime.now());
+                DateFormat('ddHHms').format(new DateTime.now());
 
   factory Purchase.fromMap(Map<String, dynamic> json, String id) => Purchase(
         id: json['id'],

@@ -17,7 +17,7 @@ class ItemModel extends BaseModel {
   final StreamController<List<Item>> _itemsController =
       StreamController<List<Item>>.broadcast();
 
-  List<Item> _items;
+  List<Item> _items = [];
   List<Item> _searchItems;
   List<Item> get items => _items;
   List<Item> get searchItems => _searchItems;
@@ -122,7 +122,7 @@ class ItemModel extends BaseModel {
     if (_selectedCategory != _categoryConst) {
       data.category = _selectedCategory;
     }
-    data.userId = currentUser.id;
+    data.userId = currentUser?.id;
     if (!_editting) {
       result = await _api.addDocument(data.toMap());
     } else {

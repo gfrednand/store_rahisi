@@ -2,12 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:storeRahisi/models/index.dart';
 import 'package:storeRahisi/pages/base_view.dart';
-import 'package:storeRahisi/pages/pos/product_item.dart';
+import 'package:storeRahisi/pages/pos/pos_item.dart';
+import 'package:storeRahisi/pages/sale/sale_list.dart';
 import 'package:storeRahisi/providers/item_model.dart';
 import 'package:storeRahisi/providers/purchase_model.dart';
 import 'package:storeRahisi/providers/sale_model.dart';
 
-class PosItemList extends StatelessWidget {
+class PosItemList extends StatefulWidget {
+  @override
+  _PosItemListState createState() => _PosItemListState();
+}
+
+class _PosItemListState extends State<PosItemList> {
+  bool itemSelected = true;
+
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
@@ -15,7 +23,7 @@ class PosItemList extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
         _buildFilterWidgets(screenSize, context),
-        _buildProductsListWidget(context)
+        itemSelected ? _buildProductsListWidget(context) : SaleList()
       ],
     );
   }
@@ -32,13 +40,13 @@ class PosItemList extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
-              _buildFilterButton("SORT"),
+              _buildItemButton(),
               Container(
                 color: Theme.of(context).primaryColor,
                 width: 2.0,
                 height: 24.0,
               ),
-              _buildFilterButton("REFINE"),
+              _buildSaleButton(),
             ],
           ),
         ),
@@ -46,27 +54,68 @@ class PosItemList extends StatelessWidget {
     );
   }
 
-  _buildFilterButton(String title) {
+  _buildSaleButton() {
     return InkWell(
       onTap: () {
-        print(title);
+        setState(() {
+          itemSelected = false;
+        });
       },
       child: Row(
         children: <Widget>[
           Icon(
-            Icons.arrow_drop_down,
-            color: Colors.black,
+            Icons.list,
+            color:
+                itemSelected ? Colors.black38 : Theme.of(context).accentColor,
           ),
           SizedBox(
             width: 2.0,
           ),
-          Text(title),
+          Text(
+            'Sales',
+            style: TextStyle(
+              color:
+                  itemSelected ? Colors.black38 : Theme.of(context).accentColor,
+              fontWeight: itemSelected ? FontWeight.normal : FontWeight.bold,
+            ),
+          )
         ],
       ),
     );
   }
 
-  _buildProductsListWidget(BuildContext context) {
+  _buildItemButton() {
+    return InkWell(
+      onTap: () {
+        setState(() {
+          itemSelected = true;
+        });
+      },
+      child: Row(
+        children: <Widget>[
+          Icon(
+            Icons.web,
+            color:
+                !itemSelected ? Colors.black38 : Theme.of(context).accentColor,
+          ),
+          SizedBox(
+            width: 2.0,
+          ),
+          Text(
+            'Items',
+            style: TextStyle(
+              color: !itemSelected
+                  ? Colors.black38
+                  : Theme.of(context).accentColor,
+              fontWeight: !itemSelected ? FontWeight.normal : FontWeight.bold,
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  static _buildProductsListWidget(BuildContext context) {
     return BaseView<ItemModel>(
         onModelReady: (model) => model.listenToItems(),
         builder: (context, model, child) {

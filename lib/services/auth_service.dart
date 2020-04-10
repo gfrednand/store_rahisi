@@ -2,11 +2,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:storeRahisi/locator.dart';
 import 'package:storeRahisi/models/user.dart';
+import 'package:storeRahisi/services/dialog_service.dart';
 import 'package:storeRahisi/services/firestore_service.dart';
 
 class AuthService {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final FirestoreService _firestoreService = locator<FirestoreService>();
+  final DialogService _dialogService = locator<DialogService>();
 
   User _currentUser;
   User get currentUser => _currentUser;
@@ -65,13 +67,23 @@ class AuthService {
 
   Future<bool> isUserLoggedIn() async {
     var user = await _firebaseAuth.currentUser();
-    await _populateCurrentUser(user);
+    if (user != null) {
+      await _populateCurrentUser(user);
+    }
     return user != null;
   }
 
   Future _populateCurrentUser(FirebaseUser user) async {
+    var result = await _firestoreService.getUser(user.uid);
     if (user != null) {
-      _currentUser = await _firestoreService.getUser(user.uid);
+      if (result is String) {
+        await _dialogService.showDialog(
+          title: 'Error',
+          description: result,
+        );
+      } else {
+        _currentUser = result;
+      }
     }
   }
 }

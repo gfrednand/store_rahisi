@@ -1,21 +1,45 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:storeRahisi/models/index.dart';
 import 'package:storeRahisi/models/supplier.dart';
+import 'package:storeRahisi/pages/supplier/supplier_form.dart';
+import 'package:storeRahisi/providers/purchase_model.dart';
 import 'package:storeRahisi/providers/supplier_model.dart';
+import 'package:storeRahisi/widgets/custom_modal_sheet.dart';
 
-class SupplierDetail extends StatelessWidget {
+class SupplierDetail extends StatefulWidget {
   final Supplier supplier;
   final SupplierModel supplierModel;
 
   const SupplierDetail({Key key, this.supplier, this.supplierModel})
       : super(key: key);
+
+  @override
+  _SupplierDetailState createState() => _SupplierDetailState();
+}
+
+class _SupplierDetailState extends State<SupplierDetail> {
+  _showModalSheetAppBar(
+      BuildContext context, String title, Widget body, double heightFactor) {
+    CustomModalSheet.show(
+      title: title,
+      context: context,
+      body: body,
+      heightFactor: heightFactor,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    PurchaseModel purchaseModel = Provider.of<PurchaseModel>(context);
+    List<Purchase> purchases =
+        purchaseModel.getPurchaseHistoryBySupplierId(widget.supplier.id);
     return Scaffold(
       appBar: AppBar(
-        title: supplier.name == null
+        title: widget.supplier.name == null
             ? Text('Supplier Details')
             : Text(
-                '${supplier.name.toUpperCase()}',
+                '${widget.supplier.name.toUpperCase()}',
                 overflow: TextOverflow.ellipsis,
               ),
       ),
@@ -27,37 +51,39 @@ class SupplierDetail extends StatelessWidget {
               runSpacing: 0.0, // gap between lines
               children: <Widget>[
                 chipDesign("Edit", Color(0xFF4db6ac)),
-                chipDesign("Delete", Color(0xFFf06292)),
+                purchases.length == 0
+                    ? chipDesign("Delete", Color(0xFFf06292))
+                    : Container(),
               ],
             ),
             Divider(
               thickness: 10.0,
             ),
             ListTile(
-              title: Text('${supplier.name}'),
+              title: Text('${widget.supplier.name}'),
               subtitle: Text(' Supplier Name'),
             ),
             ListTile(
-              title: Text('${supplier.contactPerson}'),
+              title: Text('${widget.supplier.contactPerson}'),
               subtitle: Text('Contact Person'),
             ),
             Divider(
               thickness: 10.0,
             ),
             ListTile(
-              title: Text('${supplier.phoneNumber}'),
+              title: Text('${widget.supplier.phoneNumber}'),
               subtitle: Text('Phone Number'),
             ),
             ListTile(
-              title: Text('${supplier.email}'),
+              title: Text('${widget.supplier.email}'),
               subtitle: Text('Email'),
             ),
             ListTile(
-              title: Text('${supplier.address}'),
+              title: Text('${widget.supplier.address}'),
               subtitle: Text('Address'),
             ),
             ListTile(
-              title: Text('${supplier.description}'),
+              title: Text('${widget.supplier.description}'),
               subtitle: Text('Note'),
             ),
             Divider(
@@ -72,17 +98,17 @@ class SupplierDetail extends StatelessWidget {
   Widget chipDesign(String label, Color color) {
     return GestureDetector(
       onTap: () {
-        // label == 'Delete'
-        //     ? supplierModel.removePurchase(supplier.id)
-        //     : label == 'Edit'
-        //         ? _showModalSheetAppBar(
-        //             context,
-        //             'Edit Product',
-        //             PurchaseForm(
-        //               purchase: widget.purchase,
-        //             ),
-        //             0.81)
-        //         : _showToast(label + ' Selected', color, Icons.error_outline);
+        label == 'Delete'
+            ? widget.supplierModel.removeSupplier(widget.supplier.id)
+            : label == 'Edit'
+                ? _showModalSheetAppBar(
+                    context,
+                    'Edit Product',
+                    SupplierForm(
+                      supplier: widget.supplier,
+                    ),
+                    0.81)
+                : Container();
       },
       child: Container(
         child: Chip(
