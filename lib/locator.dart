@@ -1,9 +1,5 @@
 import 'package:get_it/get_it.dart';
-import 'package:storeRahisi/providers/auth_model.dart';
-import 'package:storeRahisi/providers/item_model.dart';
-import 'package:storeRahisi/providers/payment_model.dart';
-import 'package:storeRahisi/providers/purchase_model.dart';
-import 'package:storeRahisi/providers/supplier_model.dart';
+import 'package:storeRahisi/providers/index.dart';
 import 'package:storeRahisi/services/api.dart';
 import 'package:storeRahisi/services/auth_service.dart';
 import 'package:storeRahisi/services/dialog_service.dart';
@@ -37,4 +33,6 @@ void setupLocator() {
   locator.registerLazySingleton(() => ItemModel());
   locator.registerLazySingleton(() => PurchaseModel());
   locator.registerLazySingleton(() => PaymentModel());
+  locator.registerLazySingleton(() => SaleModel());
+  locator.registerLazySingleton(() => CartModel());
 }

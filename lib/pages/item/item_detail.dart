@@ -103,7 +103,7 @@ class _ItemDetailState extends State<ItemDetail> {
                   ListTile(
                     leading: Icon(Icons.remove_from_queue),
                     title:
-                        Text('${widget.item.sales ?? 0} ${widget.item.unit}'),
+                        Text('${widget.item.totalSales ?? 0} ${widget.item.unit}'),
                     subtitle: Text('Total Sales'),
                   ),
                   ListTile(

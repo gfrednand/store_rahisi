@@ -28,7 +28,7 @@ class Item {
   int quantity;
   String userId;
   int totalPurchase;
-  int sales;
+  int totalSales;
   int inStock;
 
   bool active;
@@ -47,7 +47,7 @@ class Item {
     this.paidAmount,
     this.alertQty,
     this.totalPurchase,
-    this.sales,
+    this.totalSales,
     this.inStock,
     this.openingStock,
     this.quantity,

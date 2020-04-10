@@ -5,6 +5,7 @@ import 'package:storeRahisi/pages/home_page.dart';
 import 'package:storeRahisi/pages/item/item_detail.dart';
 import 'package:storeRahisi/pages/layout_page.dart';
 import 'package:storeRahisi/pages/login_page.dart';
+import 'package:storeRahisi/pages/pos/cart_items.dart';
 import 'package:storeRahisi/pages/purchase/purchase_detail.dart';
 import 'package:storeRahisi/pages/purchase/purchase_add.dart';
 import 'package:storeRahisi/pages/register_page.dart';
@@ -70,6 +71,11 @@ class Router {
             builder: (_) => PurchaseAdd(
                   title: title,
                 ));
+        break;
+      case AppRoutes.cart_items:
+        // var title = settings.arguments as String;
+        return MaterialPageRoute(
+            builder: (_) => CartItems());
         break;
       default:
         return MaterialPageRoute(

@@ -1,15 +1,10 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:storeRahisi/constants/routes.dart';
 import 'package:storeRahisi/constants/themes.dart';
 import 'package:storeRahisi/locator.dart';
 import 'package:storeRahisi/managers/dialog_manager.dart';
-import 'package:storeRahisi/providers/auth_model.dart';
-import 'package:storeRahisi/providers/item_model.dart';
-import 'package:storeRahisi/providers/payment_model.dart';
-import 'package:storeRahisi/providers/purchase_model.dart';
-import 'package:storeRahisi/providers/supplier_model.dart';
+import 'package:storeRahisi/providers/index.dart';
 import 'package:storeRahisi/router.dart';
 import 'package:storeRahisi/services/dialog_service.dart';
 import 'package:storeRahisi/services/navigation_service.dart';
@@ -44,12 +39,14 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => locator<ItemModel>()),
         ChangeNotifierProvider(create: (_) => locator<PurchaseModel>()),
         ChangeNotifierProvider(create: (_) => locator<PaymentModel>()),
+        ChangeNotifierProvider(create: (_) => locator<SaleModel>()),
+        ChangeNotifierProvider(create: (_) => locator<CartModel>()),
 
-        // ChangeNotifierProxyProvider<SupplierModel, PurchaseModel>(
-        //   create: (context) => PurchaseModel(),
-        //   update: (context, supplier, purchase) {
-        //     purchase.supplier = supplier;
-        //     return purchase;
+        // ChangeNotifierProxyProvider<ItemModel, CartModel>(
+        //   create: (context) => locator<CartModel>(),
+        //   update: (context, itemModel, cartModel) {
+        //     cartModel.item = itemModel.item;
+        //     return cartModel;
         //   },
         // ),
       ],

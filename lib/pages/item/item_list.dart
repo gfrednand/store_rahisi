@@ -5,6 +5,7 @@ import 'package:storeRahisi/models/index.dart';
 import 'package:storeRahisi/pages/base_view.dart';
 import 'package:storeRahisi/providers/item_model.dart';
 import 'package:storeRahisi/providers/purchase_model.dart';
+import 'package:storeRahisi/providers/sale_model.dart';
 
 class ItemList extends StatelessWidget {
   @override
@@ -23,14 +24,17 @@ class ItemList extends StatelessWidget {
                         itemBuilder: (buildContext, index) {
                           PurchaseModel purchaseModel =
                               Provider.of<PurchaseModel>(context);
+                          SaleModel saleModel =
+                              Provider.of<SaleModel>(context);
 
                           model.items[index].totalPurchase = purchaseModel
                               .getTotalPurchaseByItemId(model.items[index].id);
-                          model.items[index].sales = 0;
+                          model.items[index].totalSales = saleModel
+                              .getTotalSaleByItemId(model.items[index].id);
                           model.items[index].inStock =
                               (model.items[index].totalPurchase +
                                       model.items[index].openingStock) -
-                                  model.items[index].sales;
+                                  model.items[index].totalSales;
                           Color color = model.items[index].inStock == 0
                               ? Colors.red
                               : model.items[index].inStock >

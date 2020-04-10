@@ -25,7 +25,8 @@ class ItemModel extends BaseModel {
   final DialogService _dialogService = locator<DialogService>();
   NavigationService _navigationService = locator<NavigationService>();
   Item _item;
-  // Item get item => _item;
+  Item _selectedItem;
+  Item get item => _selectedItem;
   bool get _editting => _item != null;
 
   String _selectedCategory = _categoryConst;
@@ -125,7 +126,6 @@ class ItemModel extends BaseModel {
     if (!_editting) {
       result = await _api.addDocument(data.toMap());
     } else {
-      print('*********************${data.toMap()}');
 
       result = await _api.updateDocument(data.toMap(), data.id);
     }

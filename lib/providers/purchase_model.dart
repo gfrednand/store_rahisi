@@ -16,7 +16,7 @@ class PurchaseModel extends BaseModel {
   final StreamController<List<Purchase>> _purchasesController =
       StreamController<List<Purchase>>.broadcast();
 
-  List<Purchase> _purchases;
+  List<Purchase> _purchases = [];
   List<Purchase> _searchPurchases;
   // List<Supplier> _suppliers;
   // List<Supplier> get suppliers => _suppliers;
@@ -66,13 +66,13 @@ class PurchaseModel extends BaseModel {
   listenToPurchases() async {
     _api.streamDataCollection().listen((snapshot) {
       if (snapshot.documents.isNotEmpty) {
-        var posts = snapshot.documents
+        var purs = snapshot.documents
             .map((snapshot) =>
                 Purchase.fromMap(snapshot.data, snapshot.documentID))
             .toList();
 
-        // Add the posts onto the controller
-        _purchasesController.add(posts);
+        // Add the purchases onto the controller
+        _purchasesController.add(purs);
       }
     });
 
@@ -113,10 +113,13 @@ class PurchaseModel extends BaseModel {
 
   int getTotalPurchaseByItemId(String id) {
     int total = 0;
+    if (_purchases.length == 0) {
+      listenToPurchases();
+    }
     _purchases.forEach((purchase) {
       purchase.items.forEach((item) {
         if (item.id == id) {
-          total += item.openingStock + item.quantity;
+          total += item.quantity;
         }
       });
     });
@@ -186,7 +189,7 @@ class PurchaseModel extends BaseModel {
               amount: data.paidAmount,
               method: 'Cash',
               purchaseId: data.id,
-              note: 'Paid For ${data.id}',
+              note: 'Paid For ${data.referenceNumber}',
               supplierId: data.supplierId,
               type: 'Debit'));
       _selectedItems = [];

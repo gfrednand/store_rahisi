@@ -9,12 +9,15 @@ import 'package:storeRahisi/pages/home_page.dart';
 import 'package:storeRahisi/pages/item/item_form.dart';
 import 'package:storeRahisi/pages/item/item_list.dart';
 import 'package:storeRahisi/pages/item/item_search_delegate.dart';
+import 'package:storeRahisi/pages/pos/pos_item_list.dart';
 import 'package:storeRahisi/pages/purchase/purchase_form.dart';
 import 'package:storeRahisi/pages/purchase/purchase_list.dart';
 import 'package:storeRahisi/pages/supplier/supplier_form.dart';
 import 'package:storeRahisi/pages/supplier/supplier_list.dart';
 import 'package:storeRahisi/providers/auth_model.dart';
+import 'package:storeRahisi/providers/cart_model.dart';
 import 'package:storeRahisi/providers/item_model.dart';
+import 'package:storeRahisi/widgets/cart_button.dart';
 import 'package:storeRahisi/widgets/custom_modal_sheet.dart';
 
 class LayoutPage extends StatefulWidget {
@@ -141,7 +144,10 @@ class _LayoutPageState extends State<LayoutPage> with TickerProviderStateMixin {
                   width: double.infinity,
                   child: FlatButton(
                       color: Theme.of(context).primaryColor,
-                      child: Text('Logout',style: TextStyle(color:Theme.of(context).accentColor ),),
+                      child: Text(
+                        'Logout',
+                        style: TextStyle(color: Theme.of(context).accentColor),
+                      ),
                       onPressed: () async {
                         bool loggedOut = await model.logout();
                         if (loggedOut) {
@@ -166,6 +172,7 @@ class _LayoutPageState extends State<LayoutPage> with TickerProviderStateMixin {
   }
 
   _buildActions(BuildContext context, AuthModel model) {
+    CartModel cartModel = Provider.of<CartModel>(context);
     return <Widget>[
       _currentIndex == 0
           ? IconButton(
@@ -180,7 +187,13 @@ class _LayoutPageState extends State<LayoutPage> with TickerProviderStateMixin {
                 items = history;
               },
             )
-          : Container(),
+          : _currentIndex == 4 && cartModel.carts.length > 0
+              ? CartButton(
+                  onPressed: () {
+                    Navigator.of(context).pushNamed(AppRoutes.cart_items);
+                  },
+                  itemCount: cartModel.carts.length)
+              : Container(),
       PopupMenuButton<String>(
         padding: EdgeInsets.zero,
         onSelected: (value) async {
@@ -243,7 +256,9 @@ class _LayoutPageState extends State<LayoutPage> with TickerProviderStateMixin {
         ? ItemList()
         : _currentIndex == 1
             ? SupplierList()
-            : _currentIndex == 2 ? PurchaseList() : Container();
+            : _currentIndex == 2
+                ? PurchaseList()
+                : _currentIndex == 4 ? PosItemList() : Container();
   }
 
   @override

@@ -5,6 +5,7 @@
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
 import 'package:storeRahisi/models/index.dart';
 
 Sale saleFromJson(String str) => Sale.fromMap(json.decode(str));
@@ -19,6 +20,8 @@ class Sale {
   double tax;
   double grandTotal;
   String paymentMethod;
+  String referenceNumber;
+  String userId;
   String saleDate;
   List<Item> items;
 
@@ -30,9 +33,14 @@ class Sale {
     this.tax,
     this.grandTotal,
     this.paymentMethod,
+    String referenceNumber,
+    this.userId,
     this.saleDate,
     this.items,
-  });
+  })  : this.referenceNumber = referenceNumber ??
+            new DateFormat('yyyy/MM').format(new DateTime.now()) +
+                'S-' +
+                DateFormat('dd-HHmm').format(new DateTime.now());
 
   factory Sale.fromMap(Map<String, dynamic> json) => Sale(
         id: json["id"],
@@ -42,6 +50,7 @@ class Sale {
         tax: json["tax"].toDouble(),
         grandTotal: json["grandTotal"].toDouble(),
         paymentMethod: json["paymentMethod"],
+        userId: json["userId"],
         saleDate: json["saleDate"],
         items:
             List<Item>.from(json["items"].map((x) => Item.fromMap(x, x['id']))),
@@ -58,6 +67,7 @@ class Sale {
       tax: data["tax"].toDouble(),
       grandTotal: data["grandTotal"].toDouble(),
       paymentMethod: data["paymentMethod"],
+      userId: data["userId"],
       saleDate: data["saleDate"],
       items:
           List<Item>.from(data["items"].map((x) => Item.fromMap(x, x['id']))),
@@ -72,6 +82,7 @@ class Sale {
         "tax": tax,
         "grandTotal": grandTotal,
         "paymentMethod": paymentMethod,
+        "userId": userId,
         "saleDate": saleDate,
         "items": List<dynamic>.from(items.map((x) => x.toMapSale())),
       };
