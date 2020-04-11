@@ -10,6 +10,8 @@ import 'package:storeRahisi/providers/supplier_model.dart';
 class PurchaseList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    SupplierModel supplierModel = Provider.of<SupplierModel>(context);
+    PaymentModel paymentModel = Provider.of<PaymentModel>(context);
     return BaseView<PurchaseModel>(
       onModelReady: (model) => model.listenToPurchases(),
       builder: (context, model, child) {
@@ -22,13 +24,10 @@ class PurchaseList extends StatelessWidget {
                     : ListView.builder(
                         itemCount: model.purchases.length,
                         itemBuilder: (buildContext, index) {
-                          SupplierModel supplierModel =
-                              Provider.of<SupplierModel>(context);
                           Supplier supplier = supplierModel.getSupplierById(
                               model.purchases[index].supplierId);
                           model.purchases[index].supplier = supplier?.name;
-                          PaymentModel paymentModel =
-                              Provider.of<PaymentModel>(context);
+
                           List<Payment> payments =
                               paymentModel.getPaymentsByPurchaseId(
                                   model.purchases[index].id);

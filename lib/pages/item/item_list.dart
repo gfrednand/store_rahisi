@@ -10,6 +10,8 @@ import 'package:storeRahisi/providers/sale_model.dart';
 class ItemList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    PurchaseModel purchaseModel = Provider.of<PurchaseModel>(context);
+    SaleModel saleModel = Provider.of<SaleModel>(context);
     return BaseView<ItemModel>(
       onModelReady: (model) => model.listenToItems(),
       builder: (context, model, child) {
@@ -22,11 +24,6 @@ class ItemList extends StatelessWidget {
                     : ListView.builder(
                         itemCount: model.items.length,
                         itemBuilder: (buildContext, index) {
-                          PurchaseModel purchaseModel =
-                              Provider.of<PurchaseModel>(context);
-                          SaleModel saleModel =
-                              Provider.of<SaleModel>(context);
-
                           model.items[index].totalPurchase = purchaseModel
                               .getTotalPurchaseByItemId(model.items[index].id);
                           model.items[index].totalSales = saleModel

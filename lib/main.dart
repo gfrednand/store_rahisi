@@ -40,11 +40,11 @@ class MyApp extends StatelessWidget {
         // ),
         // StreamProvider<FirebaseUser>.value(value:  FirebaseAuth.instance.onAuthStateChanged),
         ChangeNotifierProvider(create: (_) => locator<AuthModel>()),
-        ChangeNotifierProvider(create: (_) => locator<SupplierModel>()),
-        ChangeNotifierProvider(create: (_) => locator<ItemModel>()),
         ChangeNotifierProvider(create: (_) => locator<PurchaseModel>()),
+        ChangeNotifierProvider.value(value: locator<ItemModel>(),),
+        ChangeNotifierProvider.value(value: locator<SupplierModel>(),),
+        ChangeNotifierProvider.value(value: locator<SaleModel>(),),
         ChangeNotifierProvider(create: (_) => locator<PaymentModel>()),
-        ChangeNotifierProvider(create: (_) => locator<SaleModel>()),
         ChangeNotifierProvider(create: (_) => locator<CartModel>()),
 
         // ChangeNotifierProxyProvider<ItemModel, CartModel>(
