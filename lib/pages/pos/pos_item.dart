@@ -30,8 +30,7 @@ class PosItem extends StatefulWidget {
 
 class _PosItemState extends State<PosItem> {
   int _itemCount = 0;
-  TextEditingController quantityController =
-      new TextEditingController(text: '0');
+  TextEditingController quantityController = new TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -128,9 +127,12 @@ class _PosItemState extends State<PosItem> {
                         if (int.parse(val) < widget.quantity) {
                           _itemCount = int.parse(val);
                           setCartItem(cartModel);
+                        } else {
+                          _itemCount = 0;
                         }
                       },
                       decoration: const InputDecoration(
+                        hintText: '0',
                         contentPadding:
                             const EdgeInsets.symmetric(vertical: 40.0),
                       ),
