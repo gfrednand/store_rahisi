@@ -88,12 +88,12 @@ class ItemSearchDelegate extends SearchDelegate<List<Item>> {
                         '${suggestion.name}',
                         overflow: TextOverflow.ellipsis,
                       ),
-                      subtitle: Text(
-                        '${suggestion.purchasePrice}',
-                        overflow: TextOverflow.ellipsis,
-                      ),
+                      // subtitle: Text(
+                      //   '${suggestion.purchasePrice}',
+                      //   overflow: TextOverflow.ellipsis,
+                      // ),
                       trailing:
-                          Text('${suggestion.openingStock}${suggestion.unit}'),
+                          Text('${suggestion.inStock}${suggestion.unit}'),
                     )
                   : Container();
             },

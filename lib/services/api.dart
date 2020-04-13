@@ -16,7 +16,7 @@ class Api {
     
   }
 
-  getDataCollection() {
+  Future<QuerySnapshot> getDataCollection() {
     return ref.getDocuments();
   }
 

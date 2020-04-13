@@ -43,7 +43,7 @@ ClientModel clientModel = Provider.of<ClientModel>(context);
                   ),
                   ListTile(
                     title: Text('${client?.companyName}'),
-                    subtitle: Text(' Client'),
+                    subtitle: Text(' Customer'),
                   ),
                   ListTile(
                     title: Text('${sale.paymentMethod}'),
