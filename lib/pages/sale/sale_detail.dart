@@ -16,7 +16,7 @@ class SaleDetail extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           title: sale.saleDate == null
-              ? Text('Supplier Details')
+              ? Text('Client Details')
               : Text(
                   '${sale.saleDate}',
                   overflow: TextOverflow.ellipsis,

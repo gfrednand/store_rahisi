@@ -5,12 +5,12 @@ import 'package:storeRahisi/models/index.dart';
 import 'package:storeRahisi/pages/base_view.dart';
 import 'package:storeRahisi/providers/payment_model.dart';
 import 'package:storeRahisi/providers/purchase_model.dart';
-import 'package:storeRahisi/providers/supplier_model.dart';
+import 'package:storeRahisi/providers/client_model.dart';
 
 class PurchaseList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    SupplierModel supplierModel = Provider.of<SupplierModel>(context);
+    ClientModel clientModel = Provider.of<ClientModel>(context);
     PaymentModel paymentModel = Provider.of<PaymentModel>(context);
     return BaseView<PurchaseModel>(
       onModelReady: (model) => model.listenToPurchases(),
@@ -24,9 +24,9 @@ class PurchaseList extends StatelessWidget {
                     : ListView.builder(
                         itemCount: model.purchases.length,
                         itemBuilder: (buildContext, index) {
-                          Supplier supplier = supplierModel.getSupplierById(
-                              model.purchases[index].supplierId);
-                          model.purchases[index].supplier = supplier?.name;
+                          Client client = clientModel.getClientById(
+                              model.purchases[index].clientId);
+                          model.purchases[index].companyName = client?.companyName;
 
                           List<Payment> payments =
                               paymentModel.getPaymentsByPurchaseId(
@@ -62,7 +62,7 @@ class PurchaseList extends StatelessWidget {
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                   Text(
-                                    'Supplier: ${model.purchases[index]?.supplier}',
+                                    'client: ${model.purchases[index]?.companyName}',
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                   Text(

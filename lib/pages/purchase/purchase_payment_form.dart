@@ -101,7 +101,7 @@ class _PurchasePaymentFormState extends State<PurchasePaymentForm> {
                         type: 'Debit',
                         note: descriptionController.text,
                         purchaseId: widget.purchase.id,
-                        supplierId: widget.purchase.id,
+                        clientId: widget.purchase.id,
                         userId: null,
                       ));
                       _formKey.currentState.reset();

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:storeRahisi/models/supplier.dart';
-import 'package:storeRahisi/providers/supplier_model.dart';
+import 'package:storeRahisi/models/client.dart';
+import 'package:storeRahisi/providers/client_model.dart';
 import 'package:storeRahisi/widgets/toast.dart';
 import 'package:storeRahisi/pages/base_view.dart';
-class SupplierForm extends StatelessWidget {
-  final  Supplier supplier;
-  SupplierForm({
-    Key key, this.supplier,
+class ClientForm extends StatelessWidget {
+  final  Client client;
+  ClientForm({
+    Key key, this.client,
   }) : super(key: key);
 
 
@@ -26,19 +26,19 @@ class SupplierForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var isEditing = supplier != null;
+    var isEditing = client != null;
     // Build a Form widget using the _formKey created above.
-    return BaseView<SupplierModel>(
+    return BaseView<ClientModel>(
          onModelReady: (model) {
         // update the text in the controller
         if (isEditing) {
-          nameController.text = supplier?.name ?? '';
-          descriptionController.text = supplier?.description ?? '';
-          contactPersonController.text = supplier?.contactPerson ?? '';
-          phoneNumberController.text = supplier?.phoneNumber ?? '';
-          emailController.text = supplier?.email ?? '';
-          addressController.text = supplier?.address ?? '';
-          model.setEdittingSupplier(supplier);
+          nameController.text = client?.companyName ?? '';
+          descriptionController.text = client?.description ?? '';
+          contactPersonController.text = client?.contactPerson ?? '';
+          phoneNumberController.text = client?.phoneNumber ?? '';
+          emailController.text = client?.email ?? '';
+          addressController.text = client?.address ?? '';
+          model.setEdittingclient(client);
         }
       },
         builder: (context, model, child) {
@@ -56,12 +56,12 @@ class SupplierForm extends StatelessWidget {
                         children: <Widget>[
                           TextFormField(
                             decoration: InputDecoration(
-                                labelText: 'Supplier Name*',
+                                labelText: 'client Name*',
                                 hintText: "John Store"),
                             controller: nameController,
                             validator: (value) {
                               if (value.isEmpty) {
-                                return "Please enter a valid supplier name.";
+                                return "Please enter a valid client name.";
                               }
                               return null;
                             },
@@ -130,17 +130,17 @@ class SupplierForm extends StatelessWidget {
                                     // otherwise.
                                     if (_formKey.currentState.validate()) {
                                       // If the form is valid, display a Snackbar.
-                                      Supplier supplier = Supplier(
+                                      Client client = Client(
                                           address: addressController.text,
                                           contactPerson:
                                               contactPersonController.text,
                                           description:
                                               descriptionController.text,
                                           email: emailController.text,
-                                          name: nameController.text,
+                                          companyName: nameController.text,
                                           phoneNumber:
                                               phoneNumberController.text);
-                                      model.addSupplier(supplier);
+                                      model.addClient(client);
                                
                                     }
                                   },

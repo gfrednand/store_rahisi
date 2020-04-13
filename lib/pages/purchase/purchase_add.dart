@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:storeRahisi/pages/base_view.dart';
 import 'package:storeRahisi/pages/purchase/add_item_form.dart';
-import 'package:storeRahisi/providers/item_model.dart';
-import 'package:storeRahisi/providers/purchase_model.dart';
 import 'package:storeRahisi/models/index.dart';
-import 'package:storeRahisi/providers/supplier_model.dart';
+import 'package:storeRahisi/providers/index.dart';
 import 'package:storeRahisi/widgets/custom_modal_sheet.dart';
 
 class PurchaseAdd extends StatefulWidget {
@@ -18,18 +16,18 @@ class PurchaseAdd extends StatefulWidget {
 }
 
 class _PurchaseAddState extends State<PurchaseAdd> {
-  Supplier _supplier;
+  Client _client;
 
   @override
   Widget build(BuildContext context) {
     ItemModel itemModel = Provider.of<ItemModel>(context);
     return BaseView<PurchaseModel>(
-        // onModelReady: (model) => model.getSuppliers(),
+        // onModelReady: (model) => model.getclients(),
         builder: (context, model, child) {
       return Scaffold(
         appBar: buildAppBar(model, context),
         body: buildBody(model, context),
-        floatingActionButton: _supplier == null || model.busy
+        floatingActionButton: _client == null || model.busy
             ? Container()
             : FloatingActionButton.extended(
                 onPressed: () {
@@ -63,7 +61,7 @@ class _PurchaseAddState extends State<PurchaseAdd> {
 
   Column buildBody(PurchaseModel model, BuildContext context) {
     var items = model.selectedItems;
-    SupplierModel supplierModel = Provider.of<SupplierModel>(context);
+    ClientModel clientModel = Provider.of<ClientModel>(context);
     return Column(
       children: <Widget>[
         Center(
@@ -71,18 +69,18 @@ class _PurchaseAddState extends State<PurchaseAdd> {
             padding: EdgeInsets.all(8.0),
             width: double.infinity,
             child: DropdownButtonHideUnderline(
-              child: new DropdownButton<Supplier>(
-                hint: Text('Select Supplier'),
-                value: _supplier,
-                items: supplierModel.suppliers.map((Supplier value) {
-                  return new DropdownMenuItem<Supplier>(
+              child: new DropdownButton<Client>(
+                hint: Text('Select Client'),
+                value: _client,
+                items: clientModel.clients.map((Client value) {
+                  return new DropdownMenuItem<Client>(
                     value: value,
-                    child: new Text(value.name),
+                    child: new Text(value.companyName),
                   );
                 }).toList(),
                 onChanged: (value) {
                   setState(() {
-                    _supplier = value;
+                    _client = value;
                   });
                 },
                 // style: Theme.of(context).textTheme.headline6,
@@ -187,8 +185,8 @@ class _PurchaseAddState extends State<PurchaseAdd> {
                       });
                       model.savePurchase(
                           data: Purchase(
-                              supplierId: _supplier.id,
-                              supplier: _supplier.name,
+                              clientId: _client.id,
+                              companyName: _client.companyName,
                               items: model.selectedItems,
                               grandTotalAmount: grandTotalAmount,
                               paidAmount: paidAmount,

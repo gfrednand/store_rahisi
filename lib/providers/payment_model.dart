@@ -3,8 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:storeRahisi/locator.dart';
 import 'package:storeRahisi/models/index.dart';
-import 'package:storeRahisi/providers/base_model.dart';
-import 'package:storeRahisi/providers/supplier_model.dart';
+import 'package:storeRahisi/providers/index.dart';
 import 'package:storeRahisi/services/api.dart';
 import 'package:storeRahisi/services/dialog_service.dart';
 import 'package:storeRahisi/services/navigation_service.dart';
@@ -52,9 +51,9 @@ class PaymentModel extends BaseModel {
     });
 
     _paymentsController.stream.listen((purchaseData) {
-      List<Payment> updatedSuppliers = purchaseData;
-      if (updatedSuppliers != null && updatedSuppliers.length > 0) {
-        _payments = updatedSuppliers;
+      List<Payment> updatedClients = purchaseData;
+      if (updatedClients != null && updatedClients.length > 0) {
+        _payments = updatedClients;
         notifyListeners();
       }
     });

@@ -35,7 +35,7 @@ class _AppBottonNavBarState extends State<AppBottonNavBar>
         ),
         _NavigationIconView(
           icon: const Icon(Icons.ac_unit),
-          title: 'Suppliers',
+          title: 'Clients',
           vsync: this,
         ),
         _NavigationIconView(
@@ -95,7 +95,7 @@ class _AppBottonNavBarState extends State<AppBottonNavBar>
         // _currentIndex = index;
         index == 0
             ? Navigator.pushNamed(context, AppRoutes.home)
-            : index == 1 ? Navigator.pushNamed(context, AppRoutes.supplier) : null;
+            : index == 1 ? Navigator.pushNamed(context, AppRoutes.client) : null;
         // model.setCurrentIndex(index);
         _navigationViews[_currentIndex].controller.forward();
         // });

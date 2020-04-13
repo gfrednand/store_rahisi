@@ -15,7 +15,8 @@ class PosItemList extends StatefulWidget {
 
 class _PosItemListState extends State<PosItemList> {
   bool itemSelected = true;
-
+  TextEditingController editingController = TextEditingController();
+  var items = List<Item>();
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
@@ -115,49 +116,94 @@ class _PosItemListState extends State<PosItemList> {
     );
   }
 
-  static _buildProductsListWidget(BuildContext context) {
+  filterSearchResults(String query, List<Item> items) {
+    List<Item> dummySearchList = List<Item>();
+    dummySearchList.addAll(items);
+    if (query.isNotEmpty) {
+      List<Item> dummyListData = List<Item>();
+      dummySearchList.forEach((item) {
+        if (item.name.contains(query)) {
+          dummyListData.add(item);
+        }
+      });
+      setState(() {
+        items.clear();
+        items.addAll(dummyListData);
+      });
+      return;
+    } else {
+      setState(() {
+        items.clear();
+        items.addAll(items);
+      });
+    }
+  }
+
+  _buildProductsListWidget(BuildContext context) {
     return BaseView<ItemModel>(
         onModelReady: (model) => model.listenToItems(),
         builder: (context, model, child) {
-          return Expanded(
-              child: Container(
-                  color: Colors.grey[100],
-                  child: ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: model.items.length,
-                      itemBuilder: (context, index) {
-                        PurchaseModel purchaseModel =
-                            Provider.of<PurchaseModel>(context);
-                        SaleModel saleModel = Provider.of<SaleModel>(context);
-                        List<Purchase> purchases = purchaseModel
-                            .getPurchaseHistoryByItemId(model.items[index].id);
-                        model.items[index].totalSales = saleModel
-                            .getTotalSaleByItemId(model.items[index].id);
-                        model.items[index].totalPurchase = purchaseModel
-                            .getTotalPurchaseByItemId(model.items[index].id);
-                        purchases.sort(
-                            (a, b) => a.purchaseDate.compareTo(b.purchaseDate));
-                        double cur = purchases?.last?.items?.first?.salePrice;
-                        double org = purchases?.first?.items?.first?.salePrice;
-                        double profit =
-                            cur - purchases?.first?.items?.first?.purchasePrice;
-                        int quantity = (model?.items[index]?.totalPurchase ??
-                                    0 + model?.items[index]?.openingStock ??
-                                    0) -
-                                model?.items[index]?.totalSales ??
-                            0;
-                        double disco = org - cur;
-                        disco = disco * 100;
-                        return new PosItem(
-                            profit: profit,
-                            quantity: quantity,
-                            item: model.items[index],
-                            // purchase: purchase,
-                            currentPrice: cur,
-                            originalPrice: org,
-                            discount: disco / org,
-                            imageUrl: "");
-                      })));
+          return Column(
+            children: [
+              TextField(
+                onChanged: (value) {
+                  filterSearchResults(value, model.items);
+                },
+                controller: editingController,
+                decoration: InputDecoration(
+                    labelText: "Search",
+                    hintText: "Search",
+                    prefixIcon: Icon(Icons.search),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(25.0)))),
+              ),
+              Expanded(
+                  child: Container(
+                      color: Colors.grey[100],
+                      child: ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: model.items.length,
+                          itemBuilder: (context, index) {
+                            PurchaseModel purchaseModel =
+                                Provider.of<PurchaseModel>(context);
+                            SaleModel saleModel =
+                                Provider.of<SaleModel>(context);
+                            List<Purchase> purchases =
+                                purchaseModel.getPurchaseHistoryByItemId(
+                                    model.items[index].id);
+                            model.items[index].totalSales = saleModel
+                                .getTotalSaleByItemId(model.items[index].id);
+                            model.items[index].totalPurchase =
+                                purchaseModel.getTotalPurchaseByItemId(
+                                    model.items[index].id);
+                            purchases.sort((a, b) =>
+                                a.purchaseDate.compareTo(b.purchaseDate));
+                            double cur =
+                                purchases?.last?.items?.first?.salePrice;
+                            double org =
+                                purchases?.first?.items?.first?.salePrice;
+                            double profit = cur -
+                                purchases?.first?.items?.first?.purchasePrice;
+                            int quantity = (model
+                                            ?.items[index]?.totalPurchase ??
+                                        0 + model?.items[index]?.openingStock ??
+                                        0) -
+                                    model?.items[index]?.totalSales ??
+                                0;
+                            double disco = org - cur;
+                            disco = disco * 100;
+                            return new PosItem(
+                                profit: profit,
+                                quantity: quantity,
+                                item: model.items[index],
+                                // purchase: purchase,
+                                currentPrice: cur,
+                                originalPrice: org,
+                                discount: disco / org,
+                                imageUrl: "");
+                          })))
+            ],
+          );
         });
   }
 }

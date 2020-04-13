@@ -1,14 +1,11 @@
+import 'package:barcode_scan/barcode_scan.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:storeRahisi/constants/routes.dart';
 import 'package:storeRahisi/models/index.dart';
 import 'package:storeRahisi/models/item.dart';
 import 'package:storeRahisi/pages/item/item_form.dart';
 import 'package:storeRahisi/providers/index.dart';
-import 'package:storeRahisi/providers/item_model.dart';
-import 'package:storeRahisi/providers/payment_model.dart';
-import 'package:storeRahisi/providers/purchase_model.dart';
-import 'package:storeRahisi/providers/supplier_model.dart';
 import 'package:storeRahisi/widgets/custom_modal_sheet.dart';
 import 'package:storeRahisi/widgets/toast.dart';
 
@@ -22,6 +19,7 @@ class ItemDetail extends StatefulWidget {
 
 class _ItemDetailState extends State<ItemDetail> {
   TextEditingController salePriceController;
+  String barcode = "";
   void _showToast(String message, Color backGroundColor, IconData icon) {
     Toast.show(
       message: message,
@@ -82,7 +80,9 @@ class _ItemDetailState extends State<ItemDetail> {
                     children: <Widget>[
                       chipDesign("Print Barcode", Color(0xFF9575cd)),
                       chipDesign("Edit", Color(0xFF4db6ac)),
-                   sales.length == 0 && purchases.length == 0 ?   chipDesign("Delete", Color(0xFFf06292)): Container(),
+                      sales.length == 0 && purchases.length == 0
+                          ? chipDesign("Delete", Color(0xFFf06292))
+                          : Container(),
                     ],
                   ),
                   Divider(
@@ -144,70 +144,75 @@ class _ItemDetailState extends State<ItemDetail> {
                 ],
               ),
             ),
-           purchases.length==0? Center(child: Text('No Purchases'),) :ListView.builder(
-                itemCount: purchases.length,
-                itemBuilder: (buildContext, index) {
-                  SupplierModel supplierModel =
-                      Provider.of<SupplierModel>(context);
-                  purchases[index].supplier = supplierModel
-                      .getSupplierById(purchases[index].supplierId)
-                      ?.name;
+            purchases.length == 0
+                ? Center(
+                    child: Text('No Purchases'),
+                  )
+                : ListView.builder(
+                    itemCount: purchases.length,
+                    itemBuilder: (buildContext, index) {
+                      ClientModel clientModel =
+                          Provider.of<ClientModel>(context);
+                      purchases[index].companyName = clientModel
+                          .getClientById(purchases[index].clientId)
+                          ?.companyName;
 
-                  PaymentModel paymentModel =
-                      Provider.of<PaymentModel>(context);
-                  List<Payment> payments =
-                      paymentModel.getPaymentsByPurchaseId(purchases[index].id);
-                  purchases[index].paidAmount = 0.0;
-                  payments.forEach((payment) {
-                    purchases[index].paidAmount =
-                        purchases[index].paidAmount + payment.amount;
-                  });
-                  return Card(
-                    child: ListTile(
-                      leading: ExcludeSemantics(
-                        child: CircleAvatar(
-                          radius: 25.0,
-                          backgroundColor: Theme.of(context).primaryColor,
-                          child: Text(
-                            'P',
-                            style:
-                                TextStyle(color: Theme.of(context).accentColor),
+                      PaymentModel paymentModel =
+                          Provider.of<PaymentModel>(context);
+                      List<Payment> payments = paymentModel
+                          .getPaymentsByPurchaseId(purchases[index].id);
+                      purchases[index].paidAmount = 0.0;
+                      payments.forEach((payment) {
+                        purchases[index].paidAmount =
+                            purchases[index].paidAmount + payment.amount;
+                      });
+                      return Card(
+                        child: ListTile(
+                          leading: ExcludeSemantics(
+                            child: CircleAvatar(
+                              radius: 25.0,
+                              backgroundColor: Theme.of(context).primaryColor,
+                              child: Text(
+                                'P',
+                                style: TextStyle(
+                                    color: Theme.of(context).accentColor),
+                              ),
+                            ),
                           ),
+                          title: Text(
+                            '${purchases[index]?.purchaseDate}',
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Bill No: ${purchases[index]?.referenceNumber}',
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              Text(
+                                'Client: ${purchases[index]?.companyName}',
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              Text(
+                                'Paid: ${purchases[index]?.paidAmount}/=',
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ],
+                          ),
+                          trailing:
+                              Text('${purchases[index]?.grandTotalAmount}/='),
+                          onTap: () {
+                            // var arguments = {
+                            //   'purchase': purchases[index],
+                            //   'purchaseModel': purchaseModel,
+                            // };
+                            // Navigator.pushNamed(context, AppRoutes.purchase_detail,
+                            //     arguments: arguments);
+                          },
                         ),
-                      ),
-                      title: Text(
-                        '${purchases[index]?.purchaseDate}',
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Bill No: ${purchases[index]?.referenceNumber}',
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          Text(
-                            'Supplier: ${purchases[index]?.supplier}',
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          Text(
-                            'Paid: ${purchases[index]?.paidAmount}/=',
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ],
-                      ),
-                      trailing: Text('${purchases[index]?.grandTotalAmount}/='),
-                      onTap: () {
-                        // var arguments = {
-                        //   'purchase': purchases[index],
-                        //   'purchaseModel': purchaseModel,
-                        // };
-                        // Navigator.pushNamed(context, AppRoutes.purchase_detail,
-                        //     arguments: arguments);
-                      },
-                    ),
-                  );
-                }),
+                      );
+                    }),
             sales.length == 0
                 ? Center(
                     child: Text('No Sales'),
@@ -276,7 +281,25 @@ class _ItemDetailState extends State<ItemDetail> {
                       item: widget.item,
                     ),
                     0.81)
-                : _showToast(label + ' Selected', color, Icons.error_outline);
+                : label == 'Print Barcode'
+                    ? _showModalSheetAppBar(
+                        context,
+                        'Edit Product',
+                        new Center(
+                          child: new Column(
+                            children: <Widget>[
+                              new Container(
+                                child: new MaterialButton(
+                                    onPressed: scan, child: new Text("Scan")),
+                                padding: const EdgeInsets.all(8.0),
+                              ),
+                              new Text(barcode),
+                            ],
+                          ),
+                        ),
+                        0.70)
+                    : _showToast(
+                        label + ' Selected', color, Icons.error_outline);
       },
       child: Container(
         child: Chip(
@@ -294,5 +317,25 @@ class _ItemDetailState extends State<ItemDetail> {
         margin: EdgeInsets.only(left: 12, right: 12, top: 2, bottom: 2),
       ),
     );
+  }
+
+  Future scan() async {
+    try {
+      String barcode = await BarcodeScanner.scan();
+      setState(() => this.barcode = barcode);
+    } on PlatformException catch (e) {
+      if (e.code == BarcodeScanner.CameraAccessDenied) {
+        setState(() {
+          this.barcode = 'The user did not grant the camera permission!';
+        });
+      } else {
+        setState(() => this.barcode = 'Unknown error: $e');
+      }
+    } on FormatException {
+      setState(() => this.barcode =
+          'null (User returned using the "back"-button before scanning anything. Result)');
+    } catch (e) {
+      setState(() => this.barcode = 'Unknown error: $e');
+    }
   }
 }

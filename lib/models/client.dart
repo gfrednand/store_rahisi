@@ -1,28 +1,39 @@
 // To parse this JSON data, do
 //
-//     final supplier = supplierFromJson(jsonString);
+//     final client = clientFromJson(jsonString);
 
 import 'dart:convert';
 
-// Supplier supplierFromJson(String str) => Supplier.fromMap(json.decode(str));
+// Client clientFromJson(String str) => Client.fromMap(json.decode(str));
 
-String supplierToJson(Supplier data) => json.encode(data.toMap());
+String clientToJson(Client data) => json.encode(data.toMap());
 
-class Supplier {
+class Client {
+
   String id;
   String userId;
-  String name;
+  String companyName;
   bool active;
   String contactPerson;
   String phoneNumber;
   String email;
   String address;
   String description;
+  String clientType;
+  double proviousDue;
+  String accountNo;
 
-  Supplier({
+
+
+
+
+  Client({
     this.id,
     this.userId,
-    this.name,
+    this.companyName,
+    this.clientType,
+    this.proviousDue,
+    this.accountNo,
     this.active,
     this.contactPerson,
     this.phoneNumber,
@@ -31,9 +42,12 @@ class Supplier {
     this.description,
   });
 
-  factory Supplier.fromMap(Map<String, dynamic> json, String id) => Supplier(
+  factory Client.fromMap(Map<String, dynamic> json, String id) => Client(
         id: id ?? '',
-        name: json["name"] ?? '',
+        companyName: json["companyName"] ?? '',
+        clientType: json["clientType"] ?? '',
+        proviousDue: json["proviousDue"] ?? '',
+        accountNo: json["accountNo"] ?? '',
         userId: json["userId"] ?? '',
         active: json["active"],
         contactPerson: json["contactPerson"] ?? '',
@@ -45,7 +59,10 @@ class Supplier {
 
   Map<String, dynamic> toMap() => {
         "id": id,
-        "name": name,
+        "companyName": companyName,
+        "clientType": clientType,
+        "proviousDue": proviousDue,
+        "accountNo": accountNo,
         "userId": userId,
         "active": active,
         "contactPerson": contactPerson,

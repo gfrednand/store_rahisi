@@ -3,12 +3,12 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:storeRahisi/locator.dart';
 import 'package:storeRahisi/models/index.dart';
-import 'package:storeRahisi/providers/base_model.dart';
-import 'package:storeRahisi/providers/payment_model.dart';
+import 'package:storeRahisi/providers/index.dart';
+
 import 'package:storeRahisi/services/api.dart';
 import 'package:storeRahisi/services/dialog_service.dart';
 import 'package:storeRahisi/services/navigation_service.dart';
-import 'package:storeRahisi/providers/supplier_model.dart';
+
 
 class PurchaseModel extends BaseModel {
   Api _api = Api(path: 'purchases', companyId: '1');
@@ -19,8 +19,8 @@ class PurchaseModel extends BaseModel {
   int _count = 0;
   List<Purchase> _purchases = [];
   List<Purchase> _searchPurchases;
-  // List<Supplier> _suppliers;
-  // List<Supplier> get suppliers => _suppliers;
+  // List<Client> _clients;
+  // List<Client> get clients => _clients;
   List<Item> _items;
   List<Item> get items => _items;
   List<Purchase> get purchases => _purchases;
@@ -31,17 +31,17 @@ class PurchaseModel extends BaseModel {
 
   final DialogService _dialogService = locator<DialogService>();
   NavigationService _navigationService = locator<NavigationService>();
-  SupplierModel _supplierModel = locator<SupplierModel>();
+  ClientModel _clientModel = locator<ClientModel>();
   PaymentModel _paymentModel = locator<PaymentModel>();
 
   Purchase _purchase;
   bool get _editting => _purchase != null;
 
-  // SupplierModel _supplierModel = SupplierModel();
+  // ClientModel _clientModel = ClientModel();
 
-  // getSuppliers() {
-  //   _supplierModel.fetchSuppliers();
-  //   _suppliers = _supplierModel.suppliers;
+  // getclients() {
+  //   _clientModel.fetchclients();
+  //   _clients = _clientModel.clients;
   //   // setBusy(false);
   // }
 
@@ -83,8 +83,8 @@ class PurchaseModel extends BaseModel {
         _purchases = updatedPurchases;
 
         // _purchases.map((purchase) {
-        //   purchase.supplier =
-        //       _supplierModel.getSupplierById(purchase.supplierId)?.name;
+        //   purchase.Client =
+        //       _clientModel.getClientById(purchase.ClientId)?.name;
 
         //   List<Payment> payments =
         //       _paymentModel.getPaymentsByPurchaseId(purchase.id);
@@ -112,10 +112,10 @@ class PurchaseModel extends BaseModel {
     return pur;
   }
 
-  List<Purchase> getPurchaseHistoryBySupplierId(String id) {
+  List<Purchase> getPurchaseHistoryByClientId(String id) {
     List<Purchase> purs = [];
     _purchases.forEach((purchase) {
-      if (purchase.supplierId == id) {
+      if (purchase.clientId == id) {
         purs.add(purchase);
       }
     });
@@ -202,7 +202,7 @@ class PurchaseModel extends BaseModel {
               method: 'Cash',
               purchaseId: data.id,
               note: 'Paid For ${data.referenceNumber}',
-              supplierId: data.supplierId,
+              clientId: data.clientId,
               type: 'Debit'));
       _selectedItems = [];
       await _dialogService.showDialog(

@@ -5,10 +5,8 @@ import 'package:storeRahisi/models/index.dart';
 import 'package:storeRahisi/models/purchase.dart';
 import 'package:storeRahisi/pages/purchase/purchase_form.dart';
 import 'package:storeRahisi/pages/purchase/purchase_payment_form.dart';
-import 'package:storeRahisi/providers/item_model.dart';
-import 'package:storeRahisi/providers/payment_model.dart';
-import 'package:storeRahisi/providers/purchase_model.dart';
-import 'package:storeRahisi/providers/supplier_model.dart';
+import 'package:storeRahisi/providers/index.dart';
+
 import 'package:storeRahisi/widgets/custom_modal_sheet.dart';
 import 'package:storeRahisi/widgets/toast.dart';
 
@@ -84,8 +82,8 @@ class _PurchaseDetailState extends State<PurchaseDetail> {
                     thickness: 10.0,
                   ),
                   ListTile(
-                    title: Text('${widget.purchase.supplier}'),
-                    subtitle: Text('Supplier'),
+                    title: Text('${widget.purchase.companyName}'),
+                    subtitle: Text('Client'),
                   ),
                   ListTile(
                     title: Text('${widget.purchase.referenceNumber}'),
@@ -161,10 +159,10 @@ class _PurchaseDetailState extends State<PurchaseDetail> {
             ListView.builder(
                 itemCount: payments.length,
                 itemBuilder: (buildContext, index) {
-                  SupplierModel supplierModel =
-                      Provider.of<SupplierModel>(context);
-                  Supplier supplier =
-                      supplierModel.getSupplierById(payments[index].supplierId);
+                  ClientModel clientModel =
+                      Provider.of<ClientModel>(context);
+                  Client client =
+                      clientModel.getClientById(payments[index].clientId);
                   return Card(
                     child: ListTile(
                       leading: ExcludeSemantics(
@@ -179,7 +177,7 @@ class _PurchaseDetailState extends State<PurchaseDetail> {
                         ),
                       ),
                       title: Text(
-                        '${supplier?.name}',
+                        '${client?.companyName}',
                         overflow: TextOverflow.ellipsis,
                       ),
                       subtitle: Text(

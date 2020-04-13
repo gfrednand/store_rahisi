@@ -17,8 +17,8 @@ class Purchase {
   String updatedAt;
   String referenceNumber;
   bool active;
-  String supplierId;
-  String supplier;
+  String clientId;
+  String companyName;
   List<Item> items;
   double grandTotalAmount;
   double paidAmount;
@@ -29,11 +29,11 @@ class Purchase {
       String referenceNumber,
       @required this.userId,
       this.active,
-      this.supplierId,
+      this.clientId,
       String purchaseDate,
       this.items,
       this.grandTotalAmount,
-      this.supplier,
+      this.companyName,
       this.paidAmount,
       this.dueAmount,
       this.updatedAt})
@@ -50,7 +50,7 @@ class Purchase {
         userId: json['userId'],
         referenceNumber: json['referenceNumber'],
         active: json["active"],
-        supplierId: json["supplierId"],
+        clientId: json["clientId"],
         purchaseDate: json["purchaseDate"],
         updatedAt: json["updatedAt"],
         items:
@@ -64,7 +64,7 @@ class Purchase {
         'userId': userId,
         'referenceNumber': referenceNumber,
         "active": active,
-        "supplierId": supplierId,
+        "clientId": clientId,
         "purchaseDate": purchaseDate,
         "updatedAt": updatedAt,
         "items": List<dynamic>.from(items.map((x) => x.toMapPurchase())),

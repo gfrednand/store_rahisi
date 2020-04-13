@@ -50,8 +50,8 @@ class SaleModel extends BaseModel {
         _sales = updatedSales;
 
         // _sales.map((purchase) {
-        //   purchase.supplier =
-        //       _supplierModel.getSupplierById(purchase.supplierId)?.name;
+        //   purchase.client =
+        //       _clientModel.getClientById(purchase.clientId)?.name;
 
         //   List<Payment> payments =
         //       _paymentModel.getPaymentsByPurchaseId(purchase.id);

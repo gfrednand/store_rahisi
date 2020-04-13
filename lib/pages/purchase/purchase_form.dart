@@ -8,7 +8,7 @@ import 'package:storeRahisi/widgets/input_field.dart';
 
 class PurchaseForm extends StatelessWidget {
   final Purchase purchase;
-  final supplierController = new TextEditingController();
+  final clientController = new TextEditingController();
   final paidAmountController = new TextEditingController();
 
   PurchaseForm({
@@ -26,7 +26,7 @@ class PurchaseForm extends StatelessWidget {
     return BaseView<PurchaseModel>(
       onModelReady: (model) {
         // update the text in the controller
-        supplierController.text = purchase?.supplier ?? '';
+        clientController.text = purchase?.companyName ?? '';
         paidAmountController.text = purchase?.paidAmount.toString() ?? '';
 
         model.setEdittingPurchase(purchase);
@@ -41,11 +41,11 @@ class PurchaseForm extends StatelessWidget {
               children: <Widget>[
                 InputField(
                     isReadOnly: model.busy,
-                    placeholder: 'Supplier*',
-                    controller: supplierController,
+                    placeholder: 'client*',
+                    controller: clientController,
                     validator: (value) {
                       if (value.isEmpty) {
-                        return "Please enter a valid Supplier.";
+                        return "Please enter a valid client.";
                       }
                       return null;
                     }),
@@ -87,7 +87,7 @@ class PurchaseForm extends StatelessWidget {
                         model.savePurchase(
                             data: Purchase(
                           id: purchase?.id ?? '',
-                          supplierId: supplierController.text,
+                          clientId: clientController.text,
                           paidAmount: double.parse(paidAmountController.text),
                           userId: null,
                         ));

@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:storeRahisi/constants/routes.dart';
-import 'package:storeRahisi/providers/supplier_model.dart';
 import 'package:storeRahisi/pages/base_view.dart';
+import 'package:storeRahisi/providers/index.dart';
 
-class SupplierList extends StatelessWidget {
+class ClientList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return BaseView<SupplierModel>(
-        onModelReady: (model) => model.listenToSuppliers(),
+    return BaseView<ClientModel>(
+        onModelReady: (model) => model.listenToClients(),
         builder: (context, model, child) {
           return !model.busy
-              ? model.suppliers == null
+              ? model.clients == null
                   ? Center(
                       child: Text('Nothing Found'),
                     )
                   : Scrollbar(
                       child: ListView.builder(
-                        itemCount: model.suppliers.length,
+                        itemCount: model.clients.length,
                         itemBuilder: (buildContext, index) => Card(
                           child: ListTile(
                             leading: ExcludeSemantics(
@@ -24,7 +24,7 @@ class SupplierList extends StatelessWidget {
                                 radius: 30.0,
                                 backgroundColor: Theme.of(context).primaryColor,
                                 child: Text(
-                                  model.suppliers[index].name
+                                  model.clients[index].companyName
                                       .substring(0, 2)
                                       .toUpperCase(),
                                   style: TextStyle(
@@ -33,23 +33,23 @@ class SupplierList extends StatelessWidget {
                               ),
                             ),
                             title: Hero(
-                              tag: '${model.suppliers[index].id}__heroTag',
+                              tag: '${model.clients[index].id}__heroTag',
                               child: Text(
-                                '${model.suppliers[index].name}',
+                                '${model.clients[index].companyName}',
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ),
                             subtitle: Text(
-                              '${model.suppliers[index].phoneNumber}',
+                              '${model.clients[index].phoneNumber}',
                               overflow: TextOverflow.ellipsis,
                             ),
                             onTap: () {
                               var arguments = {
-                                'supplier': model.suppliers[index],
-                                'supplierModel': model,
+                                'client': model.clients[index],
+                                'clientModel': model,
                               };
                               Navigator.pushNamed(
-                                  context, AppRoutes.supplier_detail,
+                                  context, AppRoutes.client_detail,
                                   arguments: arguments);
                             },
                           ),

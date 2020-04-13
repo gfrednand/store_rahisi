@@ -11,10 +11,9 @@ import 'package:storeRahisi/pages/purchase/purchase_add.dart';
 import 'package:storeRahisi/pages/register_page.dart';
 import 'package:storeRahisi/pages/sale/sale_detail.dart';
 import 'package:storeRahisi/pages/splash_page.dart';
-import 'package:storeRahisi/pages/supplier/supplier_detail.dart';
-import 'package:storeRahisi/pages/supplier/supplier_list.dart';
+import 'package:storeRahisi/pages/client/client_detail.dart';
+import 'package:storeRahisi/pages/client/client_list.dart';
 
-import 'models/index.dart';
 
 class Router {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -39,15 +38,15 @@ class Router {
       case AppRoutes.register:
         return MaterialPageRoute(builder: (_) => RegisterPage());
         break;
-      case AppRoutes.supplier:
-        return MaterialPageRoute(builder: (_) => SupplierList());
+      case AppRoutes.client:
+        return MaterialPageRoute(builder: (_) => ClientList());
         break;
-      case AppRoutes.supplier_detail:
+      case AppRoutes.client_detail:
         var args = settings.arguments as Map<String, dynamic>;
         return MaterialPageRoute(
-            builder: (_) => SupplierDetail(
-                  supplier: args['supplier'],
-                  supplierModel: args['supplierModel'],
+            builder: (_) => ClientDetail(
+                  client: args['client'],
+                  clientModel: args['clientModel'],
                 ));
         break;
       case AppRoutes.item_detail:

@@ -12,8 +12,8 @@ import 'package:storeRahisi/pages/item/item_search_delegate.dart';
 import 'package:storeRahisi/pages/pos/pos_item_list.dart';
 import 'package:storeRahisi/pages/purchase/purchase_form.dart';
 import 'package:storeRahisi/pages/purchase/purchase_list.dart';
-import 'package:storeRahisi/pages/supplier/supplier_form.dart';
-import 'package:storeRahisi/pages/supplier/supplier_list.dart';
+import 'package:storeRahisi/pages/client/client_form.dart';
+import 'package:storeRahisi/pages/client/client_list.dart';
 import 'package:storeRahisi/providers/auth_model.dart';
 import 'package:storeRahisi/providers/cart_model.dart';
 import 'package:storeRahisi/providers/item_model.dart';
@@ -34,7 +34,7 @@ class _LayoutPageState extends State<LayoutPage> with TickerProviderStateMixin {
     return _currentIndex == 0
         ? "Products"
         : _currentIndex == 1
-            ? "Suppliers"
+            ? "Clients"
             : _currentIndex == 2
                 ? "Purchases"
                 : _currentIndex == 3
@@ -54,7 +54,7 @@ class _LayoutPageState extends State<LayoutPage> with TickerProviderStateMixin {
         ),
         _NavigationIconView(
           icon: const Icon(Icons.ac_unit),
-          title: 'Suppliers',
+          title: 'Clients',
           vsync: this,
         ),
         _NavigationIconView(
@@ -255,7 +255,7 @@ class _LayoutPageState extends State<LayoutPage> with TickerProviderStateMixin {
     return _currentIndex == 0
         ? ItemList()
         : _currentIndex == 1
-            ? SupplierList()
+            ? ClientList()
             : _currentIndex == 2
                 ? PurchaseList()
                 : _currentIndex == 4 ? PosItemList() : Container();
@@ -288,8 +288,8 @@ class _LayoutPageState extends State<LayoutPage> with TickerProviderStateMixin {
                             ? _showModalSheetAppBar(
                                 context, 'Add Product', ItemForm(), 0.67)
                             : _currentIndex == 1
-                                ? _showModalSheetAppBar(context, 'Add Supplier',
-                                    SupplierForm(), 0.7)
+                                ? _showModalSheetAppBar(context, 'Add Client',
+                                    ClientForm(), 0.7)
                                 : _currentIndex == 2
                                     ? Navigator.pushNamed(
                                         context, AppRoutes.purchase_add,

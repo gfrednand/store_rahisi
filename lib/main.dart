@@ -42,7 +42,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => locator<AuthModel>()),
         ChangeNotifierProvider(create: (_) => locator<PurchaseModel>()),
         ChangeNotifierProvider.value(value: locator<ItemModel>(),),
-        ChangeNotifierProvider.value(value: locator<SupplierModel>(),),
+        ChangeNotifierProvider.value(value: locator<ClientModel>(),),
         ChangeNotifierProvider.value(value: locator<SaleModel>(),),
         ChangeNotifierProvider(create: (_) => locator<PaymentModel>()),
         ChangeNotifierProvider(create: (_) => locator<CartModel>()),

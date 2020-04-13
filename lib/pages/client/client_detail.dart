@@ -1,24 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:storeRahisi/models/index.dart';
-import 'package:storeRahisi/models/supplier.dart';
-import 'package:storeRahisi/pages/supplier/supplier_form.dart';
-import 'package:storeRahisi/providers/purchase_model.dart';
-import 'package:storeRahisi/providers/supplier_model.dart';
+
+import 'package:storeRahisi/pages/client/client_form.dart';
+import 'package:storeRahisi/providers/index.dart';
+
 import 'package:storeRahisi/widgets/custom_modal_sheet.dart';
 
-class SupplierDetail extends StatefulWidget {
-  final Supplier supplier;
-  final SupplierModel supplierModel;
+class ClientDetail extends StatefulWidget {
+  final Client client;
+  final ClientModel clientModel;
 
-  const SupplierDetail({Key key, this.supplier, this.supplierModel})
+  const ClientDetail({Key key, this.client, this.clientModel})
       : super(key: key);
 
   @override
-  _SupplierDetailState createState() => _SupplierDetailState();
+  _ClientDetailState createState() => _ClientDetailState();
 }
 
-class _SupplierDetailState extends State<SupplierDetail> {
+class _ClientDetailState extends State<ClientDetail> {
   _showModalSheetAppBar(
       BuildContext context, String title, Widget body, double heightFactor) {
     CustomModalSheet.show(
@@ -33,13 +33,13 @@ class _SupplierDetailState extends State<SupplierDetail> {
   Widget build(BuildContext context) {
     PurchaseModel purchaseModel = Provider.of<PurchaseModel>(context);
     List<Purchase> purchases =
-        purchaseModel.getPurchaseHistoryBySupplierId(widget.supplier.id);
+        purchaseModel.getPurchaseHistoryByClientId(widget.client.id);
     return Scaffold(
       appBar: AppBar(
-        title: widget.supplier.name == null
-            ? Text('Supplier Details')
+        title: widget.client.companyName == null
+            ? Text('Client Details')
             : Text(
-                '${widget.supplier.name.toUpperCase()}',
+                '${widget.client.companyName.toUpperCase()}',
                 overflow: TextOverflow.ellipsis,
               ),
       ),
@@ -60,30 +60,30 @@ class _SupplierDetailState extends State<SupplierDetail> {
               thickness: 10.0,
             ),
             ListTile(
-              title: Text('${widget.supplier.name}'),
-              subtitle: Text(' Supplier Name'),
+              title: Text('${widget.client.companyName}'),
+              subtitle: Text(' Company Name'),
             ),
             ListTile(
-              title: Text('${widget.supplier.contactPerson}'),
+              title: Text('${widget.client.contactPerson}'),
               subtitle: Text('Contact Person'),
             ),
             Divider(
               thickness: 10.0,
             ),
             ListTile(
-              title: Text('${widget.supplier.phoneNumber}'),
+              title: Text('${widget.client.phoneNumber}'),
               subtitle: Text('Phone Number'),
             ),
             ListTile(
-              title: Text('${widget.supplier.email}'),
+              title: Text('${widget.client.email}'),
               subtitle: Text('Email'),
             ),
             ListTile(
-              title: Text('${widget.supplier.address}'),
+              title: Text('${widget.client.address}'),
               subtitle: Text('Address'),
             ),
             ListTile(
-              title: Text('${widget.supplier.description}'),
+              title: Text('${widget.client.description}'),
               subtitle: Text('Note'),
             ),
             Divider(
@@ -99,13 +99,13 @@ class _SupplierDetailState extends State<SupplierDetail> {
     return GestureDetector(
       onTap: () {
         label == 'Delete'
-            ? widget.supplierModel.removeSupplier(widget.supplier.id)
+            ? widget.clientModel.removeClient(widget.client.id)
             : label == 'Edit'
                 ? _showModalSheetAppBar(
                     context,
                     'Edit Product',
-                    SupplierForm(
-                      supplier: widget.supplier,
+                    ClientForm(
+                      client: widget.client,
                     ),
                     0.81)
                 : Container();

@@ -10,18 +10,17 @@ String paymentToJson(Payment data) => json.encode(data.toMap());
 
 class Payment {
   String id;
-  String supplierId;
+  String clientId;
   String method;
   String type;
   String purchaseId;
   double amount;
   String note;
   String userId;
-
   Payment({
     this.id,
     this.userId,
-    this.supplierId,
+    this.clientId,
     this.method,
     this.type,
     this.purchaseId,
@@ -31,7 +30,7 @@ class Payment {
 
   factory Payment.fromMap(Map<String, dynamic> json, String id) => Payment(
         id: id ?? '',
-        supplierId: json["supplierId"],
+        clientId: json["clientId"],
         userId: json["userId"],
         method: json["method"],
         type: json["type"],
@@ -42,7 +41,7 @@ class Payment {
 
   Map<String, dynamic> toMap() => {
         "id": id,
-        "supplierId": supplierId,
+        "clientId": clientId,
         "userId": userId,
         "method": method,
         "type": type,

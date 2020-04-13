@@ -4,86 +4,86 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:storeRahisi/locator.dart';
 import 'package:storeRahisi/providers/base_model.dart';
 import 'package:storeRahisi/services/api.dart';
-import 'package:storeRahisi/models/supplier.dart';
+import 'package:storeRahisi/models/client.dart';
 import 'package:storeRahisi/services/dialog_service.dart';
 import 'package:storeRahisi/services/navigation_service.dart';
 
-class SupplierModel extends BaseModel {
+class ClientModel extends BaseModel {
   // Api _api = locator<Api>();
 
-  Api _api = Api(path: 'suppliers', companyId: '1');
+  Api _api = Api(path: 'clients', companyId: '1');
   String _documentID;
   String get documentID => _documentID;
 
-  List<Supplier> _suppliers = [];
-  List<Supplier> get suppliers => _suppliers;
+  List<Client> _clients = [];
+  List<Client> get clients => _clients;
 
-  Supplier _supplier;
-  Supplier get supplier => _supplier;
+  Client _client;
+  Client get client => _client;
 
-  bool get _editting => _supplier != null;
+  bool get _editting => _client != null;
   final DialogService _dialogService = locator<DialogService>();
   NavigationService _navigationService = locator<NavigationService>();
 
-  final StreamController<List<Supplier>> _supplierController =
-      StreamController<List<Supplier>>.broadcast();
+  final StreamController<List<Client>> _clientController =
+      StreamController<List<Client>>.broadcast();
 
-  Supplier getById(String id) =>
-      _suppliers.firstWhere((supplier) => supplier.id == id);
+  Client getById(String id) =>
+      _clients.firstWhere((client) => client.id == id);
 
-  fetchSuppliers() async {
+  fetchClients() async {
     setBusy(true);
     var result = await _api.getDataCollection();
-    _suppliers = result.documents
-        .map((doc) => Supplier.fromMap(doc.data, doc.documentID))
+    _clients = result.documents
+        .map((doc) => Client.fromMap(doc.data, doc.documentID))
         .toList();
     setBusy(false);
   }
 
-  listenToSuppliers() async {
+  listenToClients() async {
     _api.streamDataCollection().listen((postsSnapshot) {
       if (postsSnapshot.documents.isNotEmpty) {
         var posts = postsSnapshot.documents
             .map((snapshot) =>
-                Supplier.fromMap(snapshot.data, snapshot.documentID))
+                Client.fromMap(snapshot.data, snapshot.documentID))
             .toList();
 
         // Add the posts onto the controller
-        _supplierController.add(posts);
+        _clientController.add(posts);
       }
     });
 
-    _supplierController.stream.listen((purchaseData) {
-      List<Supplier> updatedSuppliers = purchaseData;
-      if (updatedSuppliers != null && updatedSuppliers.length > 0) {
-        _suppliers = updatedSuppliers;
+    _clientController.stream.listen((purchaseData) {
+      List<Client> updatedclients = purchaseData;
+      if (updatedclients != null && updatedclients.length > 0) {
+        _clients = updatedclients;
         notifyListeners();
       }
     });
   }
 
-  Supplier getSupplierById(String id) {
-    if (_suppliers.length == 0) {
-      listenToSuppliers();
+  Client getClientById(String id) {
+    if (_clients.length == 0) {
+      listenToClients();
     }
-    return _suppliers.firstWhere(
+    return _clients.firstWhere(
       (item) => item.id == id,
       orElse: () => null,
     );
   }
 
-  getSupplierByIdFromServer(String id) async {
+  getClientByIdFromServer(String id) async {
     setBusy(true);
     var doc = await _api.getDocumentById(id);
-    _supplier = Supplier.fromMap(doc.data, doc.documentID);
+    _client = Client.fromMap(doc.data, doc.documentID);
     setBusy(false);
   }
 
-  removeSupplier(String id) async {
+  removeClient(String id) async {
 
      var dialogResponse = await _dialogService.showConfirmationDialog(
       title: 'Are you sure?',
-      description: 'Do you really want to delete supplier?',
+      description: 'Do you really want to delete client?',
       confirmationTitle: 'Yes',
       cancelTitle: 'No',
     );
@@ -94,18 +94,18 @@ class SupplierModel extends BaseModel {
 
   }
 
-    void setEdittingSupplier(Supplier edittingSupplier) {
-    _supplier = edittingSupplier;
+    void setEdittingclient(Client edittingclient) {
+    _client = edittingclient;
 
   }
 
-  updateSupplier(Supplier data, String id) async {
+  updateClient(Client data, String id) async {
     setBusy(true);
     await _api.updateDocument(data.toMap(), id);
     setBusy(false);
   }
 
-  addSupplier(Supplier data) async {
+  addClient(Client data) async {
     setBusy(true);
 
     var result;
@@ -121,13 +121,13 @@ class SupplierModel extends BaseModel {
 
     if (result is String) {
       await _dialogService.showDialog(
-        title: 'Cound not create supplier',
+        title: 'Cound not create client',
         description: result,
       );
     } else {
       await _dialogService.showDialog(
-        title: 'Supplier successfully Added',
-        description: 'Supplier has been created',
+        title: 'client successfully Added',
+        description: 'client has been created',
       );
     }
 

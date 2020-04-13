@@ -29,7 +29,7 @@ void setupLocator() {
   // locator.registerLazySingleton<BillDbProvider>(() => BillDbProvider());
   // locator.registerLazySingleton<SharedPrefsUtil>(() => SharedPrefsUtil());
 
-  locator.registerLazySingleton(() => SupplierModel());
+  locator.registerLazySingleton(() => ClientModel());
   locator.registerLazySingleton(() => ItemModel());
   locator.registerLazySingleton(() => PurchaseModel());
   locator.registerLazySingleton(() => PaymentModel());

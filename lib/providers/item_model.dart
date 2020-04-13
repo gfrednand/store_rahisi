@@ -65,9 +65,9 @@ class ItemModel extends BaseModel {
     });
 
     _itemsController.stream.listen((purchaseData) {
-      List<Item> updatedSuppliers = purchaseData;
-      if (updatedSuppliers != null && updatedSuppliers.length > 0) {
-        _items = updatedSuppliers;
+      List<Item> updatedClients = purchaseData;
+      if (updatedClients != null && updatedClients.length > 0) {
+        _items = updatedClients;
         notifyListeners();
       }
     });

@@ -125,3 +125,28 @@ class Item {
         'quantity': quantity,
       };
 }
+
+class Tax {
+  String id;
+  String name;
+  String rate;
+  String type;
+
+  Tax({this.id, this.name, this.rate, this.type});
+
+ factory Tax.fromFirestore(DocumentSnapshot doc) {
+    Map json = doc.data;
+    return Tax(
+        id: doc.documentID,
+        name: json['name'],
+        rate: json['rate'],
+        type: json['type']);
+  }
+
+    Map<String, dynamic> toMap() => {
+        'id': id,
+        'rate': rate,
+        'name': name,
+        'type': type,
+      };
+}
