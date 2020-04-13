@@ -63,7 +63,7 @@ class PaymentModel extends BaseModel {
     if (_payments.length == 0) {
       listenToPayments();
     }
-    return _payments.where((payment) => payment.purchaseId == id).toList();
+    return _payments.where((payment) => payment.referenceNo == id).toList();
   }
 
   removePayment(String id) async {

@@ -1,3 +1,4 @@
+import 'package:barcode_flutter/barcode_flutter.dart';
 import 'package:barcode_scan/barcode_scan.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -19,7 +20,7 @@ class ItemDetail extends StatefulWidget {
 
 class _ItemDetailState extends State<ItemDetail> {
   TextEditingController salePriceController;
-  String barcode = "";
+
   void _showToast(String message, Color backGroundColor, IconData icon) {
     Toast.show(
       message: message,
@@ -88,6 +89,14 @@ class _ItemDetailState extends State<ItemDetail> {
                   Divider(
                     thickness: 10.0,
                   ),
+                  widget.item.barcode == null
+                      ? Container()
+                      : BarCodeImage(
+                          params: CodabarBarCodeParams(
+                            widget.item.barcode ?? '',
+                          ),
+                        ),
+                  Text(widget.item.barcode ?? ''),
                   ListTile(
                     title: Text('${widget.item.category}'),
                     subtitle: Text('Category'),
@@ -281,25 +290,7 @@ class _ItemDetailState extends State<ItemDetail> {
                       item: widget.item,
                     ),
                     0.81)
-                : label == 'Print Barcode'
-                    ? _showModalSheetAppBar(
-                        context,
-                        'Edit Product',
-                        new Center(
-                          child: new Column(
-                            children: <Widget>[
-                              new Container(
-                                child: new MaterialButton(
-                                    onPressed: scan, child: new Text("Scan")),
-                                padding: const EdgeInsets.all(8.0),
-                              ),
-                              new Text(barcode),
-                            ],
-                          ),
-                        ),
-                        0.70)
-                    : _showToast(
-                        label + ' Selected', color, Icons.error_outline);
+                : _showToast(label + ' Selected', color, Icons.error_outline);
       },
       child: Container(
         child: Chip(
@@ -317,25 +308,5 @@ class _ItemDetailState extends State<ItemDetail> {
         margin: EdgeInsets.only(left: 12, right: 12, top: 2, bottom: 2),
       ),
     );
-  }
-
-  Future scan() async {
-    try {
-      String barcode = await BarcodeScanner.scan();
-      setState(() => this.barcode = barcode);
-    } on PlatformException catch (e) {
-      if (e.code == BarcodeScanner.CameraAccessDenied) {
-        setState(() {
-          this.barcode = 'The user did not grant the camera permission!';
-        });
-      } else {
-        setState(() => this.barcode = 'Unknown error: $e');
-      }
-    } on FormatException {
-      setState(() => this.barcode =
-          'null (User returned using the "back"-button before scanning anything. Result)');
-    } catch (e) {
-      setState(() => this.barcode = 'Unknown error: $e');
-    }
   }
 }

@@ -29,7 +29,8 @@ class CartModel extends BaseModel {
       // items..add(action.item);
       if (i.quantity > 0) {
         _carts = List.from(_carts)
-          ..add(Cart(itemId: i.id, paidAmount: i.salePrice, quantity: i.quantity));
+          ..add(Cart(
+              itemId: i.id, paidAmount: i.salePrice, quantity: i.quantity));
       }
     }
     notifyListeners();
@@ -39,6 +40,10 @@ class CartModel extends BaseModel {
     return _carts..removeWhere((cart) => cart.itemId == i.id);
   }
 
-  double get totalPrice =>
-      _carts.fold(0, (total, item) => total + (item.paidAmount * item.quantity));
+  removeAllItems() {
+    _carts = [];
+  }
+
+  double get totalPrice => _carts.fold(
+      0, (total, item) => total + (item.paidAmount * item.quantity));
 }

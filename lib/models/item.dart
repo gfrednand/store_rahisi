@@ -22,6 +22,7 @@ class Item {
   double salePrice;
   double purchasePrice;
   double paidAmount;
+  String barcode;
   String createdAt;
   String updatedAt;
   int alertQty;
@@ -46,6 +47,7 @@ class Item {
     this.salePrice,
     this.purchasePrice,
     this.paidAmount,
+    this.barcode,
     this.alertQty,
     this.totalPurchase,
     this.totalSales,
@@ -70,6 +72,7 @@ class Item {
       purchasePrice: json['purchasePrice']?.toDouble(),
       paidAmount: json['paidAmount']?.toDouble(),
       alertQty: json['alertQty'],
+      barcode: json['barcode'],
       createdAt: json["createdAt"],
       updatedAt: json["updatedAt"],
       openingStock: json['openingStock'],
@@ -89,6 +92,7 @@ class Item {
         purchasePrice: json['purchasePrice']?.toDouble(),
         paidAmount: json['paidAmount']?.toDouble(),
         alertQty: json['alertQty'],
+        barcode: json['barcode'],
         createdAt: json["createdAt"],
         updatedAt: json["updatedAt"],
         openingStock: json['openingStock'],
@@ -107,6 +111,7 @@ class Item {
         'purchasePrice': purchasePrice,
         'paidAmount': paidAmount,
         'alertQty': alertQty,
+        'barcode': barcode,
         "createdAt": createdAt,
         "updatedAt": updatedAt,
         'openingStock': openingStock,

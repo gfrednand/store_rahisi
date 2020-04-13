@@ -29,7 +29,10 @@ class ClientModel extends BaseModel {
       StreamController<List<Client>>.broadcast();
 
   Client getById(String id) =>
-      _clients.firstWhere((client) => client.id == id);
+      _clients.firstWhere((client) => client.id == id, orElse: () => null,);
+
+  List<Client> getByClientType(String clientType) =>
+      _clients.where((client) => client.clientType == clientType).toList();
 
   fetchClients() async {
     setBusy(true);

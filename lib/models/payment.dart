@@ -13,7 +13,7 @@ class Payment {
   String clientId;
   String method;
   String type;
-  String purchaseId;
+  String referenceNo;
   double amount;
   String note;
   String userId;
@@ -23,7 +23,7 @@ class Payment {
     this.clientId,
     this.method,
     this.type,
-    this.purchaseId,
+    this.referenceNo,
     this.amount,
     this.note,
   });
@@ -34,7 +34,7 @@ class Payment {
         userId: json["userId"],
         method: json["method"],
         type: json["type"],
-        purchaseId: json["purchaseId"],
+        referenceNo: json["purchaseId"],
         amount: json["amount"],
         note: json["note"],
       );
@@ -45,7 +45,7 @@ class Payment {
         "userId": userId,
         "method": method,
         "type": type,
-        "purchaseId": purchaseId,
+        "purchaseId": referenceNo,
         "amount": amount,
         "note": note,
       };

@@ -62,7 +62,7 @@ class PurchaseList extends StatelessWidget {
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                   Text(
-                                    'client: ${model.purchases[index]?.companyName}',
+                                    'Supplier: ${model.purchases[index]?.companyName}',
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                   Text(

@@ -20,8 +20,10 @@ class Sale {
   double tax;
   double grandTotal;
   String paymentMethod;
+  double paidAmount;
   String referenceNumber;
   String userId;
+  String clientId;
   String saleDate;
   List<Item> items;
 
@@ -32,9 +34,11 @@ class Sale {
     this.discount,
     this.tax,
     this.grandTotal,
+    this.paidAmount,
     this.paymentMethod,
     String referenceNumber,
     this.userId,
+    this.clientId,
     String saleDate,
     this.items,
   })  :this.saleDate = saleDate ??
@@ -52,6 +56,7 @@ class Sale {
         grandTotal: json["grandTotal"].toDouble(),
         paymentMethod: json["paymentMethod"],
         userId: json["userId"],
+        clientId: json["clientId"],
         saleDate: json["saleDate"],
         items:
             List<Item>.from(json["items"].map((x) => Item.fromMap(x, x['id']))),
@@ -69,6 +74,7 @@ class Sale {
       grandTotal: data["grandTotal"].toDouble(),
       paymentMethod: data["paymentMethod"],
       userId: data["userId"],
+      clientId: data["clientId"],
       saleDate: data["saleDate"],
       items:
           List<Item>.from(data["items"].map((x) => Item.fromMap(x, x['id']))),
@@ -84,6 +90,7 @@ class Sale {
         "grandTotal": grandTotal,
         "paymentMethod": paymentMethod,
         "userId": userId,
+        "clientId": clientId,
         "saleDate": saleDate,
         "items": List<dynamic>.from(items.map((x) => x.toMapSale())),
       };

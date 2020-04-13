@@ -1,6 +1,7 @@
 // import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:storeRahisi/constants/app_constants.dart';
 import 'package:storeRahisi/constants/routes.dart';
 import 'package:storeRahisi/models/item.dart';
 import 'package:storeRahisi/models/user.dart';
@@ -256,12 +257,12 @@ class _LayoutPageState extends State<LayoutPage> with TickerProviderStateMixin {
         ? ItemList()
         : _currentIndex == 1
             ? TabBarView(children: [
-                Center(
-                  child: Text('Suppliers'),
+                ClientList(
+                  clientType: AppConstants.clientTypeSupplier,
                 ),
-                Center(
-                  child: Text('Customers'),
-                )
+                ClientList(
+                  clientType: AppConstants.clientTypeCustomer,
+                ),
               ])
             : _currentIndex == 2
                 ? PurchaseList()
@@ -283,21 +284,26 @@ class _LayoutPageState extends State<LayoutPage> with TickerProviderStateMixin {
         builder: (context, model, child) => _currentIndex == 1
             ? DefaultTabController(
                 length: tabs.length,
-                child: Scaffold(
-                  appBar: AppBar(
-                    automaticallyImplyLeading: false,
-                    title: Text(_title(context)),
-                    actions: _buildActions(context, model),
-                    bottom: TabBar(
-                      isScrollable: false,
-                      tabs: [
-                        for (final tab in tabs) Tab(text: tab),
-                      ],
-                    ),
-                  ),
-                  body: _buildTransitionsStack(),
-                  bottomNavigationBar: buildBottomNavigationBar(
-                      bottomNavigationBarItems, textTheme, colorScheme),
+                child: Builder(builder: (BuildContext context) {
+                    return Scaffold(
+                      appBar: AppBar(
+                        automaticallyImplyLeading: false,
+                        title: Text(_title(context)),
+                        actions: _buildActions(context, model),
+                        bottom: TabBar(
+                          isScrollable: false,
+                          tabs: [
+                            for (final tab in tabs) Tab(text: tab),
+                          ],
+                        ),
+                      ),
+                      body: _buildTransitionsStack(),
+                      floatingActionButton:
+                          floatingActionButton(context, colorScheme),
+                      bottomNavigationBar: buildBottomNavigationBar(
+                          bottomNavigationBarItems, textTheme, colorScheme),
+                    );
+                  }
                 ),
               )
             : Scaffold(
@@ -308,40 +314,55 @@ class _LayoutPageState extends State<LayoutPage> with TickerProviderStateMixin {
                 ),
                 // resizeToAvoidBottomPadding: true,
                 // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-                floatingActionButton: _currentIndex == 0 ||
-                        _currentIndex == 1 ||
-                        _currentIndex == 2 ||
-                        _currentIndex == 3
-                    ? FloatingActionButton(
-                        onPressed: () {
-                          _currentIndex == 0
-                              ? _showModalSheetAppBar(
-                                  context, 'Add Product', ItemForm(), 0.67)
-                              : _currentIndex == 1
-                                  ? _showModalSheetAppBar(
-                                      context, 'Add Client', ClientForm(), 0.7)
-                                  : _currentIndex == 2
-                                      ? Navigator.pushNamed(
-                                          context, AppRoutes.purchase_add,
-                                          arguments: 'Add Purchase')
-                                      : _currentIndex == 3
-                                          ? _showModalSheetAppBar(context,
-                                              'Add Expense', Container(), 0.5)
-                                          : Container();
-                        },
-                        child: Icon(
-                          Icons.add,
-                          color: colorScheme.onPrimary,
-                        ),
-                        tooltip: 'Add',
-                      )
-                    : Container(),
+                floatingActionButton:
+                    floatingActionButton(context, colorScheme),
                 body: Center(
                   child: _buildTransitionsStack(),
                 ),
                 bottomNavigationBar: buildBottomNavigationBar(
                     bottomNavigationBarItems, textTheme, colorScheme),
               ));
+  }
+
+  StatelessWidget floatingActionButton(
+      BuildContext context, ColorScheme colorScheme) {
+    return _currentIndex == 0 ||
+            _currentIndex == 1 ||
+            _currentIndex == 2 ||
+            _currentIndex == 3
+        ? FloatingActionButton(
+            onPressed: () {
+              int tabIndex = _currentIndex==1? DefaultTabController.of(context).index :0;
+              _currentIndex == 0
+                  ? _showModalSheetAppBar(
+                      context, 'Add Product', ItemForm(), 0.67)
+                  : _currentIndex == 1
+                      ? _showModalSheetAppBar(
+                          context,
+                          tabIndex == 0
+                              ? 'Add ' + AppConstants.clientTypeSupplier
+                              : 'Add ' + AppConstants.clientTypeCustomer,
+                          ClientForm(
+                            clientType: tabIndex == 0
+                                ? AppConstants.clientTypeSupplier
+                                : AppConstants.clientTypeCustomer,
+                          ),
+                          0.7)
+                      : _currentIndex == 2
+                          ? Navigator.pushNamed(context, AppRoutes.purchase_add,
+                              arguments: 'Add Purchase')
+                          : _currentIndex == 3
+                              ? _showModalSheetAppBar(
+                                  context, 'Add Expense', Container(), 0.5)
+                              : Container();
+            },
+            child: Icon(
+              Icons.add,
+              color: colorScheme.onPrimary,
+            ),
+            tooltip: 'Add',
+          )
+        : Container();
   }
 
   BottomNavigationBar buildBottomNavigationBar(

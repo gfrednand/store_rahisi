@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:storeRahisi/locator.dart';
 import 'package:storeRahisi/models/index.dart';
 import 'package:storeRahisi/providers/base_model.dart';
+import 'package:storeRahisi/providers/cart_model.dart';
 import 'package:storeRahisi/providers/payment_model.dart';
 import 'package:storeRahisi/services/api.dart';
 import 'package:storeRahisi/services/dialog_service.dart';
@@ -22,6 +23,7 @@ class SaleModel extends BaseModel {
   final DialogService _dialogService = locator<DialogService>();
   NavigationService _navigationService = locator<NavigationService>();
   PaymentModel _paymentModel = locator<PaymentModel>();
+  CartModel _cartModel = locator<CartModel>();
 
   Sale _sale;
   bool get _editting => _sale != null;
@@ -94,8 +96,6 @@ class SaleModel extends BaseModel {
     return total;
   }
 
-
-
   getSaleByIdFromServer(String id) async {
     setBusy(true);
     var doc = await _api.getDocumentById(id);
@@ -135,6 +135,15 @@ class SaleModel extends BaseModel {
         description: result,
       );
     } else {
+      await _paymentModel.savePayment(
+          data: Payment(
+              amount: data.paidAmount,
+              method: data.paymentMethod,
+              referenceNo: data.referenceNumber,
+              note: 'Paid for Invoice ${data.referenceNumber}',
+              clientId: data.clientId,
+              type: 'Credit'));
+      _cartModel.removeAllItems();
       await _dialogService.showDialog(
         title: 'Successful',
         description: 'Item Sold',

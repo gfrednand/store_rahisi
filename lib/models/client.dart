@@ -46,7 +46,7 @@ class Client {
         id: id ?? '',
         companyName: json["companyName"] ?? '',
         clientType: json["clientType"] ?? '',
-        proviousDue: json["proviousDue"] ?? '',
+        proviousDue: json["proviousDue"]?.toDouble() ?? '',
         accountNo: json["accountNo"] ?? '',
         userId: json["userId"] ?? '',
         active: json["active"],

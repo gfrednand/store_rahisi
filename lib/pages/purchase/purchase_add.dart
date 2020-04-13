@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:storeRahisi/constants/app_constants.dart';
 import 'package:storeRahisi/pages/base_view.dart';
 import 'package:storeRahisi/pages/purchase/add_item_form.dart';
 import 'package:storeRahisi/models/index.dart';
@@ -62,6 +63,7 @@ class _PurchaseAddState extends State<PurchaseAdd> {
   Column buildBody(PurchaseModel model, BuildContext context) {
     var items = model.selectedItems;
     ClientModel clientModel = Provider.of<ClientModel>(context);
+    List<Client> clients =clientModel.getByClientType(AppConstants.clientTypeSupplier);
     return Column(
       children: <Widget>[
         Center(
@@ -72,7 +74,7 @@ class _PurchaseAddState extends State<PurchaseAdd> {
               child: new DropdownButton<Client>(
                 hint: Text('Select Client'),
                 value: _client,
-                items: clientModel.clients.map((Client value) {
+                items: clients.map((Client value) {
                   return new DropdownMenuItem<Client>(
                     value: value,
                     child: new Text(value.companyName),

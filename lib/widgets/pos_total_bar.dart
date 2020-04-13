@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:storeRahisi/constants/ui_helpers.dart';
 
 import 'package:storeRahisi/models/index.dart';
 import 'package:storeRahisi/pages/pos/pos_item_list.dart';
 import 'package:storeRahisi/providers/sale_model.dart';
+import 'package:storeRahisi/widgets/busy_button.dart';
 
 typedef onSellCallback = Function(
     String productId, double profit, int quantity, double amount);
 
-class POSTotalBar extends StatelessWidget {
+class POSTotalBar extends StatefulWidget {
   final BuildContext context;
   final Size screenSize;
   final double total;
@@ -21,13 +23,22 @@ class POSTotalBar extends StatelessWidget {
     @required this.carts,
     @required this.screenSize,
     @required this.total,
-    @required this.subtotal, this.saleModel,
+    @required this.subtotal,
+    this.saleModel,
   });
+
+  @override
+  _POSTotalBarState createState() => _POSTotalBarState();
+}
+
+class _POSTotalBarState extends State<POSTotalBar> {
+  TextEditingController paidAmountController = new TextEditingController();
+
   @override
   Widget build(context) {
     return Container(
       margin: const EdgeInsets.all(10.0),
-      width: screenSize.width,
+      width: widget.screenSize.width,
       child: Card(
         elevation: 10.0,
         child: Padding(
@@ -44,14 +55,15 @@ class POSTotalBar extends StatelessWidget {
                     style: Theme.of(context).textTheme.headline6,
                   ),
                   Text(
-                    "Tsh $subtotal",
+                    "Tsh ${widget.subtotal}",
                     style: Theme.of(context).textTheme.headline6,
                   ),
                 ],
               ),
+
               Container(
                 color: Theme.of(context).primaryColor,
-                width: screenSize.width,
+                width: widget.screenSize.width,
                 height: 1.0,
               ),
               Row(
@@ -62,21 +74,29 @@ class POSTotalBar extends StatelessWidget {
                     style: Theme.of(context).textTheme.headline5,
                   ),
                   Text(
-                    "Tsh $total",
+                    "Tsh ${widget.total}",
                     style: Theme.of(context).textTheme.headline5,
                   ),
                 ],
               ),
+              TextField(
+                controller: paidAmountController,
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                    labelText: "Paid Amount",
+                    // prefixIcon: Icon(Icons.search),
+                    border: OutlineInputBorder()),
+              ),
               //  SizedBox(height: 12.0),
-              total <= 0
+                     verticalSpaceSmall,
+              widget.total <= 0
                   ? new Container()
-                  : MaterialButton(
-                      color: Theme.of(context).accentColor,
-//                          textColor: Colors.white,
-                      child: new Text("Sell"),
+                  : BusyButton(
+                      title: 'Sell',
+                      enabled: paidAmountController.text == null,
                       onPressed: () async {
                         List<Item> items = [];
-                        List<Cart> c = List.from(carts);
+                        List<Cart> c = List.from(widget.carts);
                         c.forEach((cart) {
                           items.add(Item(
                               name: '',
@@ -87,16 +107,17 @@ class POSTotalBar extends StatelessWidget {
                         double tax = 0.0;
                         double discount = 0.0;
 
-                        await saleModel.saveSale(
+                        await widget.saleModel.saveSale(
                             data: Sale(
                                 discount: discount,
-                                grandTotal: (total + tax) - discount,
+                                grandTotal: (widget.total + tax) - discount,
                                 paymentMethod: 'Cash',
-                                subTotal: total - discount,
+                                paidAmount:
+                                    double.parse(paidAmountController.text),
+                                subTotal: widget.total - discount,
                                 tax: tax,
                                 items: items));
                       },
-                         splashColor: Colors.redAccent,
                     )
             ],
           ),

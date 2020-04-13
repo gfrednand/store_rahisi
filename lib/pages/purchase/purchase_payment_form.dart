@@ -100,7 +100,7 @@ class _PurchasePaymentFormState extends State<PurchasePaymentForm> {
                         method: _paymentMethod,
                         type: 'Debit',
                         note: descriptionController.text,
-                        purchaseId: widget.purchase.id,
+                        referenceNo: widget.purchase.id,
                         clientId: widget.purchase.id,
                         userId: null,
                       ));

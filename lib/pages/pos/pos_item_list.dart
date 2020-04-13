@@ -15,8 +15,23 @@ class PosItemList extends StatefulWidget {
 
 class _PosItemListState extends State<PosItemList> {
   bool itemSelected = true;
-  TextEditingController editingController = TextEditingController();
+  final editingController = TextEditingController();
   var allItems = List<Item>();
+  String filter = '';
+  @override
+  void initState() {
+    editingController.addListener(() {
+      filter = editingController.text.toLowerCase();
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    editingController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
@@ -116,39 +131,11 @@ class _PosItemListState extends State<PosItemList> {
     );
   }
 
-  filterSearchResults(String query, List<Item> items) {
-    List<Item> dummySearchList = List<Item>();
-    if (items.length > 0) {
-      dummySearchList = items;
-    }
-    print('^^^^^^^^^^^${dummySearchList.toString()}');
-
-    if (query.isNotEmpty) {
-      List<Item> dummyListData = List<Item>();
-      dummySearchList.forEach((item) {
-        if (item.name.contains(query)) {
-          dummyListData.add(item);
-        }
-      });
-      setState(() {
-        allItems.clear();
-        allItems.addAll(dummyListData);
-      });
-      return;
-    } else {
-      print('*******${items.toString()}');
-      setState(() {
-        allItems.clear();
-        allItems = items;
-      });
-    }
-  }
-
   _buildProductsListWidget(BuildContext context) {
     return BaseView<ItemModel>(
         onModelReady: (model) => model.listenToItems(),
         builder: (context, model, child) {
-          allItems = model.items;
+          allItems = allItems.length > 0 ? allItems : model.items;
           return Expanded(
             child: Column(
               mainAxisSize: MainAxisSize.max,
@@ -156,13 +143,9 @@ class _PosItemListState extends State<PosItemList> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TextField(
-                    onChanged: (value) {
-                      filterSearchResults(value, model.items);
-                    },
                     controller: editingController,
                     decoration: InputDecoration(
                         labelText: "Search",
-                        hintText: "Search",
                         prefixIcon: Icon(Icons.search),
                         border: OutlineInputBorder()),
                   ),
@@ -172,7 +155,7 @@ class _PosItemListState extends State<PosItemList> {
                         color: Colors.grey[100],
                         child: ListView.builder(
                             shrinkWrap: true,
-                            itemCount: allItems.length,
+                            itemCount: model.items.length,
                             itemBuilder: (context, index) {
                               PurchaseModel purchaseModel =
                                   Provider.of<PurchaseModel>(context);
@@ -180,19 +163,27 @@ class _PosItemListState extends State<PosItemList> {
                                   Provider.of<SaleModel>(context);
                               List<Purchase> purchases =
                                   purchaseModel.getPurchaseHistoryByItemId(
-                                      allItems[index].id);
-                              allItems[index].totalSales = saleModel
-                                  .getTotalSaleByItemId(allItems[index].id);
-                              allItems[index].totalPurchase = purchaseModel
-                                  .getTotalPurchaseByItemId(allItems[index].id);
+                                      model.items[index].id);
+                              model.items[index].totalSales = saleModel
+                                  .getTotalSaleByItemId(model.items[index].id);
+                              model.items[index].totalPurchase =
+                                  purchaseModel.getTotalPurchaseByItemId(
+                                      model.items[index].id);
                               purchases.sort((a, b) =>
                                   a.purchaseDate.compareTo(b.purchaseDate));
                               double cur =
-                                  purchases?.last?.items?.first?.salePrice;
-                              double org =
-                                  purchases?.first?.items?.first?.salePrice;
-                              double profit = cur -
-                                  purchases?.first?.items?.first?.purchasePrice;
+                                  purchases != null && purchases.length > 0
+                                      ? purchases.last?.items?.first?.salePrice
+                                      : 0;
+                              double org = purchases != null &&
+                                      purchases.length > 0
+                                  ? purchases?.first?.items?.first?.salePrice
+                                  : 0;
+                              var t = purchases != null && purchases.length > 0
+                                  ? purchases
+                                      ?.first?.items?.first?.purchasePrice
+                                  : 0;
+                              double profit = cur - t;
                               int quantity =
                                   (model?.items[index]?.totalPurchase ??
                                               0 +
@@ -203,15 +194,31 @@ class _PosItemListState extends State<PosItemList> {
                                       0;
                               double disco = org - cur;
                               disco = disco * 100;
-                              return new PosItem(
-                                  profit: profit,
-                                  quantity: quantity,
-                                  item: allItems[index],
-                                  // purchase: purchase,
-                                  currentPrice: cur,
-                                  originalPrice: org,
-                                  discount: disco / org,
-                                  imageUrl: "");
+
+                         
+                              return filter == null || filter == ''
+                                  ? new PosItem(
+                                      profit: profit,
+                                      quantity: quantity,
+                                      item: model.items[index],
+                                      // purchase: purchase,
+                                      currentPrice: cur,
+                                      originalPrice: org,
+                                      discount: disco / org,
+                                      imageUrl: "")
+                                  : model.items[index].name
+                                          .toLowerCase()
+                                          .contains(filter.toLowerCase())
+                                      ? new PosItem(
+                                          profit: profit,
+                                          quantity: quantity,
+                                          item: model.items[index],
+                                          // purchase: purchase,
+                                          currentPrice: cur,
+                                          originalPrice: org,
+                                          discount: disco / org,
+                                          imageUrl: "")
+                                      : new Container();
                             })))
               ],
             ),

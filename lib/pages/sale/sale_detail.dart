@@ -11,6 +11,10 @@ class SaleDetail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<String> tabs = ['Details', 'Items'];
+ClientModel clientModel = Provider.of<ClientModel>(context);
+        Client client = clientModel.getClientById(
+                              sale.clientId);
+                        
     return DefaultTabController(
       length: tabs.length,
       child: Scaffold(
@@ -36,6 +40,10 @@ class SaleDetail extends StatelessWidget {
                   ListTile(
                     title: Text('${sale.referenceNumber}'),
                     subtitle: Text(' Reference Number'),
+                  ),
+                  ListTile(
+                    title: Text('${client?.companyName}'),
+                    subtitle: Text(' Client'),
                   ),
                   ListTile(
                     title: Text('${sale.paymentMethod}'),

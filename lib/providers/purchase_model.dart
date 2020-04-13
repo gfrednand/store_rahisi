@@ -200,8 +200,8 @@ class PurchaseModel extends BaseModel {
           data: Payment(
               amount: data.paidAmount,
               method: 'Cash',
-              purchaseId: data.id,
-              note: 'Paid For ${data.referenceNumber}',
+              referenceNo: data.referenceNumber,
+              note: 'Paid for Bill ${data.referenceNumber}',
               clientId: data.clientId,
               type: 'Debit'));
       _selectedItems = [];
