@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
+// import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:storeRahisi/locator.dart';
 import 'package:storeRahisi/providers/base_model.dart';
 import 'package:storeRahisi/services/api.dart';

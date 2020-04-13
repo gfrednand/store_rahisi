@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class SaleForm {
+class ClientForm{
 
   getForm(_registerFormKey, context, firstNameInputController) {
     return Container(

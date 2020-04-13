@@ -28,8 +28,33 @@
         });
       }
     </script>
-    <script src="firebase-app.js"></script>
-    <script src="firebase-firestore.js"></script>
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+
+    <script src="https://www.gstatic.com/firebasejs/7.5.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.5.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.5.0/firebase-firestore.js"></script>
+
+    <!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+    <!-- <script src="https://www.gstatic.com/firebasejs/7.14.0/firebase-analytics.js"></script> -->
+
+    <script>
+      // Your web app's Firebase configuration
+      var firebaseConfig = {
+        apiKey: "AIzaSyAo4BoJNXJeW_v7rrKHZrkP1XeaWI6bV8Q",
+        authDomain: "store-rahisi.firebaseapp.com",
+        databaseURL: "https://store-rahisi.firebaseio.com",
+        projectId: "store-rahisi",
+        storageBucket: "store-rahisi.appspot.com",
+        messagingSenderId: "756033135438",
+        appId: "1:756033135438:web:25723f4e28fb85ca08f41f",
+        measurementId: "G-CDZD7CT16B",
+      };
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+
+      // firebase.analytics();
+    </script>
     <script src="main.dart.js" type="application/javascript"></script>
   </body>
 </html>

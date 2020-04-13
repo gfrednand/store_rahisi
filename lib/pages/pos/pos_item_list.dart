@@ -16,7 +16,7 @@ class PosItemList extends StatefulWidget {
 class _PosItemListState extends State<PosItemList> {
   bool itemSelected = true;
   TextEditingController editingController = TextEditingController();
-  var items = List<Item>();
+  var allItems = List<Item>();
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
@@ -118,7 +118,11 @@ class _PosItemListState extends State<PosItemList> {
 
   filterSearchResults(String query, List<Item> items) {
     List<Item> dummySearchList = List<Item>();
-    dummySearchList.addAll(items);
+    if (items.length > 0) {
+      dummySearchList = items;
+    }
+    print('^^^^^^^^^^^${dummySearchList.toString()}');
+
     if (query.isNotEmpty) {
       List<Item> dummyListData = List<Item>();
       dummySearchList.forEach((item) {
@@ -127,14 +131,15 @@ class _PosItemListState extends State<PosItemList> {
         }
       });
       setState(() {
-        items.clear();
-        items.addAll(dummyListData);
+        allItems.clear();
+        allItems.addAll(dummyListData);
       });
       return;
     } else {
+      print('*******${items.toString()}');
       setState(() {
-        items.clear();
-        items.addAll(items);
+        allItems.clear();
+        allItems = items;
       });
     }
   }
@@ -143,66 +148,73 @@ class _PosItemListState extends State<PosItemList> {
     return BaseView<ItemModel>(
         onModelReady: (model) => model.listenToItems(),
         builder: (context, model, child) {
-          return Column(
-            children: [
-              TextField(
-                onChanged: (value) {
-                  filterSearchResults(value, model.items);
-                },
-                controller: editingController,
-                decoration: InputDecoration(
-                    labelText: "Search",
-                    hintText: "Search",
-                    prefixIcon: Icon(Icons.search),
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(25.0)))),
-              ),
-              Expanded(
-                  child: Container(
-                      color: Colors.grey[100],
-                      child: ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: model.items.length,
-                          itemBuilder: (context, index) {
-                            PurchaseModel purchaseModel =
-                                Provider.of<PurchaseModel>(context);
-                            SaleModel saleModel =
-                                Provider.of<SaleModel>(context);
-                            List<Purchase> purchases =
-                                purchaseModel.getPurchaseHistoryByItemId(
-                                    model.items[index].id);
-                            model.items[index].totalSales = saleModel
-                                .getTotalSaleByItemId(model.items[index].id);
-                            model.items[index].totalPurchase =
-                                purchaseModel.getTotalPurchaseByItemId(
-                                    model.items[index].id);
-                            purchases.sort((a, b) =>
-                                a.purchaseDate.compareTo(b.purchaseDate));
-                            double cur =
-                                purchases?.last?.items?.first?.salePrice;
-                            double org =
-                                purchases?.first?.items?.first?.salePrice;
-                            double profit = cur -
-                                purchases?.first?.items?.first?.purchasePrice;
-                            int quantity = (model
-                                            ?.items[index]?.totalPurchase ??
-                                        0 + model?.items[index]?.openingStock ??
-                                        0) -
-                                    model?.items[index]?.totalSales ??
-                                0;
-                            double disco = org - cur;
-                            disco = disco * 100;
-                            return new PosItem(
-                                profit: profit,
-                                quantity: quantity,
-                                item: model.items[index],
-                                // purchase: purchase,
-                                currentPrice: cur,
-                                originalPrice: org,
-                                discount: disco / org,
-                                imageUrl: "");
-                          })))
-            ],
+          allItems = model.items;
+          return Expanded(
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextField(
+                    onChanged: (value) {
+                      filterSearchResults(value, model.items);
+                    },
+                    controller: editingController,
+                    decoration: InputDecoration(
+                        labelText: "Search",
+                        hintText: "Search",
+                        prefixIcon: Icon(Icons.search),
+                        border: OutlineInputBorder()),
+                  ),
+                ),
+                Expanded(
+                    child: Container(
+                        color: Colors.grey[100],
+                        child: ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: allItems.length,
+                            itemBuilder: (context, index) {
+                              PurchaseModel purchaseModel =
+                                  Provider.of<PurchaseModel>(context);
+                              SaleModel saleModel =
+                                  Provider.of<SaleModel>(context);
+                              List<Purchase> purchases =
+                                  purchaseModel.getPurchaseHistoryByItemId(
+                                      allItems[index].id);
+                              allItems[index].totalSales = saleModel
+                                  .getTotalSaleByItemId(allItems[index].id);
+                              allItems[index].totalPurchase = purchaseModel
+                                  .getTotalPurchaseByItemId(allItems[index].id);
+                              purchases.sort((a, b) =>
+                                  a.purchaseDate.compareTo(b.purchaseDate));
+                              double cur =
+                                  purchases?.last?.items?.first?.salePrice;
+                              double org =
+                                  purchases?.first?.items?.first?.salePrice;
+                              double profit = cur -
+                                  purchases?.first?.items?.first?.purchasePrice;
+                              int quantity =
+                                  (model?.items[index]?.totalPurchase ??
+                                              0 +
+                                                  model?.items[index]
+                                                      ?.openingStock ??
+                                              0) -
+                                          model?.items[index]?.totalSales ??
+                                      0;
+                              double disco = org - cur;
+                              disco = disco * 100;
+                              return new PosItem(
+                                  profit: profit,
+                                  quantity: quantity,
+                                  item: allItems[index],
+                                  // purchase: purchase,
+                                  currentPrice: cur,
+                                  originalPrice: org,
+                                  discount: disco / org,
+                                  imageUrl: "");
+                            })))
+              ],
+            ),
           );
         });
   }
