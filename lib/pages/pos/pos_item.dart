@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import 'package:storeRahisi/models/item.dart';
 import 'package:storeRahisi/providers/cart_model.dart';
+import 'package:storeRahisi/providers/index.dart';
 
 class PosItem extends StatefulWidget {
   final Item item;
@@ -36,6 +37,13 @@ class _PosItemState extends State<PosItem> {
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
     CartModel cartModel = Provider.of<CartModel>(context);
+    SaleModel saleModel = Provider.of<SaleModel>(context);
+    PurchaseModel purchaseModel = Provider.of<PurchaseModel>(context);
+    int totalSales = saleModel.getTotalSaleByItemId(widget.item.id)??0;
+    int totalPurchases = purchaseModel.getTotalPurchaseByItemId(widget.item.id) ?? 0;
+    int inStock =
+        (totalPurchases  + widget.item.openingStock) - totalSales;
+        print('object${ widget.item.openingStock}-------$inStock');
 
     return new Container(
       padding: const EdgeInsets.symmetric(horizontal: 5.0),
@@ -53,7 +61,7 @@ class _PosItemState extends State<PosItem> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  Text(widget.item.name + " * " + widget.quantity.toString(),
+                  Text('${widget.item.name} * $inStock',
                       style: Theme.of(context).textTheme.headline6),
                   SizedBox(
                     height: 10.0,
@@ -124,7 +132,7 @@ class _PosItemState extends State<PosItem> {
                     width: 40.0,
                     child: TextFormField(
                       onChanged: (val) {
-                        if (int.parse(val) < widget.quantity) {
+                        if (int.parse(val) < inStock) {
                           _itemCount = int.parse(val);
                           setCartItem(cartModel);
                         } else {
@@ -146,7 +154,7 @@ class _PosItemState extends State<PosItem> {
                           color: Theme.of(context).accentColor),
                       onPressed: () {
                         setState(() {
-                          if (_itemCount < widget.quantity) {
+                          if (_itemCount < inStock) {
                             _itemCount++;
                             quantityController = new TextEditingController(
                                 text: _itemCount.toString());
