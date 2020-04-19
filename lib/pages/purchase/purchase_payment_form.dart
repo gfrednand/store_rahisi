@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:storeRahisi/app_localizations.dart';
 import 'package:storeRahisi/constants/ui_helpers.dart';
 import 'package:storeRahisi/models/index.dart';
 import 'package:storeRahisi/providers/item_model.dart';
@@ -46,7 +47,7 @@ class _PurchasePaymentFormState extends State<PurchasePaymentForm> {
                   return InputDecorator(
                     decoration: InputDecoration(
                       icon: const Icon(Icons.texture),
-                      labelText: 'Payment Method',
+                      labelText: AppLocalizations.of(context).translate('paymentMethod'),
                     ),
                     child: new DropdownButtonHideUnderline(
                       child: new DropdownButton(
@@ -58,7 +59,7 @@ class _PurchasePaymentFormState extends State<PurchasePaymentForm> {
                             state.didChange(newValue);
                           });
                         },
-                        items: ['Cash', 'Cheque', 'Others'].map((String value) {
+                        items: [AppLocalizations.of(context).translate('cash'), AppLocalizations.of(context).translate('cheque'), AppLocalizations.of(context).translate('others')].map((String value) {
                           return new DropdownMenuItem(
                             value: value,
                             child: new Text(value),
@@ -89,7 +90,7 @@ class _PurchasePaymentFormState extends State<PurchasePaymentForm> {
               verticalSpaceSmall,
               Center(
                 child: BusyButton(
-                  title: 'Submit',
+                  title: AppLocalizations.of(context).translate('submit'),
                   busy: paymentModel.busy,
                   onPressed: () async {
                     if (_formKey.currentState.validate()) {

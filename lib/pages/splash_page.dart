@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:storeRahisi/app_localizations.dart';
 import 'package:storeRahisi/providers/auth_model.dart';
 
 import 'base_view.dart';
@@ -22,7 +23,7 @@ class SplashPage extends StatelessWidget {
                 Padding(
                   padding: new EdgeInsets.all(10.0),
                   child: Text(
-                    'STORE RAHISI',
+                    AppLocalizations.of(context).translate('appTitle'),
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 30.0,
@@ -44,8 +45,7 @@ class SplashPage extends StatelessWidget {
                     child: Text(
                       'V 0.1',
                       style: TextStyle(
-                          color: Theme.of(context).accentColor,
-                          fontSize: 15.0),
+                          color: Theme.of(context).accentColor, fontSize: 15.0),
                     ),
                   ),
                 )

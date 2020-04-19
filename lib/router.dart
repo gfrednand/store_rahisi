@@ -9,6 +9,7 @@ import 'package:storeRahisi/pages/pos/cart_items.dart';
 import 'package:storeRahisi/pages/purchase/purchase_detail.dart';
 import 'package:storeRahisi/pages/purchase/purchase_add.dart';
 import 'package:storeRahisi/pages/register_page.dart';
+import 'package:storeRahisi/pages/report/index.dart';
 import 'package:storeRahisi/pages/sale/sale_detail.dart';
 import 'package:storeRahisi/pages/splash_page.dart';
 import 'package:storeRahisi/pages/client/client_detail.dart';
@@ -84,6 +85,22 @@ class Router {
         // var title = settings.arguments as String;
         return MaterialPageRoute(
             builder: (_) => CartItems());
+        break;
+      case AppRoutes.item_report:
+        return MaterialPageRoute(
+            builder: (_) => ItemReport());
+        break;
+      case AppRoutes.purchase_report:
+        return MaterialPageRoute(
+            builder: (_) => PurchaseReport());
+        break;
+      case AppRoutes.sale_report:
+        return MaterialPageRoute(
+            builder: (_) => SaleReport());
+        break;
+      case AppRoutes.profit_report:
+        return MaterialPageRoute(
+            builder: (_) => ProfitReport());
         break;
       default:
         return MaterialPageRoute(

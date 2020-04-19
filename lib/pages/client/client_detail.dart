@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:storeRahisi/app_localizations.dart';
 import 'package:storeRahisi/models/index.dart';
 
 import 'package:storeRahisi/pages/client/client_form.dart';
@@ -34,10 +35,15 @@ class _ClientDetailState extends State<ClientDetail> {
     PurchaseModel purchaseModel = Provider.of<PurchaseModel>(context);
     List<Purchase> purchases =
         purchaseModel.getPurchaseHistoryByClientId(widget.client.id);
+    SaleModel saleModel = Provider.of<SaleModel>(context);
+    List<Sale> sales =
+        saleModel.getSaleHistoryByClientId(widget.client.id);
+        print(sales.length);
+        print(purchases.length);
     return Scaffold(
       appBar: AppBar(
         title: widget.client.companyName == null
-            ? Text('Client Details')
+            ? Text(AppLocalizations.of(context).translate('clientDetails'))
             : Text(
                 '${widget.client.companyName.toUpperCase()}',
                 overflow: TextOverflow.ellipsis,
@@ -50,9 +56,9 @@ class _ClientDetailState extends State<ClientDetail> {
               spacing: 0.0, // gap between adjacent chips
               runSpacing: 0.0, // gap between lines
               children: <Widget>[
-                chipDesign("Edit", Color(0xFF4db6ac)),
-                purchases.length == 0
-                    ? chipDesign("Delete", Color(0xFFf06292))
+                chipDesign(AppLocalizations.of(context).translate('edit'), Color(0xFF4db6ac)),
+                purchases.length == 0 && sales.length == 0
+                    ? chipDesign(AppLocalizations.of(context).translate('delete'), Color(0xFFf06292))
                     : Container(),
               ],
             ),
@@ -61,30 +67,30 @@ class _ClientDetailState extends State<ClientDetail> {
             ),
             ListTile(
               title: Text('${widget.client.companyName}'),
-              subtitle: Text(' Company Name'),
+              subtitle: Text(AppLocalizations.of(context).translate('companyName')),
             ),
             ListTile(
               title: Text('${widget.client.contactPerson}'),
-              subtitle: Text('Contact Person'),
+              subtitle: Text(AppLocalizations.of(context).translate('contactPerson')),
             ),
             Divider(
               thickness: 10.0,
             ),
             ListTile(
               title: Text('${widget.client.phoneNumber}'),
-              subtitle: Text('Phone Number'),
+              subtitle: Text(AppLocalizations.of(context).translate('phoneNumber')),
             ),
             ListTile(
               title: Text('${widget.client.email}'),
-              subtitle: Text('Email'),
+              subtitle: Text(AppLocalizations.of(context).translate('email')),
             ),
             ListTile(
               title: Text('${widget.client.address}'),
-              subtitle: Text('Address'),
+              subtitle: Text(AppLocalizations.of(context).translate('address')),
             ),
             ListTile(
               title: Text('${widget.client.description}'),
-              subtitle: Text('Note'),
+              subtitle: Text(AppLocalizations.of(context).translate('notes')),
             ),
             Divider(
               thickness: 10.0,
@@ -98,12 +104,12 @@ class _ClientDetailState extends State<ClientDetail> {
   Widget chipDesign(String label, Color color) {
     return GestureDetector(
       onTap: () {
-        label == 'Delete'
+        label == AppLocalizations.of(context).translate('delete')
             ? widget.clientModel.removeClient(widget.client.id)
-            : label == 'Edit'
+            : label == AppLocalizations.of(context).translate('edit')
                 ? _showModalSheetAppBar(
                     context,
-                    'Edit Product',
+                    AppLocalizations.of(context).translate('editItem'),
                     ClientForm(
                       client: widget.client,
                     ),

@@ -3,6 +3,7 @@ import 'package:barcode_scan/barcode_scan.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:storeRahisi/app_localizations.dart';
 import 'package:storeRahisi/models/index.dart';
 import 'package:storeRahisi/models/item.dart';
 import 'package:storeRahisi/pages/item/item_form.dart';
@@ -42,7 +43,7 @@ class _ItemDetailState extends State<ItemDetail> {
 
   @override
   Widget build(BuildContext context) {
-    List<String> tabs = ['Details', 'Purchase History', 'Sales History'];
+    List<String> tabs = [AppLocalizations.of(context).translate('details'), AppLocalizations.of(context).translate('purchaseHistory'), AppLocalizations.of(context).translate('salesHistory')];
     PurchaseModel purchaseModel = Provider.of<PurchaseModel>(context);
     List<Purchase> purchases =
         purchaseModel.getPurchaseHistoryByItemId(widget.item.id);
@@ -58,7 +59,7 @@ class _ItemDetailState extends State<ItemDetail> {
       child: Scaffold(
         appBar: AppBar(
           title: widget.item.name == null
-              ? Text('Item Detail')
+              ? Text(AppLocalizations.of(context).translate('itemDetails'))
               : Text(
                   '${widget.item.name.toUpperCase()}',
                   overflow: TextOverflow.ellipsis,
@@ -79,8 +80,8 @@ class _ItemDetailState extends State<ItemDetail> {
                     spacing: 0.0, // gap between adjacent chips
                     runSpacing: 0.0, // gap between lines
                     children: <Widget>[
-                      chipDesign("Print Barcode", Color(0xFF9575cd)),
-                      chipDesign("Edit", Color(0xFF4db6ac)),
+                      chipDesign(AppLocalizations.of(context).translate('nothingFound'), Color(0xFF9575cd)),
+                      chipDesign(AppLocalizations.of(context).translate('edit'), Color(0xFF4db6ac)),
                       sales.length == 0 && purchases.length == 0
                           ? chipDesign("Delete", Color(0xFFf06292))
                           : Container(),
@@ -99,7 +100,7 @@ class _ItemDetailState extends State<ItemDetail> {
                   Text(widget.item.barcode ?? ''),
                   ListTile(
                     title: Text('${widget.item.category}'),
-                    subtitle: Text('Category'),
+                    subtitle: Text(AppLocalizations.of(context).translate('category')),
                   ),
                   Divider(
                     thickness: 10.0,
@@ -108,19 +109,19 @@ class _ItemDetailState extends State<ItemDetail> {
                     leading: Icon(Icons.add_to_queue),
                     title:
                         Text('${widget.item.openingStock} ${widget.item.unit}'),
-                    subtitle: Text('Opening Stock'),
+                    subtitle: Text(AppLocalizations.of(context).translate('openingStock')),
                   ),
                   ListTile(
                     leading: Icon(Icons.add_to_queue),
                     title: Text(
                         '${widget.item.totalPurchase ?? 0} ${widget.item.unit}'),
-                    subtitle: Text('Total Purchase'),
+                    subtitle: Text(AppLocalizations.of(context).translate('totalPurchase')),
                   ),
                   ListTile(
                     leading: Icon(Icons.remove_from_queue),
                     title: Text(
                         '${widget.item.totalSales ?? 0} ${widget.item.unit}'),
-                    subtitle: Text('Total Sales'),
+                    subtitle: Text(AppLocalizations.of(context).translate('totalSales')),
                   ),
                   ListTile(
                     leading: Icon(Icons.inbox),
@@ -129,7 +130,7 @@ class _ItemDetailState extends State<ItemDetail> {
                       style:
                           TextStyle(color: color, fontWeight: FontWeight.bold),
                     ),
-                    subtitle: Text('In Stock',
+                    subtitle: Text(AppLocalizations.of(context).translate('inStock'),
                         style: TextStyle(
                             color: color, fontWeight: FontWeight.bold)),
                   ),
@@ -138,14 +139,14 @@ class _ItemDetailState extends State<ItemDetail> {
                   ),
                   ListTile(
                     title: Text('${widget.item.alertQty} ${widget.item.unit}'),
-                    subtitle: Text('Alert Quantity'),
+                    subtitle: Text(AppLocalizations.of(context).translate('alertQuantity')),
                   ),
                   Divider(
                     thickness: 10.0,
                   ),
                   ListTile(
                     title: Text('${widget.item.description}'),
-                    subtitle: Text('Description'),
+                    subtitle: Text(AppLocalizations.of(context).translate('description')),
                   ),
                   Divider(
                     thickness: 10.0,
@@ -155,7 +156,7 @@ class _ItemDetailState extends State<ItemDetail> {
             ),
             purchases.length == 0
                 ? Center(
-                    child: Text('No Purchases'),
+                    child: Text(AppLocalizations.of(context).translate('noPurchase')),
                   )
                 : ListView.builder(
                     itemCount: purchases.length,
@@ -195,16 +196,16 @@ class _ItemDetailState extends State<ItemDetail> {
                           subtitle: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                'Bill No: ${purchases[index]?.referenceNumber}',
+                              Text(AppLocalizations.of(context).translate('billNo')+
+                                ': ${purchases[index]?.referenceNumber}',
                                 overflow: TextOverflow.ellipsis,
                               ),
-                              Text(
-                                'Client: ${purchases[index]?.companyName}',
+                              Text(AppLocalizations.of(context).translate('supplier')+
+                                ': ${purchases[index]?.companyName}',
                                 overflow: TextOverflow.ellipsis,
                               ),
-                              Text(
-                                'Paid: ${purchases[index]?.paidAmount}/=',
+                              Text(AppLocalizations.of(context).translate('paid')+
+                                ': ${purchases[index]?.paidAmount}/=',
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ],
@@ -224,7 +225,7 @@ class _ItemDetailState extends State<ItemDetail> {
                     }),
             sales.length == 0
                 ? Center(
-                    child: Text('No Sales'),
+                    child: Text(AppLocalizations.of(context).translate('noSales')),
                   )
                 : ListView.builder(
                     itemCount: sales.length,
@@ -249,12 +250,12 @@ class _ItemDetailState extends State<ItemDetail> {
                           subtitle: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                'Ref No: ${sales[index]?.referenceNumber}',
+                              Text(AppLocalizations.of(context).translate('refNo') +
+                                ': ${sales[index]?.referenceNumber}',
                                 overflow: TextOverflow.ellipsis,
                               ),
-                              Text(
-                                'Paid ${sales[index]?.grandTotal}/=',
+                              Text(AppLocalizations.of(context).translate('paid') +
+                                ' ${sales[index]?.grandTotal}/=',
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ],
@@ -280,17 +281,17 @@ class _ItemDetailState extends State<ItemDetail> {
   Widget chipDesign(String label, Color color) {
     return GestureDetector(
       onTap: () {
-        label == 'Delete'
+        label == AppLocalizations.of(context).translate('delete')
             ? widget.itemModel.removeItem(widget.item.id)
-            : label == 'Edit'
+            : label == AppLocalizations.of(context).translate('edit')
                 ? _showModalSheetAppBar(
                     context,
-                    'Edit Product',
+                    AppLocalizations.of(context).translate('editItem'),
                     ItemForm(
                       item: widget.item,
                     ),
                     0.81)
-                : _showToast(label + ' Selected', color, Icons.error_outline);
+                : _showToast(label +   AppLocalizations.of(context).translate('selected'), color, Icons.error_outline);
       },
       child: Container(
         child: Chip(

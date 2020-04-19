@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:storeRahisi/app_localizations.dart';
 import 'package:storeRahisi/constants/routes.dart';
 import 'package:storeRahisi/pages/base_view.dart';
 import 'package:storeRahisi/providers/index.dart';
@@ -14,12 +16,15 @@ class SaleList extends StatelessWidget {
               shrinkWrap: true,
               itemCount: model.sales.length,
               itemBuilder: (context, index) {
+                var saleDate = new DateFormat('MMM dd, yyyy')
+                    .format(model.sales[index].saleDate);
                 return Card(
                   child: ListTile(
-                    title: Text(model.sales[index].saleDate),
+                    title: Text(saleDate),
                     trailing: Text('${model.sales[index].grandTotal} /='),
-                    subtitle:
-                        Text('Total Items: ${model.sales[index].items.length}'),
+                    subtitle: Text(
+                        AppLocalizations.of(context).translate('totalSales') +
+                            ': ${model.sales[index].items.length}'),
                     onTap: () {
                       var arguments = {
                         'sale': model.sales[index],

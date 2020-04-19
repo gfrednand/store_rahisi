@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:storeRahisi/app_localizations.dart';
 import 'package:storeRahisi/models/index.dart';
 import 'package:storeRahisi/providers/index.dart';
 
@@ -10,7 +11,7 @@ class SaleDetail extends StatelessWidget {
   const SaleDetail({Key key, this.sale, this.saleModel}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    List<String> tabs = ['Details', 'Items'];
+    List<String> tabs = [AppLocalizations.of(context).translate('details'), AppLocalizations.of(context).translate('items')];
 ClientModel clientModel = Provider.of<ClientModel>(context);
         Client client = clientModel.getClientById(
                               sale.clientId);
@@ -20,7 +21,7 @@ ClientModel clientModel = Provider.of<ClientModel>(context);
       child: Scaffold(
         appBar: AppBar(
           title: sale.saleDate == null
-              ? Text('Client Details')
+              ? Text(AppLocalizations.of(context).translate('customerDetails'))
               : Text(
                   '${sale.saleDate}',
                   overflow: TextOverflow.ellipsis,
@@ -39,27 +40,27 @@ ClientModel clientModel = Provider.of<ClientModel>(context);
                 children: <Widget>[
                   ListTile(
                     title: Text('${sale.referenceNumber}'),
-                    subtitle: Text(' Reference Number'),
+                    subtitle: Text(AppLocalizations.of(context).translate('referenceNumber')),
                   ),
                   ListTile(
                     title: Text('${client?.companyName}'),
-                    subtitle: Text(' Customer'),
+                    subtitle: Text(AppLocalizations.of(context).translate('customer')),
                   ),
                   ListTile(
                     title: Text('${sale.paymentMethod}'),
-                    subtitle: Text(' Payment Method'),
+                    subtitle: Text(AppLocalizations.of(context).translate('paymentMethod')),
                   ),
                   ListTile(
                     title: Text('${sale.grandTotal}'),
-                    subtitle: Text(' Grand Total'),
+                    subtitle: Text(AppLocalizations.of(context).translate('grandTotal')),
                   ),
                   ListTile(
                     title: Text('${sale.tax}'),
-                    subtitle: Text(' Tax'),
+                    subtitle: Text(AppLocalizations.of(context).translate('tax')),
                   ),
                   ListTile(
                     title: Text('${sale.discount}'),
-                    subtitle: Text(' Discount'),
+                    subtitle: Text(AppLocalizations.of(context).translate('discount')),
                   ),
                   Divider(
                     thickness: 10.0,
@@ -94,7 +95,7 @@ ClientModel clientModel = Provider.of<ClientModel>(context);
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Paid Amount: ${sale.items[index].paidAmount} @1',
+                            AppLocalizations.of(context).translate('paidAmount') +': ${sale.items[index].paidAmount} @1',
                             overflow: TextOverflow.ellipsis,
                           ),
                         ],

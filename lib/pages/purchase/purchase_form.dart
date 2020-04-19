@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:storeRahisi/app_localizations.dart';
 import 'package:storeRahisi/constants/ui_helpers.dart';
 import 'package:storeRahisi/models/purchase.dart';
 import 'package:storeRahisi/pages/base_view.dart';
@@ -41,7 +43,7 @@ class PurchaseForm extends StatelessWidget {
               children: <Widget>[
                 InputField(
                     isReadOnly: model.busy,
-                    placeholder: 'client*',
+                    placeholder: AppLocalizations.of(context).translate('client') +'*',
                     controller: clientController,
                     validator: (value) {
                       if (value.isEmpty) {
@@ -51,7 +53,7 @@ class PurchaseForm extends StatelessWidget {
                     }),
                 InputField(
                     isReadOnly: model.busy,
-                    placeholder: 'Paid Amount*',
+                    placeholder: AppLocalizations.of(context).translate('paidAmount') +'*',
                     controller: paidAmountController,
                     validator: (value) {
                       if (value.isEmpty) {
@@ -78,7 +80,7 @@ class PurchaseForm extends StatelessWidget {
 
                 Center(
                   child: BusyButton(
-                    title: 'Submit',
+                    title: AppLocalizations.of(context).translate('submit') ,
                     busy: model.busy,
                     onPressed: () async {
                       if (_formKey.currentState.validate()) {
@@ -89,6 +91,7 @@ class PurchaseForm extends StatelessWidget {
                           id: purchase?.id ?? '',
                           clientId: clientController.text,
                           paidAmount: double.parse(paidAmountController.text),
+                          updatedAt: isEditing? new DateTime.now(): null,
                           userId: null,
                         ));
                       }
@@ -99,7 +102,7 @@ class PurchaseForm extends StatelessWidget {
                 SizedBox(
                   width: double.infinity,
                   child: FlatButton(
-                      child: Text('Cancel'),
+                      child: Text(AppLocalizations.of(context).translate('cancel') ),
                       onPressed: () {
                         Navigator.pop(context);
                       }),

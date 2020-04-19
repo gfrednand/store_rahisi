@@ -4,12 +4,13 @@
 
 import 'dart:convert';
 
+import 'package:intl/intl.dart';
+
 // Client clientFromJson(String str) => Client.fromMap(json.decode(str));
 
 String clientToJson(Client data) => json.encode(data.toMap());
 
 class Client {
-
   String id;
   String userId;
   String companyName;
@@ -22,10 +23,8 @@ class Client {
   String clientType;
   double proviousDue;
   String accountNo;
-
-
-
-
+  String createdAt;
+  String updatedAt;
 
   Client({
     this.id,
@@ -40,7 +39,10 @@ class Client {
     this.email,
     this.address,
     this.description,
-  });
+    String createdAt,
+    this.updatedAt,
+  }) : this.createdAt = createdAt ??
+            new DateFormat('MMM dd, yyyy HH:mm').format(new DateTime.now());
 
   factory Client.fromMap(Map<String, dynamic> json, String id) => Client(
         id: id ?? '',
@@ -55,6 +57,8 @@ class Client {
         email: json["email"] ?? '',
         address: json["address"] ?? '',
         description: json["description"] ?? '',
+        createdAt: json["createdAt"],
+        updatedAt: json["updatedAt"],
       );
 
   Map<String, dynamic> toMap() => {
@@ -70,5 +74,7 @@ class Client {
         "email": email,
         "address": address,
         "description": description,
+        "createdAt": createdAt,
+        "updatedAt": updatedAt,
       };
 }

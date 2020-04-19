@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
+import 'package:storeRahisi/app_localizations.dart';
 import 'package:storeRahisi/models/item.dart';
 import 'package:storeRahisi/providers/cart_model.dart';
 import 'package:storeRahisi/providers/index.dart';
@@ -43,7 +43,6 @@ class _PosItemState extends State<PosItem> {
     int totalPurchases = purchaseModel.getTotalPurchaseByItemId(widget.item.id) ?? 0;
     int inStock =
         (totalPurchases  + widget.item.openingStock) - totalSales;
-        print('object${ widget.item.openingStock}-------$inStock');
 
     return new Container(
       padding: const EdgeInsets.symmetric(horizontal: 5.0),
@@ -93,7 +92,7 @@ class _PosItemState extends State<PosItem> {
                       ),
                       widget.discount > 0
                           ? Text(
-                              "${widget.discount.toStringAsFixed(1)}\% off",
+                              "${widget.discount.toStringAsFixed(1)}\% " + AppLocalizations.of(context).translate('off'),
                               style:
                                   TextStyle(fontSize: 12.0, color: Colors.grey),
                             )

@@ -1,9 +1,9 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:storeRahisi/app_localizations.dart';
 import 'package:storeRahisi/models/index.dart';
 import 'package:storeRahisi/pages/base_view.dart';
-import 'package:storeRahisi/pages/pos/cart_item_details.dart';
 import 'package:storeRahisi/providers/cart_model.dart';
 import 'package:storeRahisi/providers/index.dart';
 import 'package:storeRahisi/widgets/busy_overlay.dart';
@@ -27,14 +27,14 @@ class _CartItemsState extends State<CartItems> {
             appBar: AppBar(
               leading: BackButton(),
               centerTitle: true,
-              title: Text('Cart (${cartModel.carts.length})'),
+              title: Text(AppLocalizations.of(context).translate('cart')+' (${cartModel.carts.length})'),
             ),
             body: BusyOverlay(
               show: model.busy,
-              title: 'Committing Sale',
+              title: AppLocalizations.of(context).translate('committingSale'),
               child: cartModel.carts.length == 0
                   ? Center(
-                      child: Text('Not Found'),
+                      child: Text(AppLocalizations.of(context).translate('nothingFound')),
                     )
                   : Column(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -99,16 +99,16 @@ class _CartItemsState extends State<CartItems> {
                                                           showDialog(context: context, builder: (BuildContext context) {
                                                                 return AlertDialog(
                                                                   title: Text(
-                                                                      'Delete Product From Cart'),
+                                                                      AppLocalizations.of(context).translate('deleteFromCart')),
                                                                   content: Text(
-                                                                      'Are you sure'),
+                                                                      AppLocalizations.of(context).translate('areYouSure')),
                                                                   actions: <Widget>[
                                                                     Row(
                                                                       mainAxisSize: MainAxisSize.min,
                                                                       mainAxisAlignment:MainAxisAlignment.spaceEvenly,
                                                                       children: <Widget>[
                                                                         FlatButton(
-                                                                            child: Text('Cancel'),
+                                                                            child: Text( AppLocalizations.of(context).translate('cancel')),
                                                                             onPressed: () {
                                                                               Navigator.of(context).pop();
                                                                             }),
@@ -118,7 +118,7 @@ class _CartItemsState extends State<CartItems> {
                                                                           height: 24.0,
                                                                         ),
                                                                         FlatButton(
-                                                                            child: Text('OK'),
+                                                                            child: Text( AppLocalizations.of(context).translate('ok')),
                                                                             onPressed: () {
                                                                               setState(() {
                                                                                 cartModel.removeItem(item);
@@ -135,7 +135,7 @@ class _CartItemsState extends State<CartItems> {
                                                         color: Theme.of(context)
                                                             .errorColor,
                                                       ),
-                                                      label: Text("Remove",
+                                                      label: Text(AppLocalizations.of(context).translate('remove'),
                                                           style: TextStyle(
                                                               color: Theme.of(
                                                                       context)

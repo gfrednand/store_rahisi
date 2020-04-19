@@ -22,12 +22,15 @@ class Item {
   double salePrice;
   double purchasePrice;
   double paidAmount;
+  double profit;
   String barcode;
-  String createdAt;
-  String updatedAt;
+  DateTime createdAt;
+  DateTime updatedAt;
   int alertQty;
   int openingStock;
   int quantity;
+  int saleQuantity;
+  int purchaseQuantity;
   String userId;
   int totalPurchase;
   int totalSales;
@@ -40,7 +43,7 @@ class Item {
     this.userId,
     @required this.name,
     this.category,
-    String createdAt,
+    DateTime createdAt,
     this.updatedAt,
     this.unit,
     this.description,
@@ -51,12 +54,15 @@ class Item {
     this.alertQty,
     this.totalPurchase,
     this.totalSales,
+    this.profit,
     this.inStock,
     this.openingStock,
     this.quantity,
+    this.saleQuantity,
+    this.purchaseQuantity,
     this.active,
-  }) : this.createdAt = createdAt ??
-            new DateFormat('MMM dd, yyyy HH:mm').format(new DateTime.now());
+  }) : this.createdAt = createdAt ?? DateTime.now();
+            // new DateFormat('MMM dd, yyyy HH:mm').format(new DateTime.now());
 
   factory Item.fromFirestore(DocumentSnapshot doc) {
     Map json = doc.data;
@@ -73,7 +79,7 @@ class Item {
       paidAmount: json['paidAmount']?.toDouble(),
       alertQty: json['alertQty'],
       barcode: json['barcode'],
-      createdAt: json["createdAt"],
+      createdAt: DateTime.tryParse(json["createdAt"].toString()),
       updatedAt: json["updatedAt"],
       openingStock: json['openingStock'],
       quantity: json['quantity'],
@@ -93,7 +99,7 @@ class Item {
         paidAmount: json['paidAmount']?.toDouble(),
         alertQty: json['alertQty'],
         barcode: json['barcode'],
-        createdAt: json["createdAt"],
+        createdAt:  DateTime.tryParse(json["createdAt"].toString()),
         updatedAt: json["updatedAt"],
         openingStock: json['openingStock'],
         quantity: json['quantity'],
@@ -129,30 +135,5 @@ class Item {
         'id': id,
         'paidAmount': paidAmount,
         'quantity': quantity,
-      };
-}
-
-class Tax {
-  String id;
-  String name;
-  String rate;
-  String type;
-
-  Tax({this.id, this.name, this.rate, this.type});
-
- factory Tax.fromFirestore(DocumentSnapshot doc) {
-    Map json = doc.data;
-    return Tax(
-        id: doc.documentID,
-        name: json['name'],
-        rate: json['rate'],
-        type: json['type']);
-  }
-
-    Map<String, dynamic> toMap() => {
-        'id': id,
-        'rate': rate,
-        'name': name,
-        'type': type,
       };
 }

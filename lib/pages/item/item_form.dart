@@ -1,6 +1,8 @@
 import 'package:barcode_scan/barcode_scan.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
+import 'package:storeRahisi/app_localizations.dart';
 import 'package:storeRahisi/constants/ui_helpers.dart';
 import 'package:storeRahisi/models/item.dart';
 import 'package:storeRahisi/providers/item_model.dart';
@@ -70,7 +72,7 @@ class _ItemFormState extends State<ItemForm> {
                 InputField(
                   smallVersion: true,
                   isReadOnly: model.busy,
-                  placeholder: 'Item Name*',
+                  placeholder: AppLocalizations.of(context).translate('itemName') +'*',
                   controller: nameController,
                 ),
                 verticalSpaceSmall,
@@ -118,7 +120,7 @@ class _ItemFormState extends State<ItemForm> {
                 InputField(
                   smallVersion: true,
                   isReadOnly: model.busy,
-                  placeholder: 'Opening Stock',
+                  placeholder: AppLocalizations.of(context).translate('openingStock'),
                   controller: openingStockController,
                   textInputType: TextInputType.numberWithOptions(),
                 ),
@@ -126,7 +128,7 @@ class _ItemFormState extends State<ItemForm> {
                 InputField(
                   smallVersion: true,
                   isReadOnly: model.busy,
-                  placeholder: 'Alert Quantity',
+                  placeholder: AppLocalizations.of(context).translate('alertQuantity'),
                   controller: alertQtyController,
                   textInputType: TextInputType.numberWithOptions(),
                 ),
@@ -134,7 +136,7 @@ class _ItemFormState extends State<ItemForm> {
                 InputField(
                   smallVersion: true,
                   isReadOnly: model.busy,
-                  placeholder: 'Description',
+                  placeholder: AppLocalizations.of(context).translate('description'),
                   controller: descriptionController,
                 ),
                 verticalSpaceSmall,
@@ -148,14 +150,14 @@ class _ItemFormState extends State<ItemForm> {
                             ),
                           ),
                     new FlatButton(
-                        onPressed: scan, child: new Text("Scan Barcode")),
+                        onPressed: scan, child: new Text(AppLocalizations.of(context).translate('scanBarcode'))),
                   ],
                 ),
                 verticalSpaceSmall,
 
                 Center(
                   child: BusyButton(
-                    title: 'Submit',
+                    title: AppLocalizations.of(context).translate('submit'),
                     busy: model.busy,
                     onPressed: () async {
                       if (_formKey.currentState.validate()) {
@@ -169,6 +171,7 @@ class _ItemFormState extends State<ItemForm> {
                           description: descriptionController.text,
                           name: nameController.text,
                           barcode: barcode,
+                          updatedAt: isEditing?  DateTime.now(): null,
                           openingStock: int.parse(openingStockController.text),
                           // salePrice: double.parse(salePriceController.text),
                           // purchasePrice:
@@ -184,7 +187,7 @@ class _ItemFormState extends State<ItemForm> {
                 SizedBox(
                   width: double.infinity,
                   child: FlatButton(
-                      child: Text('Cancel'),
+                      child: Text(AppLocalizations.of(context).translate('cancel')),
                       onPressed: () {
                         Navigator.pop(context);
                       }),
@@ -207,16 +210,16 @@ class _ItemFormState extends State<ItemForm> {
     } on PlatformException catch (e) {
       if (e.code == BarcodeScanner.CameraAccessDenied) {
         setState(() {
-          this.barcode = 'The user did not grant the camera permission!';
+          this.barcode = AppLocalizations.of(context).translate('userCameraPermisson');
         });
       } else {
-        setState(() => this.barcode = 'Unknown error: $e');
+        setState(() => this.barcode = AppLocalizations.of(context).translate('unknownError')+ ': $e');
       }
     } on FormatException {
       setState(() => this.barcode =
-          'null (User returned using the "back"-button before scanning anything. Result)');
+          AppLocalizations.of(context).translate('barcodeBackButtonException'));
     } catch (e) {
-      setState(() => this.barcode = 'Unknown error: $e');
+      setState(() => this.barcode = AppLocalizations.of(context).translate('unknownError')+': $e');
     }
   }
 }

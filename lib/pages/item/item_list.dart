@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:storeRahisi/constants/routes.dart';
-import 'package:storeRahisi/models/index.dart';
 import 'package:storeRahisi/pages/base_view.dart';
 import 'package:storeRahisi/providers/item_model.dart';
 import 'package:storeRahisi/providers/purchase_model.dart';
 import 'package:storeRahisi/providers/sale_model.dart';
+import '../../app_localizations.dart';
 
 class ItemList extends StatelessWidget {
   @override
@@ -19,7 +19,7 @@ class ItemList extends StatelessWidget {
             child: !model.busy
                 ? model.items == null
                     ? Center(
-                        child: Text('Nothing Found'),
+                        child: Text(AppLocalizations.of(context).translate('nothingFound')),
                       )
                     : ListView.builder(
                         itemCount: model.items.length,

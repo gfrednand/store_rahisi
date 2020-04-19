@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:storeRahisi/app_localizations.dart';
 import 'package:storeRahisi/constants/routes.dart';
 import 'package:storeRahisi/models/index.dart';
 import 'package:storeRahisi/pages/base_view.dart';
@@ -19,14 +21,16 @@ class PurchaseList extends StatelessWidget {
             child: !model.busy
                 ? model.purchases == null
                     ? Center(
-                        child: Text('Nothing Found'),
+                        child: Text(AppLocalizations.of(context)
+                            .translate('nothingFound')),
                       )
                     : ListView.builder(
                         itemCount: model.purchases.length,
                         itemBuilder: (buildContext, index) {
-                          Client client = clientModel.getClientById(
-                              model.purchases[index].clientId);
-                          model.purchases[index].companyName = client?.companyName;
+                          Client client = clientModel
+                              .getClientById(model.purchases[index].clientId);
+                          model.purchases[index].companyName =
+                              client?.companyName;
 
                           List<Payment> payments =
                               paymentModel.getPaymentsByPurchaseId(
@@ -36,6 +40,8 @@ class PurchaseList extends StatelessWidget {
                             paidAmount = paidAmount + payment.amount;
                           });
                           model.purchases[index].paidAmount = paidAmount;
+                          var purchaseDate =
+                              new DateFormat('MMM dd, yyyy').format(model.purchases[index].purchaseDate);
                           return Card(
                             child: ListTile(
                               leading: ExcludeSemantics(
@@ -51,22 +57,28 @@ class PurchaseList extends StatelessWidget {
                                 ),
                               ),
                               title: Text(
-                                '${model.purchases[index].purchaseDate}',
+                                '$purchaseDate',
                                 overflow: TextOverflow.ellipsis,
                               ),
                               subtitle: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    'Bill No: ${model.purchases[index]?.referenceNumber}',
+                                    AppLocalizations.of(context)
+                                            .translate('billNo') +
+                                        ': ${model.purchases[index]?.referenceNumber}',
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                   Text(
-                                    'Supplier: ${model.purchases[index]?.companyName}',
+                                    AppLocalizations.of(context)
+                                            .translate('supplier') +
+                                        ': ${model.purchases[index]?.companyName}',
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                   Text(
-                                    'Paid: ${model.purchases[index]?.paidAmount}/=',
+                                    AppLocalizations.of(context)
+                                            .translate('paid') +
+                                        ': ${model.purchases[index]?.paidAmount}/=',
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                 ],

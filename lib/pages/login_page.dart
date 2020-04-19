@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:storeRahisi/app_localizations.dart';
 import 'package:storeRahisi/constants/ui_helpers.dart';
 import 'package:storeRahisi/pages/base_view.dart';
 import 'package:storeRahisi/providers/auth_model.dart';
@@ -14,24 +15,24 @@ class LoginPage extends StatelessWidget {
       new TextEditingController();
   final TextEditingController pwdInputController = new TextEditingController();
 
-  String emailValidator(String value) {
-    Pattern pattern =
-        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-    RegExp regex = new RegExp(pattern);
-    if (!regex.hasMatch(value)) {
-      return 'Email format is invalid';
-    } else {
-      return null;
-    }
-  }
+  // String emailValidator(String value) {
+  //   Pattern pattern =
+  //       r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+  //   RegExp regex = new RegExp(pattern);
+  //   if (!regex.hasMatch(value)) {
+  //     return AppLocalizations.of(context).translate('emailFormatInvalid');
+  //   } else {
+  //     return null;
+  //   }
+  // }
 
-  String pwdValidator(String value) {
-    if (value.length < 8) {
-      return 'Password must be longer than 8 characters';
-    } else {
-      return null;
-    }
-  }
+  // String pwdValidator(String value) {
+  //   if (value.length < 8) {
+  //     return AppLocalizations.of(context).translate('passwordMustBe8');
+  //   } else {
+  //     return null;
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +56,7 @@ class LoginPage extends StatelessWidget {
                     Padding(
                       padding: new EdgeInsets.all(10.0),
                       child: Text(
-                        'Store Rahisi',
+                        AppLocalizations.of(context).translate('appTitle'),
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Theme.of(context).accentColor,
@@ -63,7 +64,7 @@ class LoginPage extends StatelessWidget {
                       ),
                     ),
                     InputField(
-                      placeholder: 'Email',
+                      placeholder: AppLocalizations.of(context).translate('email'),
                       isReadOnly: model.busy,
                       controller: emailInputController,
                       textInputType: TextInputType.emailAddress,
@@ -71,7 +72,7 @@ class LoginPage extends StatelessWidget {
                     verticalSpaceSmall,
                     InputField(
                       isReadOnly: model.busy,
-                      placeholder: 'Password',
+                      placeholder: AppLocalizations.of(context).translate('password'),
                       password: true,
                       controller: pwdInputController,
               
@@ -82,7 +83,7 @@ class LoginPage extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         BusyButton(
-                          title: 'Login',
+                          title: AppLocalizations.of(context).translate('login'),
                           enabled: !model.busy,
                           onPressed: () {
                             if (_loginFormKey.currentState.validate()) {
@@ -98,9 +99,9 @@ class LoginPage extends StatelessWidget {
                     SizedBox(
                       height: 20.0,
                     ),
-                    Text("Don't have an account yet?"),
+                    Text(AppLocalizations.of(context).translate('dontHaveAccount')),
                     FlatButton(
-                      child: Text("Register here!"),
+                      child: Text(AppLocalizations.of(context).translate('registerHere')),
                       onPressed: () {
                         model.navigateToSignUp();
                       },

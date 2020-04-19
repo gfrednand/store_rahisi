@@ -9,7 +9,6 @@ import 'package:storeRahisi/services/api.dart';
 import 'package:storeRahisi/services/dialog_service.dart';
 import 'package:storeRahisi/services/navigation_service.dart';
 
-
 class PurchaseModel extends BaseModel {
   Api _api = Api(path: 'purchases', companyId: '1');
 
@@ -31,11 +30,16 @@ class PurchaseModel extends BaseModel {
 
   final DialogService _dialogService = locator<DialogService>();
   NavigationService _navigationService = locator<NavigationService>();
-  ClientModel _clientModel = locator<ClientModel>();
+  // ClientModel _clientModel = locator<ClientModel>();
   PaymentModel _paymentModel = locator<PaymentModel>();
 
   Purchase _purchase;
   bool get _editting => _purchase != null;
+
+  double _totalPurchaseAmount = 0.0;
+  int _totalQuantity = 0;
+  double get totalPurchaseAmount => _totalPurchaseAmount;
+  int get totalQuantity => _totalQuantity;
 
   // ClientModel _clientModel = ClientModel();
 
@@ -100,6 +104,9 @@ class PurchaseModel extends BaseModel {
   }
 
   List<Purchase> getPurchaseHistoryByItemId(String id) {
+    if (_purchases.length == 0) {
+      listenToPurchases();
+    }
     List<Purchase> pur = [];
     _purchases.forEach((purchase) {
       purchase.items.forEach((item) {
@@ -113,6 +120,9 @@ class PurchaseModel extends BaseModel {
   }
 
   List<Purchase> getPurchaseHistoryByClientId(String id) {
+    if (_purchases.length == 0) {
+      listenToPurchases();
+    }
     List<Purchase> purs = [];
     _purchases.forEach((purchase) {
       if (purchase.clientId == id) {
@@ -184,6 +194,8 @@ class PurchaseModel extends BaseModel {
     data.userId = currentUser?.id;
     if (!_editting) {
       result = await _api.addDocument(data.toMap());
+
+      // data.items
     } else {
       result = await _api.updateDocument(data.toMap(), data.id);
     }
@@ -212,6 +224,58 @@ class PurchaseModel extends BaseModel {
     }
 
     _navigationService.pop();
+  }
+
+  List<Purchase> generateReport(DateTime fromDate, DateTime toDate) {
+    _totalPurchaseAmount = 0.0;
+    _totalQuantity = 0;
+    if (_purchases.length == 0) {
+      listenToPurchases();
+    }
+    List<Purchase> purs = _purchases
+        .where((purchase) =>
+            purchase.purchaseDate
+                .isAfter(fromDate.add(const Duration(days: -1))) &&
+            purchase.purchaseDate.isBefore(toDate.add(const Duration(days: 1))))
+        .toList();
+
+    purs.forEach((purchase) {
+      purchase.items.forEach((item) {
+        _totalPurchaseAmount = item.paidAmount + _totalPurchaseAmount;
+        _totalQuantity = item.quantity + _totalQuantity;
+      });
+    });
+    return purs;
+  }
+
+  Map<String, dynamic> getPurchaseQuantityAmount(
+      String itemId, DateTime fromDate, DateTime toDate) {
+    int quantity = 0;
+    double purchaseAmount = 0.0;
+
+    if (_purchases.length == 0) {
+      listenToPurchases();
+    }
+    List<Purchase> purs = _purchases
+        .where((purchase) =>
+            purchase.purchaseDate
+                .isAfter(fromDate.add(const Duration(days: -1))) &&
+            purchase.purchaseDate.isBefore(toDate.add(const Duration(days: 1))))
+        .toList();
+
+    purs.forEach((purchase) {
+      purchase.items.forEach((item) {
+        if (item.id == itemId) {
+          quantity = item.quantity + quantity;
+          purchaseAmount = item.purchasePrice + purchaseAmount;
+        }
+      });
+    });
+
+    Map<String, dynamic> data = {};
+    data['quantity'] = quantity;
+    data['purchaseAmount'] = purchaseAmount;
+    return data;
   }
 
   void setEdittingPurchase(Purchase edittingPurchase) {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:storeRahisi/app_localizations.dart';
 import 'package:storeRahisi/constants/routes.dart';
 import 'package:storeRahisi/models/item.dart';
-
 
 class ItemSearchDelegate extends SearchDelegate<List<Item>> {
   final List<Item> history;
@@ -41,15 +41,13 @@ class ItemSearchDelegate extends SearchDelegate<List<Item>> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Center(
-            child: Text(
-              "Search term must be longer than two letters.",
-            ),
+            child: Text(AppLocalizations.of(context)
+                .translate('searchLongerThanTwoLetter')),
           )
         ],
       );
     }
     return Container();
-
   }
 
   @override
@@ -92,8 +90,7 @@ class ItemSearchDelegate extends SearchDelegate<List<Item>> {
                       //   '${suggestion.purchasePrice}',
                       //   overflow: TextOverflow.ellipsis,
                       // ),
-                      trailing:
-                          Text('${suggestion.inStock}${suggestion.unit}'),
+                      trailing: Text('${suggestion.inStock}${suggestion.unit}'),
                     )
                   : Container();
             },

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:storeRahisi/models/index.dart';
 
@@ -48,6 +49,8 @@ class _PurchaseDetailState extends State<PurchaseDetail> {
         paymentModel.getPaymentsByPurchaseId(widget.purchase.id);
 
     double dueAmount = widget.purchase.grandTotalAmount - widget.purchase.paidAmount;
+
+ var purchaseDate=   new DateFormat('MMM dd, yyyy').format(widget.purchase.purchaseDate);
     return DefaultTabController(
       length: tabs.length,
       child: Scaffold(
@@ -55,7 +58,7 @@ class _PurchaseDetailState extends State<PurchaseDetail> {
           title: widget.purchase.purchaseDate == null
               ? Text('Purchase Detail')
               : Text(
-                  '${widget.purchase.purchaseDate.toUpperCase()}',
+                  '$purchaseDate',
                   overflow: TextOverflow.ellipsis,
                 ),
           bottom: TabBar(
@@ -83,7 +86,7 @@ class _PurchaseDetailState extends State<PurchaseDetail> {
                   ),
                   ListTile(
                     title: Text('${widget.purchase.companyName}'),
-                    subtitle: Text('Client'),
+                    subtitle: Text('Supplier'),
                   ),
                   ListTile(
                     title: Text('${widget.purchase.referenceNumber}'),

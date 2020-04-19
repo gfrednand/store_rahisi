@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:storeRahisi/app_localizations.dart';
 import 'package:storeRahisi/constants/app_constants.dart';
 import 'package:storeRahisi/pages/base_view.dart';
 import 'package:storeRahisi/pages/purchase/add_item_form.dart';
@@ -72,7 +73,7 @@ class _PurchaseAddState extends State<PurchaseAdd> {
             width: double.infinity,
             child: DropdownButtonHideUnderline(
               child: new DropdownButton<Client>(
-                hint: Text('Select Client'),
+                hint: Text(AppLocalizations.of(context).translate('selectSupplier')),
                 value: _client,
                 items: clients.map((Client value) {
                   return new DropdownMenuItem<Client>(
@@ -119,15 +120,15 @@ class _PurchaseAddState extends State<PurchaseAdd> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Purchase Price: ${items[index].purchasePrice} @1',
+                            AppLocalizations.of(context).translate('purchasePrice')+': ${items[index].purchasePrice} @1',
                             overflow: TextOverflow.ellipsis,
                           ),
                           Text(
-                            'Sale Price: ${items[index].salePrice} @1',
+                            AppLocalizations.of(context).translate('salePrice')+': ${items[index].salePrice} @1',
                             overflow: TextOverflow.ellipsis,
                           ),
                           Text(
-                            'Quantity: ${items[index].quantity}',
+                           AppLocalizations.of(context).translate('quantity')+ ': ${items[index].quantity}',
                             overflow: TextOverflow.ellipsis,
                           ),
                         ],
@@ -195,7 +196,7 @@ class _PurchaseAddState extends State<PurchaseAdd> {
                               dueAmount: grandTotalAmount - paidAmount,
                               userId: ''));
                     },
-                    label: Text('Save'),
+                    label: Text(AppLocalizations.of(context).translate('save')),
 
                     // shape: CircleBorder(side: BorderSide(color: Colors.transparent)),
                   )

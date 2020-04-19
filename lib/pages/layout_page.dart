@@ -1,6 +1,7 @@
 // import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:storeRahisi/app_localizations.dart';
 import 'package:storeRahisi/constants/app_constants.dart';
 import 'package:storeRahisi/constants/routes.dart';
 import 'package:storeRahisi/models/item.dart';
@@ -18,6 +19,7 @@ import 'package:storeRahisi/pages/client/client_list.dart';
 import 'package:storeRahisi/providers/auth_model.dart';
 import 'package:storeRahisi/providers/cart_model.dart';
 import 'package:storeRahisi/providers/item_model.dart';
+import 'package:storeRahisi/widgets/app_drawer.dart';
 import 'package:storeRahisi/widgets/cart_button.dart';
 import 'package:storeRahisi/widgets/custom_modal_sheet.dart';
 
@@ -33,14 +35,14 @@ class _LayoutPageState extends State<LayoutPage> with TickerProviderStateMixin {
   List<Item> items;
   String _title(BuildContext context) {
     return _currentIndex == 0
-        ? "Products"
+        ? AppLocalizations.of(context).translate('items')
         : _currentIndex == 1
-            ? "Clients"
+            ? AppLocalizations.of(context).translate('clients')
             : _currentIndex == 2
-                ? "Purchases"
+                ? AppLocalizations.of(context).translate('purchases')
                 : _currentIndex == 3
-                    ? "Expenses"
-                    : _currentIndex == 4 ? "POS" : "";
+                    ? AppLocalizations.of(context).translate('pos')
+                    : "";
   }
 
   @override
@@ -50,32 +52,22 @@ class _LayoutPageState extends State<LayoutPage> with TickerProviderStateMixin {
       _navigationViews = <_NavigationIconView>[
         _NavigationIconView(
           icon: const Icon(Icons.select_all),
-          title: 'Products',
+          title: AppLocalizations.of(context).translate('items'),
           vsync: this,
         ),
         _NavigationIconView(
           icon: const Icon(Icons.ac_unit),
-          title: 'Clients',
+          title: AppLocalizations.of(context).translate('clients'),
           vsync: this,
         ),
         _NavigationIconView(
           icon: const Icon(Icons.view_week),
-          title: 'Purchases',
+          title: AppLocalizations.of(context).translate('purchases'),
           vsync: this,
         ),
-        _NavigationIconView(
-          icon: const Icon(Icons.terrain),
-          title: 'Expense',
-          vsync: this,
-        ),
-        // _NavigationIconView(
-        //   icon: const Icon(Icons.trending_up),
-        //   title: 'Reports',
-        //   vsync: this,
-        // ),
         _NavigationIconView(
           icon: const Icon(Icons.style),
-          title: 'POS',
+          title: AppLocalizations.of(context).translate('pos'),
           vsync: this,
         ),
       ];
@@ -107,14 +99,16 @@ class _LayoutPageState extends State<LayoutPage> with TickerProviderStateMixin {
                         leading: Icon(Icons.person),
                         title: Text(
                             '${model.currentUser.fname} ${model.currentUser.lname}'),
-                        subtitle: Text('Username'),
+                        subtitle: Text(
+                            AppLocalizations.of(context).translate('username')),
                       )
                     : Container(),
                 model.currentUser != null
                     ? ListTile(
                         leading: Icon(Icons.email),
                         title: Text("${model.currentUser.email}"),
-                        subtitle: Text('Email'),
+                        subtitle: Text(
+                            AppLocalizations.of(context).translate('email')),
                       )
                     : Container(),
 
@@ -122,14 +116,16 @@ class _LayoutPageState extends State<LayoutPage> with TickerProviderStateMixin {
                     ? ListTile(
                         leading: Icon(Icons.person_pin),
                         title: Text("${model.currentUser.designation}"),
-                        subtitle: Text('Designation'),
+                        subtitle: Text(AppLocalizations.of(context)
+                            .translate('designation')),
                       )
                     : Container(),
                 model.currentUser != null
                     ? ListTile(
                         leading: Icon(Icons.phone),
                         title: Text("${model.currentUser.phoneNumber}"),
-                        subtitle: Text('Phone Number'),
+                        subtitle: Text(AppLocalizations.of(context)
+                            .translate('phoneNumber')),
                       )
                     : Container(),
 
@@ -137,7 +133,8 @@ class _LayoutPageState extends State<LayoutPage> with TickerProviderStateMixin {
                     ? ListTile(
                         leading: Icon(Icons.label_important),
                         title: Text("${model.currentUser.id}"),
-                        subtitle: Text('Reference Number'),
+                        subtitle: Text(AppLocalizations.of(context)
+                            .translate('referenceNumber')),
                       )
                     : Container(),
                 // Divider(),
@@ -146,7 +143,7 @@ class _LayoutPageState extends State<LayoutPage> with TickerProviderStateMixin {
                   child: FlatButton(
                       color: Theme.of(context).primaryColor,
                       child: Text(
-                        'Logout',
+                        AppLocalizations.of(context).translate('logout'),
                         style: TextStyle(color: Theme.of(context).accentColor),
                       ),
                       onPressed: () async {
@@ -160,7 +157,8 @@ class _LayoutPageState extends State<LayoutPage> with TickerProviderStateMixin {
                 SizedBox(
                   width: double.infinity,
                   child: FlatButton(
-                      child: Text('Cancel'),
+                      child: Text(
+                          AppLocalizations.of(context).translate('cancel')),
                       onPressed: () {
                         Navigator.pop(context);
                       }),
@@ -182,13 +180,13 @@ class _LayoutPageState extends State<LayoutPage> with TickerProviderStateMixin {
                 ItemModel itemModel =
                     Provider.of<ItemModel>(context, listen: false);
                 await itemModel.fetchItems();
-                items = await itemModel.items;
+                items = itemModel.items;
                 final List<Item> history = await showSearch(
                     context: context, delegate: ItemSearchDelegate(items));
                 items = history;
               },
             )
-          : _currentIndex == 4 && cartModel.carts.length > 0
+          : _currentIndex == 3 && cartModel.carts.length > 0
               ? CartButton(
                   onPressed: () {
                     Navigator.of(context).pushNamed(AppRoutes.cart_items);
@@ -199,41 +197,42 @@ class _LayoutPageState extends State<LayoutPage> with TickerProviderStateMixin {
         padding: EdgeInsets.zero,
         onSelected: (value) async {
           print(value);
-          if (value == 'Logout') {
+          if (value == AppLocalizations.of(context).translate('logout')) {
             await model.logout();
             Navigator.of(context).pushReplacementNamed(AppRoutes.splash);
           }
-          if (value == 'Profile') {
+          if (value == AppLocalizations.of(context).translate('profile')) {
             var body = _getProfileBody(model);
-            _showModalSheetAppBar(context, 'Profile', body, 0.5);
+            _showModalSheetAppBar(context,
+                AppLocalizations.of(context).translate('profile'), body, 0.5);
           }
         },
         itemBuilder: (context) => <PopupMenuEntry<String>>[
+          // PopupMenuItem<String>(
+          //   value: 'Settings',
+          //   child: ListTile(
+          //     leading: Icon(Icons.settings),
+          //     title: Text(
+          //       'Settings',
+          //     ),
+          //   ),
+          // ),
           PopupMenuItem<String>(
-            value: 'Settings',
-            child: ListTile(
-              leading: Icon(Icons.settings),
-              title: Text(
-                'Settings',
-              ),
-            ),
-          ),
-          PopupMenuItem<String>(
-            value: 'Profile',
+            value: AppLocalizations.of(context).translate('profile'),
             child: ListTile(
               leading: Icon(Icons.person_outline),
               title: Text(
-                'Profile',
+                AppLocalizations.of(context).translate('profile'),
               ),
             ),
           ),
           const PopupMenuDivider(),
           PopupMenuItem<String>(
-            value: 'Logout',
+            value: AppLocalizations.of(context).translate('logout'),
             child: ListTile(
               leading: Icon(Icons.remove_circle_outline),
               title: Text(
-                'Logout',
+                AppLocalizations.of(context).translate('logout'),
               ),
             ),
           ),
@@ -266,7 +265,7 @@ class _LayoutPageState extends State<LayoutPage> with TickerProviderStateMixin {
               ])
             : _currentIndex == 2
                 ? PurchaseList()
-                : _currentIndex == 4 ? PosItemList() : Container();
+                : _currentIndex == 3 ? PosItemList() : Container();
   }
 
   @override
@@ -274,8 +273,8 @@ class _LayoutPageState extends State<LayoutPage> with TickerProviderStateMixin {
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
     List<String> tabs = [
-      'Suppliers',
-      'Customers',
+      AppLocalizations.of(context).translate('suppliers'),
+      AppLocalizations.of(context).translate('customers'),
     ];
     var bottomNavigationBarItems = _navigationViews
         .map<BottomNavigationBarItem>((navigationView) => navigationView.item)
@@ -285,30 +284,33 @@ class _LayoutPageState extends State<LayoutPage> with TickerProviderStateMixin {
             ? DefaultTabController(
                 length: tabs.length,
                 child: Builder(builder: (BuildContext context) {
-                    return Scaffold(
-                      appBar: AppBar(
-                        automaticallyImplyLeading: false,
-                        title: Text(_title(context)),
-                        actions: _buildActions(context, model),
-                        bottom: TabBar(
-                          isScrollable: false,
-                          tabs: [
-                            for (final tab in tabs) Tab(text: tab),
-                          ],
-                        ),
+                  return Scaffold(
+                    drawer: CustomDrawer(context),
+                    appBar: AppBar(
+                      centerTitle: true,
+                      // automaticallyImplyLeading: false,
+                      title: Text(_title(context)),
+                      actions: _buildActions(context, model),
+                      bottom: TabBar(
+                        isScrollable: false,
+                        tabs: [
+                          for (final tab in tabs) Tab(text: tab),
+                        ],
                       ),
-                      body: _buildTransitionsStack(),
-                      floatingActionButton:
-                          floatingActionButton(context, colorScheme),
-                      bottomNavigationBar: buildBottomNavigationBar(
-                          bottomNavigationBarItems, textTheme, colorScheme),
-                    );
-                  }
-                ),
+                    ),
+                    body: _buildTransitionsStack(),
+                    floatingActionButton:
+                        floatingActionButton(context, colorScheme),
+                    bottomNavigationBar: buildBottomNavigationBar(
+                        bottomNavigationBarItems, textTheme, colorScheme),
+                  );
+                }),
               )
             : Scaffold(
+                drawer: CustomDrawer(context),
                 appBar: AppBar(
-                  automaticallyImplyLeading: false,
+                  centerTitle: true,
+                  // automaticallyImplyLeading: false,
                   title: Text(_title(context)),
                   actions: _buildActions(context, model),
                 ),
@@ -326,22 +328,28 @@ class _LayoutPageState extends State<LayoutPage> with TickerProviderStateMixin {
 
   StatelessWidget floatingActionButton(
       BuildContext context, ColorScheme colorScheme) {
-    return _currentIndex == 0 ||
-            _currentIndex == 1 ||
-            _currentIndex == 2 ||
-            _currentIndex == 3
+    return _currentIndex == 0 || _currentIndex == 1 || _currentIndex == 2
         ? FloatingActionButton(
             onPressed: () {
-              int tabIndex = _currentIndex==1? DefaultTabController.of(context).index :0;
+              int tabIndex = _currentIndex == 1
+                  ? DefaultTabController.of(context).index
+                  : 0;
               _currentIndex == 0
                   ? _showModalSheetAppBar(
-                      context, 'Add Product', ItemForm(), 0.67)
+                      context,
+                      AppLocalizations.of(context).translate('addItem'),
+                      ItemForm(),
+                      0.67)
                   : _currentIndex == 1
                       ? _showModalSheetAppBar(
                           context,
                           tabIndex == 0
-                              ? 'Add ' + AppConstants.clientTypeSupplier
-                              : 'Add ' + AppConstants.clientTypeCustomer,
+                              ? AppLocalizations.of(context).translate('add') +
+                                  ' ' +
+                                  AppConstants.clientTypeSupplier
+                              : AppLocalizations.of(context).translate('add') +
+                                  ' ' +
+                                  AppConstants.clientTypeCustomer,
                           ClientForm(
                             clientType: tabIndex == 0
                                 ? AppConstants.clientTypeSupplier
@@ -350,17 +358,15 @@ class _LayoutPageState extends State<LayoutPage> with TickerProviderStateMixin {
                           0.7)
                       : _currentIndex == 2
                           ? Navigator.pushNamed(context, AppRoutes.purchase_add,
-                              arguments: 'Add Purchase')
-                          : _currentIndex == 3
-                              ? _showModalSheetAppBar(
-                                  context, 'Add Expense', Container(), 0.5)
-                              : Container();
+                              arguments: AppLocalizations.of(context)
+                                  .translate('addPurchase'))
+                          : Container();
             },
             child: Icon(
               Icons.add,
               color: colorScheme.onPrimary,
             ),
-            tooltip: 'Add',
+            tooltip: AppLocalizations.of(context).translate('add'),
           )
         : Container();
   }
@@ -370,7 +376,7 @@ class _LayoutPageState extends State<LayoutPage> with TickerProviderStateMixin {
       TextTheme textTheme,
       ColorScheme colorScheme) {
     return BottomNavigationBar(
-      showUnselectedLabels: false,
+      showUnselectedLabels: true,
       items: bottomNavigationBarItems,
       currentIndex: _currentIndex,
       type: BottomNavigationBarType.fixed,

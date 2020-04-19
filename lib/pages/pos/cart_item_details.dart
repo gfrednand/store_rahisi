@@ -4,6 +4,8 @@ import 'package:storeRahisi/models/index.dart';
 import 'package:storeRahisi/providers/cart_model.dart';
 import 'package:storeRahisi/providers/item_model.dart';
 
+import '../../app_localizations.dart';
+
 class CartItemDetails extends StatelessWidget {
   final Cart cart;
   final CartModel cartModel;
@@ -54,8 +56,8 @@ class CartItemDetails extends StatelessWidget {
                           context: context,
                           builder: (BuildContext context) {
                             return AlertDialog(
-                              title: Text('Delete Product From Cart'),
-                              content: Text('Are you sure'),
+                              title: Text(AppLocalizations.of(context).translate('deleteFromCart')),
+                              content: Text(AppLocalizations.of(context).translate('areYouSure')),
                               actions: <Widget>[
                                 Row(
                                   mainAxisSize: MainAxisSize.min,
@@ -63,7 +65,7 @@ class CartItemDetails extends StatelessWidget {
                                       MainAxisAlignment.spaceEvenly,
                                   children: <Widget>[
                                     FlatButton(
-                                        child: Text('Cancel'),
+                                        child: Text(AppLocalizations.of(context).translate('cancel')),
                                         onPressed: () {
                                           Navigator.of(context).pop();
                                         }),
@@ -73,7 +75,7 @@ class CartItemDetails extends StatelessWidget {
                                       height: 24.0,
                                     ),
                                     FlatButton(
-                                        child: Text('OK'),
+                                        child: Text(AppLocalizations.of(context).translate('ok')),
                                         onPressed: () {
                                           cartModel.removeItem(item);
                                              Navigator.of(context).pop();
@@ -88,7 +90,7 @@ class CartItemDetails extends StatelessWidget {
                         Icons.delete,
                         color: Theme.of(context).errorColor,
                       ),
-                      label: Text("Remove",
+                      label: Text(AppLocalizations.of(context).translate('remove'),
                           style: TextStyle(
                               color: Theme.of(context).errorColor))),
                   Text(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:storeRahisi/app_localizations.dart';
 import 'package:storeRahisi/models/index.dart';
 import 'package:storeRahisi/pages/base_view.dart';
 import 'package:storeRahisi/pages/pos/pos_item.dart';
@@ -80,7 +81,7 @@ class _PosItemListState extends State<PosItemList> {
       child: Row(
         children: <Widget>[
           Icon(
-            Icons.list,
+            Icons.dns,
             color:
                 itemSelected ? Colors.black38 : Theme.of(context).accentColor,
           ),
@@ -88,7 +89,7 @@ class _PosItemListState extends State<PosItemList> {
             width: 2.0,
           ),
           Text(
-            'Sales',
+            AppLocalizations.of(context).translate('sales'),
             style: TextStyle(
               color:
                   itemSelected ? Colors.black38 : Theme.of(context).accentColor,
@@ -118,7 +119,7 @@ class _PosItemListState extends State<PosItemList> {
             width: 2.0,
           ),
           Text(
-            'Items',
+            AppLocalizations.of(context).translate('items'),
             style: TextStyle(
               color: !itemSelected
                   ? Colors.black38
@@ -145,7 +146,7 @@ class _PosItemListState extends State<PosItemList> {
                   child: TextField(
                     controller: editingController,
                     decoration: InputDecoration(
-                        labelText: "Search",
+                        labelText: AppLocalizations.of(context).translate('search'),
                         prefixIcon: Icon(Icons.search),
                         border: OutlineInputBorder()),
                   ),

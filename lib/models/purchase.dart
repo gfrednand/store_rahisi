@@ -13,8 +13,8 @@ String purchaseToJson(Purchase data) => json.encode(data.toMap());
 
 class Purchase {
   String id;
-  String purchaseDate;
-  String updatedAt;
+  DateTime purchaseDate;
+  DateTime updatedAt;
   String referenceNumber;
   bool active;
   String clientId;
@@ -30,15 +30,15 @@ class Purchase {
       @required this.userId,
       this.active,
       this.clientId,
-      String purchaseDate,
+      DateTime purchaseDate,
       this.items,
       this.grandTotalAmount,
       this.companyName,
       this.paidAmount,
       this.dueAmount,
       this.updatedAt})
-      : this.purchaseDate = purchaseDate ??
-            new DateFormat('MMM dd, yyyy HH:mm').format(new DateTime.now()),
+      : this.purchaseDate = purchaseDate ?? DateTime.now(),
+        // new DateFormat('MMM dd, yyyy HH:mm').format(new DateTime.now()),
         this.id = id ?? Uuid().generateV4(),
         this.referenceNumber = referenceNumber ??
             new DateFormat('yyyy/MM').format(new DateTime.now()) +
@@ -51,7 +51,7 @@ class Purchase {
         referenceNumber: json['referenceNumber'],
         active: json["active"],
         clientId: json["clientId"],
-        purchaseDate: json["purchaseDate"],
+        purchaseDate: DateTime.tryParse(json["purchaseDate"].toDate().toString()),
         updatedAt: json["updatedAt"],
         items:
             List<Item>.from(json["items"].map((x) => Item.fromMap(x, x['id']))),

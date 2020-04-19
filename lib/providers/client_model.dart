@@ -44,15 +44,14 @@ class ClientModel extends BaseModel {
   }
 
   listenToClients() async {
-    _api.streamDataCollection().listen((postsSnapshot) {
-      if (postsSnapshot.documents.isNotEmpty) {
-        var posts = postsSnapshot.documents
+    _api.streamDataCollection().listen((snapShot) {
+      if (snapShot.documents.isNotEmpty) {
+        var clents = snapShot.documents
             .map((snapshot) =>
                 Client.fromMap(snapshot.data, snapshot.documentID))
             .toList();
-
-        // Add the posts onto the controller
-        _clientController.add(posts);
+        // Add the clents onto the controller
+        _clientController.add(clents);
       }
     });
 

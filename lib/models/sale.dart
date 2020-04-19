@@ -24,7 +24,8 @@ class Sale {
   String referenceNumber;
   String userId;
   String clientId;
-  String saleDate;
+  String companyName;
+  DateTime saleDate;
   List<Item> items;
 
   Sale({
@@ -35,14 +36,16 @@ class Sale {
     this.tax,
     this.grandTotal,
     this.paidAmount,
+    this.companyName,
     this.paymentMethod,
     String referenceNumber,
     this.userId,
     this.clientId,
-    String saleDate,
+    DateTime saleDate,
     this.items,
-  })  :this.saleDate = saleDate ??
-            new DateFormat('MMM dd, yyyy HH:mm').format(new DateTime.now()), this.referenceNumber = referenceNumber ??
+  })  :this.saleDate = saleDate ?? DateTime.now(),
+            // new DateFormat('MMM dd, yyyy HH:mm').format(new DateTime.now()),
+             this.referenceNumber = referenceNumber ??
             new DateFormat('yyyy/MM').format(new DateTime.now()) +
                 'S-' +
                 DateFormat('ddHHms').format(new DateTime.now());
@@ -75,7 +78,7 @@ class Sale {
       paymentMethod: data["paymentMethod"],
       userId: data["userId"],
       clientId: data["clientId"],
-      saleDate: data["saleDate"],
+      saleDate: DateTime.tryParse(data["saleDate"].toDate().toString()),
       items:
           List<Item>.from(data["items"].map((x) => Item.fromMap(x, x['id']))),
     );

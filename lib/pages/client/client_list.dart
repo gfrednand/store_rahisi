@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:storeRahisi/app_localizations.dart';
 import 'package:storeRahisi/constants/routes.dart';
 import 'package:storeRahisi/models/index.dart';
 import 'package:storeRahisi/pages/base_view.dart';
@@ -19,7 +20,7 @@ class ClientList extends StatelessWidget {
           return !model.busy
               ? model.clients == null
                   ? Center(
-                      child: Text('Nothing Found'),
+                      child: Text(AppLocalizations.of(context).translate('nothingFound')),
                     )
                   : Scrollbar(
                       child: ListView.builder(

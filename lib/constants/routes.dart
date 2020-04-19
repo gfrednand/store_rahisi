@@ -1,7 +1,7 @@
 class AppRoutes {
 static const home = "/";
 static const layout = "layout";
-static const product = "product";
+static const item = "product";
 static const sale = "sale";
 static const purchase = "purchase";
 static const expense = "expense";
@@ -17,6 +17,10 @@ static const purchase_detail = "purchase_detail";
 static const purchase_add = "purchase_add";
 static const cart_items = "cart_items";
 static const sale_detail = "sale_detail";
+static const item_report = "item_report";
+static const purchase_report = "purchase_report";
+static const sale_report = "sale_report";
+static const profit_report = "profit_report";
 
 
 }

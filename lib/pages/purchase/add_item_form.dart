@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:storeRahisi/app_localizations.dart';
 import 'package:storeRahisi/constants/ui_helpers.dart';
 import 'package:storeRahisi/models/index.dart';
 import 'package:storeRahisi/providers/purchase_model.dart';
@@ -45,7 +46,7 @@ class _AddItemFormState extends State<AddItemForm> {
                   return InputDecorator(
                     decoration: InputDecoration(
                       icon: const Icon(Icons.texture),
-                      labelText: 'Select Item',
+                      labelText:  AppLocalizations.of(context).translate('selectedItem'),
                     ),
                     isEmpty: widget.items == null,
                     child: new DropdownButtonHideUnderline(
@@ -159,14 +160,14 @@ class _AddItemFormState extends State<AddItemForm> {
                     widget.purchaseModel.setSelectedItem(_item);
                     Navigator.pop(context);
                   },
-                  child: Text('Add'),
+                  child: Text(AppLocalizations.of(context).translate('add')),
                 ),
               ),
 
               SizedBox(
                 width: double.infinity,
                 child: FlatButton(
-                    child: Text('Cancel'),
+                    child: Text(AppLocalizations.of(context).translate('cancel')),
                     onPressed: () {
                       Navigator.pop(context);
                     }),
