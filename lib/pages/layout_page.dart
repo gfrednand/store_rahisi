@@ -285,7 +285,7 @@ class _LayoutPageState extends State<LayoutPage> with TickerProviderStateMixin {
                 length: tabs.length,
                 child: Builder(builder: (BuildContext context) {
                   return Scaffold(
-                    drawer: CustomDrawer(context),
+                    drawer: CustomDrawer(context,model.currentUser),
                     appBar: AppBar(
                       centerTitle: true,
                       // automaticallyImplyLeading: false,
@@ -307,7 +307,7 @@ class _LayoutPageState extends State<LayoutPage> with TickerProviderStateMixin {
                 }),
               )
             : Scaffold(
-                drawer: CustomDrawer(context),
+                drawer: CustomDrawer(context,model.currentUser),
                 appBar: AppBar(
                   centerTitle: true,
                   // automaticallyImplyLeading: false,

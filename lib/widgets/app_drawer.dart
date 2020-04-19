@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:storeRahisi/app_localizations.dart';
 import 'package:storeRahisi/constants/routes.dart';
+import 'package:storeRahisi/models/user.dart';
 
 class CustomDrawer extends StatelessWidget {
   final BuildContext ctx;
-  CustomDrawer(this.ctx);
+  final User user;
+  CustomDrawer(this.ctx, this.user);
   @override
   Widget build(ctx) {
     return Drawer(
@@ -12,10 +14,17 @@ class CustomDrawer extends StatelessWidget {
         // Important: Delete any padding from the ListView.
         padding: EdgeInsets.zero,
         children: <Widget>[
-          DrawerHeader(
-            child: Text(''),
-            decoration: BoxDecoration(
-              color: Theme.of(ctx).primaryColor,
+          UserAccountsDrawerHeader(
+            accountName: Text('${user.fname} ${user.lname}'),
+            accountEmail: Text("${user.email}"),
+            currentAccountPicture: CircleAvatar(
+              backgroundColor: Theme.of(ctx).platform == TargetPlatform.iOS
+                  ? Colors.blue
+                  : Colors.white,
+              child: Text(
+                "S",
+                style: TextStyle(fontSize: 40.0),
+              ),
             ),
           ),
           ListTile(
