@@ -51,14 +51,13 @@ class _ItemReportState extends State<ItemReport> {
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
-    SaleModel saleModel = Provider.of<SaleModel>(context);
 
-    ClientModel clientModel = Provider.of<ClientModel>(context);
     // PaymentModel paymentModel = Provider.of<PaymentModel>(context);
 
     ItemModel itemModel = Provider.of<ItemModel>(context);
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         title: Text(AppLocalizations.of(context).translate('itemReport')),
       ),
       body: Column(
@@ -290,6 +289,13 @@ class _ItemReportState extends State<ItemReport> {
 //Let associate be a model class with attributes name,gender and age and associateList be a list of associate model class.
 
     List<List<dynamic>> rows = List<List<dynamic>>();
+        rows.add([
+      "From",
+      DateFormat('MMM dd, yyyy').format(selectedFromDate.toLocal()),
+      "To",
+      DateFormat('MMM dd, yyyy').format(selectedToDate.toLocal()),
+      "",
+    ]);
     rows.add([
       "Product",
       "Purchase",

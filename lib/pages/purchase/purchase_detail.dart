@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:storeRahisi/app_localizations.dart';
+import 'package:storeRahisi/constants/routes.dart';
 import 'package:storeRahisi/models/index.dart';
 
 import 'package:storeRahisi/models/purchase.dart';
@@ -48,15 +50,17 @@ class _PurchaseDetailState extends State<PurchaseDetail> {
     List<Payment> payments =
         paymentModel.getPaymentsByPurchaseId(widget.purchase.id);
 
-    double dueAmount = widget.purchase.grandTotalAmount - widget.purchase.paidAmount;
+    double dueAmount =
+        widget.purchase.grandTotalAmount - widget.purchase.paidAmount;
 
- var purchaseDate=   new DateFormat('MMM dd, yyyy').format(widget.purchase.purchaseDate);
+    var purchaseDate =
+        new DateFormat('MMM dd, yyyy').format(widget.purchase.purchaseDate);
     return DefaultTabController(
       length: tabs.length,
       child: Scaffold(
         appBar: AppBar(
           title: widget.purchase.purchaseDate == null
-              ? Text('Purchase Detail')
+              ? Text(AppLocalizations.of(context).translate('purchaseDetails'))
               : Text(
                   '$purchaseDate',
                   overflow: TextOverflow.ellipsis,
@@ -162,8 +166,7 @@ class _PurchaseDetailState extends State<PurchaseDetail> {
             ListView.builder(
                 itemCount: payments.length,
                 itemBuilder: (buildContext, index) {
-                  ClientModel clientModel =
-                      Provider.of<ClientModel>(context);
+                  ClientModel clientModel = Provider.of<ClientModel>(context);
                   Client client =
                       clientModel.getClientById(payments[index].clientId);
                   return Card(
@@ -198,8 +201,8 @@ class _PurchaseDetailState extends State<PurchaseDetail> {
                 }),
             dueAmount > 0
                 ? PurchasePaymentForm(
-                        dueAmount: dueAmount,
-                        purchase: widget.purchase,
+                    dueAmount: dueAmount,
+                    purchase: widget.purchase,
                   )
                 : Container(
                     child: Center(
@@ -215,17 +218,17 @@ class _PurchaseDetailState extends State<PurchaseDetail> {
   Widget chipDesign(String label, Color color) {
     return GestureDetector(
       onTap: () {
-        label == 'Delete'
-            ? widget.purchaseModel.removePurchase(widget.purchase.id)
-            : label == 'Edit'
-                ? _showModalSheetAppBar(
-                    context,
-                    'Edit Purchase',
-                    PurchaseForm(
-                      purchase: widget.purchase,
-                    ),
-                    0.81)
-                : _showToast(label + ' Selected', color, Icons.error_outline);
+        if (label == 'Delete') {
+          widget.purchaseModel.removePurchase(widget.purchase.id);
+        }
+
+        if (label == 'Edit') {
+          widget.purchaseModel.setEdittingPurchase(widget.purchase);
+          Navigator.pushNamed(context, AppRoutes.purchase_add, arguments: {
+            'title': AppLocalizations.of(context).translate('editPurchase'),
+            'purchase': widget.purchase,
+          });
+        }
       },
       child: Container(
         child: Chip(

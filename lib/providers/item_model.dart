@@ -10,10 +10,9 @@ import 'package:storeRahisi/services/dialog_service.dart';
 import 'package:storeRahisi/services/navigation_service.dart';
 
 class ItemModel extends BaseModel {
-  // Api _api = locator<Api>();
+  // Api Api(path: 'items', companyId: currentUser.companyId) = locator<Api>();
   static String _unitConst = 'Select a Product Unit';
   static String _categoryConst = 'Select a Product Category';
-  Api _api = Api(path: 'items', companyId: '1');
 
   final StreamController<List<Item>> _itemsController =
       StreamController<List<Item>>.broadcast();
@@ -35,7 +34,7 @@ class ItemModel extends BaseModel {
   String _selectedCategory = _categoryConst;
   String get selectedCategory => _selectedCategory;
 
-    double _totalProfit = 0.0;
+  double _totalProfit = 0.0;
   double get totalProfit => _totalProfit;
   void setSelectedCategory(dynamic category) {
     _selectedCategory = category;
@@ -51,7 +50,8 @@ class ItemModel extends BaseModel {
 
   fetchItems() async {
     setBusy(true);
-    var result = await _api.getDataCollection();
+    var result = await Api(path: 'items', companyId: currentUser.companyId)
+        .getDataCollection();
     _items = result.documents
         .map((doc) => Item.fromMap(doc.data, doc.documentID))
         .toList();
@@ -59,14 +59,15 @@ class ItemModel extends BaseModel {
   }
 
   listenToItems() async {
-    _api.streamDataCollection().listen((postsSnapshot) {
-      if (postsSnapshot.documents.isNotEmpty) {
-        var posts = postsSnapshot.documents
-            .map((doc) => Item.fromFirestore(doc))
-            .toList();
+    Api(path: 'items', companyId: currentUser.companyId)
+        .streamDataCollection()
+        .listen((snapshot) {
+      if (snapshot.documents.isNotEmpty) {
+        var itms =
+            snapshot.documents.map((doc) => Item.fromFirestore(doc)).toList();
 
-        // Add the posts onto the controller
-        _itemsController.add(posts);
+        // Add the itms onto the controller
+        _itemsController.add(itms);
       }
     });
 
@@ -97,7 +98,8 @@ class ItemModel extends BaseModel {
 
   getItemByIdFromServer(String id) async {
     setBusy(true);
-    var doc = await _api.getDocumentById(id);
+    var doc = await Api(path: 'items', companyId: currentUser.companyId)
+        .getDocumentById(id);
     _item = Item.fromMap(doc.data, doc.documentID);
     setBusy(false);
   }
@@ -110,7 +112,8 @@ class ItemModel extends BaseModel {
       cancelTitle: 'No',
     );
     if (dialogResponse.confirmed) {
-      await _api.removeDocument(id);
+      await Api(path: 'items', companyId: currentUser.companyId)
+          .removeDocument(id);
       _navigationService.pop();
     }
   }
@@ -127,9 +130,11 @@ class ItemModel extends BaseModel {
     }
     data.userId = currentUser?.id;
     if (!_editting) {
-      result = await _api.addDocument(data.toMap());
+      result = await Api(path: 'items', companyId: currentUser.companyId)
+          .addDocument(data.toMap());
     } else {
-      result = await _api.updateDocument(data.toMap(), data.id);
+      result = await Api(path: 'items', companyId: currentUser.companyId)
+          .updateDocument(data.toMap(), data.id);
     }
 
     setBusy(false);
@@ -146,7 +151,12 @@ class ItemModel extends BaseModel {
       );
     }
 
-    _navigationService.pop();
+    if (_editting) {
+      _navigationService.pop();
+      _navigationService.pop();
+    } else {
+      _navigationService.pop();
+    }
   }
 
   void setEdittingItem(Item edittingItem) {
@@ -164,7 +174,7 @@ class ItemModel extends BaseModel {
   }
 
   List<Item> generateReport(DateTime fromDate, DateTime toDate) {
-   _totalProfit=0.0;
+    _totalProfit = 0.0;
 
     return _items.map((item) {
       Map<String, dynamic> purMap =

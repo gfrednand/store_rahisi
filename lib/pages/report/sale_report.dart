@@ -59,6 +59,7 @@ class _SaleReportState extends State<SaleReport> {
     ItemModel itemModel = Provider.of<ItemModel>(context);
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         title: Text(AppLocalizations.of(context).translate('salesReport')),
       ),
       body: Column(
@@ -334,6 +335,13 @@ class _SaleReportState extends State<SaleReport> {
 //Let associate be a model class with attributes name,gender and age and associateList be a list of associate model class.
 
     List<List<dynamic>> rows = List<List<dynamic>>();
+    rows.add([
+      "From",
+      DateFormat('MMM dd, yyyy').format(selectedFromDate.toLocal()),
+      "To",
+      DateFormat('MMM dd, yyyy').format(selectedToDate.toLocal()),
+      "",
+    ]);
     rows.add([
       "Reference Number",
       "Supplier",

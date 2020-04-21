@@ -20,6 +20,7 @@ class CustomModalSheet {
         isScrollControlled: true,
         builder: (context) {
           return SingleChildScrollView(
+            
             child: Container(
               padding: EdgeInsets.only(
                   bottom: MediaQuery.of(context).viewInsets.bottom),
@@ -28,6 +29,13 @@ class CustomModalSheet {
               //     color: Colors.white,
               //     borderRadius:
               //         new BorderRadius.all(const Radius.circular(10.0))),
+              // decoration: BoxDecoration(
+              //   borderRadius: BorderRadius.only(
+              //     topLeft: Radius.circular(16.0),
+              //     topRight: Radius.circular(16.0),
+              //   ),
+              //   color: Theme.of(context).accentColor,
+              // ),
               child: ConstrainedBox(
                 constraints: new BoxConstraints(
                   minHeight: 0.0,

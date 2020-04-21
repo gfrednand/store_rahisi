@@ -9,7 +9,6 @@ import 'package:storeRahisi/services/dialog_service.dart';
 import 'package:storeRahisi/services/navigation_service.dart';
 
 class PaymentModel extends BaseModel {
-  Api _api = Api(path: 'payments', companyId: '1');
   final DialogService _dialogService = locator<DialogService>();
   NavigationService _navigationService = locator<NavigationService>();
 
@@ -20,40 +19,39 @@ class PaymentModel extends BaseModel {
 
   Payment _payment;
 
-
   // Item get item => _payment;
   bool get _editting => _payment != null;
 
-  fetchItems() async {
+  fetchPayments() async {
     setBusy(true);
-    var result = await _api.getDataCollection();
+    var result = await Api(path: 'payments', companyId: currentUser.companyId)
+        .getDataCollection();
     _payments = result.documents
         .map((doc) => Payment.fromMap(doc.data, doc.documentID))
         .toList();
-    
-
-          
 
     setBusy(false);
   }
 
   listenToPayments() async {
-    _api.streamDataCollection().listen((postsSnapshot) {
-      if (postsSnapshot.documents.isNotEmpty) {
-        var posts = postsSnapshot.documents
+    Api(path: 'payments', companyId: currentUser.companyId)
+        .streamDataCollection()
+        .listen((snapshot) {
+      if (snapshot.documents.isNotEmpty) {
+        var payments = snapshot.documents
             .map((snapshot) =>
                 Payment.fromMap(snapshot.data, snapshot.documentID))
             .toList();
 
-        // Add the posts onto the controller
-        _paymentsController.add(posts);
+        // Add the payments onto the controller
+        _paymentsController.add(payments);
       }
     });
 
     _paymentsController.stream.listen((purchaseData) {
-      List<Payment> updatedClients = purchaseData;
-      if (updatedClients != null && updatedClients.length > 0) {
-        _payments = updatedClients;
+      List<Payment> updatedPayments = purchaseData;
+      if (updatedPayments != null && updatedPayments.length > 0) {
+        _payments = updatedPayments;
         notifyListeners();
       }
     });
@@ -74,7 +72,8 @@ class PaymentModel extends BaseModel {
       cancelTitle: 'No',
     );
     if (dialogResponse.confirmed) {
-      await _api.removeDocument(id);
+      await Api(path: 'payments', companyId: currentUser.companyId)
+          .removeDocument(id);
       _navigationService.pop();
     }
   }
@@ -83,13 +82,15 @@ class PaymentModel extends BaseModel {
     // setBusy(true);
     var result;
     if (!_editting) {
-      result = await _api.addDocument(data.toMap());
+      result = await Api(path: 'payments', companyId: currentUser.companyId)
+          .addDocument(data.toMap());
     } else {
       print('*********************${data.toMap()}');
 
-      result = await _api.updateDocument(data.toMap(), data.id);
+      result = await Api(path: 'payments', companyId: currentUser.companyId)
+          .updateDocument(data.toMap(), data.id);
     }
-    
+
     // setBusy(false);
 
     // if (result is String) {

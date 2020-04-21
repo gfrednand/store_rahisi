@@ -176,8 +176,7 @@ class _ClientFormState extends State<ClientForm> {
                       SizedBox(
                         width: double.infinity,
                         child: FlatButton(
-                            child: Text(AppLocalizations.of(context)
-                                .translate('cancel')),
+                            child: Text(AppLocalizations.of(context).translate('cancel'),style: TextStyle(color: Colors.grey[800]),),
                             onPressed: () {
                               Navigator.pop(context);
                             }),

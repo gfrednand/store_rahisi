@@ -4,46 +4,46 @@
 
 import 'dart:convert';
 
-Expense expenseFromJson(String str) => Expense.fromMap(json.decode(str));
+// Expense expenseFromJson(String str) => Expense.fromMap(json.decode(str));
 
 String expenseToJson(Expense data) => json.encode(data.toMap());
 
 class Expense {
-    String id;
-    String date;
-    bool active;
-    String responsiblePerson;
-    double amount;
-    String category;
-    String description;
+  String id;
+  DateTime date;
+  bool active;
+  String responsiblePerson;
+  double amount;
+  String description;
+  String userId;
 
-    Expense({
-        this.id,
-        this.date,
-        this.active,
-        this.responsiblePerson,
-        this.amount,
-        this.category,
-        this.description,
-    });
+  Expense({
+    this.id,
+    this.userId,
+    DateTime date,
+    this.active,
+    this.responsiblePerson,
+    this.amount,
+    this.description,
+  }) : this.date = date ?? DateTime.now();
 
-    factory Expense.fromMap(Map<String, dynamic> json) => Expense(
-        id: json["id"],
-        date: json["date"],
+  factory Expense.fromMap(Map<String, dynamic> json, String id) => Expense(
+        id: id ?? '',
+        date: DateTime.tryParse(json["date"].toDate().toString()),
+        userId: json["userId"],
         active: json["active"],
         responsiblePerson: json["ResponsiblePerson"],
         amount: json["Amount"].toDouble(),
-        category: json["category"],
         description: json["description"],
-    );
+      );
 
-    Map<String, dynamic> toMap() => {
+  Map<String, dynamic> toMap() => {
         "id": id,
         "date": date,
+        "userId": userId,
         "active": active,
         "ResponsiblePerson": responsiblePerson,
         "Amount": amount,
-        "category": category,
         "description": description,
-    };
+      };
 }

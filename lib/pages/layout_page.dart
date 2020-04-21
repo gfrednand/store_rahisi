@@ -204,7 +204,7 @@ class _LayoutPageState extends State<LayoutPage> with TickerProviderStateMixin {
           if (value == AppLocalizations.of(context).translate('profile')) {
             var body = _getProfileBody(model);
             _showModalSheetAppBar(context,
-                AppLocalizations.of(context).translate('profile'), body, 0.5);
+                AppLocalizations.of(context).translate('profile'), body, 0.62);
           }
         },
         itemBuilder: (context) => <PopupMenuEntry<String>>[
@@ -285,7 +285,7 @@ class _LayoutPageState extends State<LayoutPage> with TickerProviderStateMixin {
                 length: tabs.length,
                 child: Builder(builder: (BuildContext context) {
                   return Scaffold(
-                    drawer: CustomDrawer(context,model.currentUser),
+                    drawer: CustomDrawer(context, model.currentUser),
                     appBar: AppBar(
                       centerTitle: true,
                       // automaticallyImplyLeading: false,
@@ -307,7 +307,7 @@ class _LayoutPageState extends State<LayoutPage> with TickerProviderStateMixin {
                 }),
               )
             : Scaffold(
-                drawer: CustomDrawer(context,model.currentUser),
+                drawer: CustomDrawer(context, model.currentUser),
                 appBar: AppBar(
                   centerTitle: true,
                   // automaticallyImplyLeading: false,
@@ -358,8 +358,10 @@ class _LayoutPageState extends State<LayoutPage> with TickerProviderStateMixin {
                           0.7)
                       : _currentIndex == 2
                           ? Navigator.pushNamed(context, AppRoutes.purchase_add,
-                              arguments: AppLocalizations.of(context)
-                                  .translate('addPurchase'))
+                              arguments: {
+                                  'title': AppLocalizations.of(context)
+                                  .translate('addPurchase'),
+                                } )
                           : Container();
             },
             child: Icon(

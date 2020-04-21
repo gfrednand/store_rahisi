@@ -3,15 +3,16 @@ import 'dart:async';
 
 import 'package:flutter/services.dart';
 
+
 class Api {
   final Firestore _db = Firestore.instance;
-
   String path;
   String companyId;
 
   CollectionReference ref;
 
-  Api({this.path, this.companyId}) {
+  Api({this.path,this.companyId}) {
+
     ref = _db.collection("companies").document(companyId).collection(path);
     
   }

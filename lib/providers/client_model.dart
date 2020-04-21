@@ -9,9 +9,8 @@ import 'package:storeRahisi/services/dialog_service.dart';
 import 'package:storeRahisi/services/navigation_service.dart';
 
 class ClientModel extends BaseModel {
-  // Api _api = locator<Api>();
+  // Api Api(path: 'items', companyId: currentUser.companyId) = locator<Api>();
 
-  Api _api = Api(path: 'clients', companyId: '1');
   String _documentID;
   String get documentID => _documentID;
 
@@ -28,15 +27,18 @@ class ClientModel extends BaseModel {
   final StreamController<List<Client>> _clientController =
       StreamController<List<Client>>.broadcast();
 
-  Client getById(String id) =>
-      _clients.firstWhere((client) => client.id == id, orElse: () => null,);
+  Client getById(String id) => _clients.firstWhere(
+        (client) => client.id == id,
+        orElse: () => null,
+      );
 
   List<Client> getByClientType(String clientType) =>
       _clients.where((client) => client.clientType == clientType).toList();
 
   fetchClients() async {
     setBusy(true);
-    var result = await _api.getDataCollection();
+    var result = await Api(path: 'clients', companyId: currentUser.companyId)
+        .getDataCollection();
     _clients = result.documents
         .map((doc) => Client.fromMap(doc.data, doc.documentID))
         .toList();
@@ -44,7 +46,9 @@ class ClientModel extends BaseModel {
   }
 
   listenToClients() async {
-    _api.streamDataCollection().listen((snapShot) {
+    Api(path: 'clients', companyId: currentUser.companyId)
+        .streamDataCollection()
+        .listen((snapShot) {
       if (snapShot.documents.isNotEmpty) {
         var clents = snapShot.documents
             .map((snapshot) =>
@@ -76,34 +80,34 @@ class ClientModel extends BaseModel {
 
   getClientByIdFromServer(String id) async {
     setBusy(true);
-    var doc = await _api.getDocumentById(id);
+    var doc = await Api(path: 'clients', companyId: currentUser.companyId)
+        .getDocumentById(id);
     _client = Client.fromMap(doc.data, doc.documentID);
     setBusy(false);
   }
 
   removeClient(String id) async {
-
-     var dialogResponse = await _dialogService.showConfirmationDialog(
+    var dialogResponse = await _dialogService.showConfirmationDialog(
       title: 'Are you sure?',
       description: 'Do you really want to delete client?',
       confirmationTitle: 'Yes',
       cancelTitle: 'No',
     );
     if (dialogResponse.confirmed) {
-      await _api.removeDocument(id);
+      await Api(path: 'clients', companyId: currentUser.companyId)
+          .removeDocument(id);
       _navigationService.pop();
     }
-
   }
 
-    void setEdittingclient(Client edittingclient) {
+  void setEdittingclient(Client edittingclient) {
     _client = edittingclient;
-
   }
 
   updateClient(Client data, String id) async {
     setBusy(true);
-    await _api.updateDocument(data.toMap(), id);
+    await Api(path: 'clients', companyId: currentUser.companyId)
+        .updateDocument(data.toMap(), id);
     setBusy(false);
   }
 
@@ -114,9 +118,11 @@ class ClientModel extends BaseModel {
 
     data.userId = currentUser?.id;
     if (!_editting) {
-      result = await _api.addDocument(data.toMap());
+      result = await Api(path: 'clients', companyId: currentUser.companyId)
+          .addDocument(data.toMap());
     } else {
-      result = await _api.updateDocument(data.toMap(), data.id);
+      result = await Api(path: 'clients', companyId: currentUser.companyId)
+          .updateDocument(data.toMap(), data.id);
     }
 
     setBusy(false);
@@ -133,6 +139,11 @@ class ClientModel extends BaseModel {
       );
     }
 
-    _navigationService.pop();
+    if (_editting) {
+      _navigationService.pop();
+      _navigationService.pop();
+    } else {
+      _navigationService.pop();
+    }
   }
 }

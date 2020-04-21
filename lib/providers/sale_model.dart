@@ -12,8 +12,6 @@ import 'package:storeRahisi/services/dialog_service.dart';
 import 'package:storeRahisi/services/navigation_service.dart';
 
 class SaleModel extends BaseModel {
-  Api _api = Api(path: 'sales', companyId: '1');
-
   final StreamController<List<Sale>> _salesController =
       StreamController<List<Sale>>.broadcast();
 
@@ -41,13 +39,16 @@ class SaleModel extends BaseModel {
 
   fetchSales() async {
     setBusy(true);
-    var result = await _api.getDataCollection();
+    var result = await Api(path: 'sales', companyId: currentUser.companyId)
+        .getDataCollection();
     _sales = result.documents.map((doc) => Sale.fromFirestore(doc)).toList();
     setBusy(false);
   }
 
   listenToSales() async {
-    _api.streamDataCollection().listen((snapshot) {
+    Api(path: 'sales', companyId: currentUser.companyId)
+        .streamDataCollection()
+        .listen((snapshot) {
       if (snapshot.documents.isNotEmpty) {
         var sals = snapshot.documents
             .map((snapshot) => Sale.fromFirestore(snapshot))
@@ -125,7 +126,8 @@ class SaleModel extends BaseModel {
 
   getSaleByIdFromServer(String id) async {
     setBusy(true);
-    var doc = await _api.getDocumentById(id);
+    var doc = await Api(path: 'sales', companyId: currentUser.companyId)
+        .getDocumentById(id);
     _sale = Sale.fromFirestore(doc);
     setBusy(false);
   }
@@ -138,7 +140,8 @@ class SaleModel extends BaseModel {
       cancelTitle: 'No',
     );
     if (dialogResponse.confirmed) {
-      await _api.removeDocument(id);
+      await Api(path: 'sales', companyId: currentUser.companyId)
+          .removeDocument(id);
       _navigationService.pop();
     }
   }
@@ -150,9 +153,11 @@ class SaleModel extends BaseModel {
     data.userId = currentUser?.id;
 
     if (!_editting) {
-      result = await _api.addDocument(data.toMap());
+      result = await Api(path: 'sales', companyId: currentUser.companyId)
+          .addDocument(data.toMap());
     } else {
-      result = await _api.updateDocument(data.toMap(), data.id);
+      result = await Api(path: 'sales', companyId: currentUser.companyId)
+          .updateDocument(data.toMap(), data.id);
     }
     setBusy(false);
 
@@ -176,7 +181,13 @@ class SaleModel extends BaseModel {
         description: 'Item Sold',
       );
     }
-    _navigationService.pop();
+
+    if (_editting) {
+      _navigationService.pop();
+      _navigationService.pop();
+    } else {
+      _navigationService.pop();
+    }
   }
 
   List<Sale> generateReport(DateTime fromDate, DateTime toDate) {
@@ -253,6 +264,31 @@ class SaleModel extends BaseModel {
     Map<String, dynamic> data = {};
     data['quantity'] = quantity;
     data['purchaseAmount'] = purchaseAmount;
+    return data;
+  }
+
+  Map<String, dynamic> getTotalSales(DateTime fromDate, DateTime toDate) {
+    double purchaseAmount = 0;
+    double beginningInventory = 0.0;
+    double endingInventory = 0.0;
+
+    if (_sales.length == 0) {
+      listenToSales();
+    }
+    List<Sale> sals = _sales
+        .where((purchase) =>
+            purchase.saleDate.isAfter(fromDate.add(const Duration(days: -1))) &&
+            purchase.saleDate.isBefore(toDate.add(const Duration(days: 1))))
+        .toList();
+
+    sals.forEach((sale) {
+      sale.items.forEach((item) {
+        purchaseAmount = (item.paidAmount * item.quantity) + purchaseAmount;
+      });
+    });
+    Map<String, dynamic> data = {};
+    data['totalSales'] = purchaseAmount;
+    data['costOfSales'] = beginningInventory + purchaseAmount - endingInventory;
     return data;
   }
 }

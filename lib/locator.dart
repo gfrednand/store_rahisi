@@ -37,4 +37,5 @@ void setupLocator() {
   locator.registerLazySingleton(() => PaymentModel());
   locator.registerLazySingleton(() => SaleModel());
   locator.registerLazySingleton(() => CartModel());
+  locator.registerLazySingleton(() => ExpenseModel());
 }

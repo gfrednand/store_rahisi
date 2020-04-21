@@ -10,8 +10,6 @@ import 'package:storeRahisi/services/dialog_service.dart';
 import 'package:storeRahisi/services/navigation_service.dart';
 
 class PurchaseModel extends BaseModel {
-  Api _api = Api(path: 'purchases', companyId: '1');
-
   final StreamController<List<Purchase>> _purchasesController =
       StreamController<List<Purchase>>.broadcast();
 
@@ -59,9 +57,18 @@ class PurchaseModel extends BaseModel {
     notifyListeners();
   }
 
+
+  void setEdittingPurchase(Purchase edittingPurchase) {
+    _selectedItems = [];
+    _purchase = edittingPurchase;
+    _selectedItems.addAll(_purchase.items);
+    notifyListeners();
+  }
+
   fetchPurchases() async {
     setBusy(true);
-    var result = await _api.getDataCollection();
+    var result = await Api(path: 'purchases', companyId: currentUser.companyId)
+        .getDataCollection();
     _purchases = result.documents
         .map((doc) => Purchase.fromMap(doc.data, doc.documentID))
         .toList();
@@ -69,7 +76,9 @@ class PurchaseModel extends BaseModel {
   }
 
   listenToPurchases() async {
-    _api.streamDataCollection().listen((snapshot) {
+    Api(path: 'purchases', companyId: currentUser.companyId)
+        .streamDataCollection()
+        .listen((snapshot) {
       if (snapshot.documents.isNotEmpty) {
         var purs = snapshot.documents
             .map((snapshot) =>
@@ -169,7 +178,8 @@ class PurchaseModel extends BaseModel {
 
   getPurchaseByIdFromServer(String id) async {
     setBusy(true);
-    var doc = await _api.getDocumentById(id);
+    var doc = await Api(path: 'purchases', companyId: currentUser.companyId)
+        .getDocumentById(id);
     _purchase = Purchase.fromMap(doc.data, doc.documentID);
     setBusy(false);
   }
@@ -182,7 +192,8 @@ class PurchaseModel extends BaseModel {
       cancelTitle: 'No',
     );
     if (dialogResponse.confirmed) {
-      await _api.removeDocument(id);
+      await Api(path: 'purchases', companyId: currentUser.companyId)
+          .removeDocument(id);
       _navigationService.pop();
     }
   }
@@ -193,11 +204,13 @@ class PurchaseModel extends BaseModel {
 
     data.userId = currentUser?.id;
     if (!_editting) {
-      result = await _api.addDocument(data.toMap());
+      result = await Api(path: 'purchases', companyId: currentUser.companyId)
+          .addDocument(data.toMap());
 
       // data.items
     } else {
-      result = await _api.updateDocument(data.toMap(), data.id);
+      result = await Api(path: 'purchases', companyId: currentUser.companyId)
+          .updateDocument(data.toMap(), data.id);
     }
 
     setBusy(false);
@@ -223,7 +236,12 @@ class PurchaseModel extends BaseModel {
       );
     }
 
-    _navigationService.pop();
+    if (_editting) {
+      _navigationService.pop();
+      _navigationService.pop();
+    } else {
+      _navigationService.pop();
+    }
   }
 
   List<Purchase> generateReport(DateTime fromDate, DateTime toDate) {
@@ -276,13 +294,6 @@ class PurchaseModel extends BaseModel {
     data['quantity'] = quantity;
     data['purchaseAmount'] = purchaseAmount;
     return data;
-  }
-
-  void setEdittingPurchase(Purchase edittingPurchase) {
-    _purchase = edittingPurchase;
-    // _selectedCategory = edittingPurchase.category;
-    // _selectedUnit = edittingPurchase.unit;
-    // notifyListeners();
   }
 
   // checkPurchase(String name) async {

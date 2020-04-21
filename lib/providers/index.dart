@@ -6,4 +6,5 @@ export 'item_model.dart';
 export 'payment_model.dart';
 export 'purchase_model.dart';
 export 'sale_model.dart';
+export 'expense_model.dart';
 export 'client_model.dart';

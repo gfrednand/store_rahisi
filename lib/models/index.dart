@@ -7,3 +7,4 @@ export 'expense.dart';
 export 'user.dart';
 export 'payment.dart';
 export 'client.dart';
+export 'transaction.dart';

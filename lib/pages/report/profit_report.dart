@@ -22,6 +22,7 @@ class _ProfitReportState extends State<ProfitReport> {
   DateTime selectedFromDate = DateTime.now();
   DateTime selectedToDate = DateTime.now();
   List<Item> items = [];
+   Map<String,dynamic> data;
   String filePath;
   bool isSort = true;
   Future<Null> _selectFromDate(BuildContext context) async {
@@ -53,12 +54,13 @@ class _ProfitReportState extends State<ProfitReport> {
     Size screenSize = MediaQuery.of(context).size;
     SaleModel saleModel = Provider.of<SaleModel>(context);
 
-    ClientModel clientModel = Provider.of<ClientModel>(context);
+    // ClientModel clientModel = Provider.of<ClientModel>(context);
     // PaymentModel paymentModel = Provider.of<PaymentModel>(context);
 
     ItemModel itemModel = Provider.of<ItemModel>(context);
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         title: Text(AppLocalizations.of(context).translate('profitReport')),
       ),
       body: Column(
@@ -119,14 +121,13 @@ class _ProfitReportState extends State<ProfitReport> {
                   title: 'Generate',
                   onPressed: () {
                     setState(() {
-                      items = itemModel.generateReport(
-                          selectedFromDate, selectedToDate);
+                    data =  saleModel.getTotalSales(selectedFromDate, selectedToDate);
                     });
                   })),
-          items.length > 0
+          data!=null
               ? Divider(thickness: 0.2, color: Colors.black)
               : Container(),
-          items.length > 0
+          data!=null
               ? Flexible(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
@@ -139,50 +140,69 @@ class _ProfitReportState extends State<ProfitReport> {
                         children: [
                           TableRow(children: [
                             TableCell(
+                                child: Text('Total Sales',
+                                    textAlign: TextAlign.center)),
+                            TableCell(
+                              child: Center(child: Text(data['totalSales'].toString())),
+                            ),
+                          ]),
+                          TableRow(children: [
+                            TableCell(
+                                child: Text('Cost of Sales',
+                                    textAlign: TextAlign.center)),
+                            TableCell(
+                              child: Center(child: Text(data['totalSales'].toString())),
+                            ),
+                          ]),
+                          TableRow(children: [
+                            TableCell(
+                                child: Text('Gross Profit/Loss',
+                                    textAlign: TextAlign.center)),
+                            TableCell(
+                              child: Center(child: Text('0')),
+                            ),
+                          ]),
+                          TableRow(children: [
+                            TableCell(
+                                child: Text('Total Expense',
+                                    textAlign: TextAlign.center)),
+                            TableCell(
+                              child: Center(child: Text('(-)0')),
+                            ),
+                          ]),
+                          TableRow(children: [
+                            TableCell(
+                                child: Text('Net Profit/Loss Before Tax',
+                                    textAlign: TextAlign.center)),
+                            TableCell(
+                              child: Center(child: Text('0')),
+                            ),
+                          ]),
+                          TableRow(children: [
+                            TableCell(
+                                child: Text('Total Tax',
+                                    textAlign: TextAlign.center)),
+                            TableCell(
+                              child: Center(child: Text('(-)0')),
+                            ),
+                          ]),
+                          TableRow(children: [
+                            TableCell(
+                              child: Text(
+                                'Net Profit/ Loss After Tax',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                            TableCell(
+                              child: Center(
                                 child: Text(
-                              'Total Sells',textAlign: TextAlign.center
-                            )),
-                            TableCell(
-                              child: Center(child: Text('0')),
-                            ),
-                          ]),
-                          TableRow(children: [
-                            TableCell(child: Text('Cost of Sales',textAlign: TextAlign.center)),
-                            TableCell(
-                              child: Center(child: Text('0')),
-                            ),
-                          ]),
-                          TableRow(children: [
-                            TableCell(child: Text('Gross Profit/Loss',textAlign: TextAlign.center)),
-                            TableCell(
-                              child: Center(child: Text('0')),
-                            ),
-                          ]),
-                          TableRow(children: [
-                            TableCell(child: Text('Total Expense',textAlign: TextAlign.center)),
-                            TableCell(
-                              child: Center(child: Text('(-)0')),
-                            ),
-                          ]),
-                          TableRow(children: [
-                            TableCell(
-                                child: Text('Net Profit/Loss Before Tax',textAlign: TextAlign.center)),
-                            TableCell(
-                              child: Center(child: Text('0')),
-                            ),
-                          ]),
-                          TableRow(children: [
-                            TableCell(child: Text('Total Tax',textAlign: TextAlign.center)),
-                            TableCell(
-                              child: Center(child: Text('(-)0')),
-                            ),
-                          ]),
-                          TableRow(children: [
-                            TableCell(
-                              child: Text('Net Profit/ Loss After Tax', style: TextStyle(fontWeight: FontWeight.bold,),textAlign: TextAlign.center,),
-                            ),
-                            TableCell(
-                              child: Center(child: Text('0',style: TextStyle(fontWeight: FontWeight.bold),),),
+                                  '0',
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                              ),
                             ),
                           ]),
                         ],
@@ -191,7 +211,7 @@ class _ProfitReportState extends State<ProfitReport> {
                   ),
                 )
               : Container(),
-          items.length > 0
+          data!=null
               ? RaisedButton(
                   child: Text('Send'),
                   onPressed: () async {
@@ -248,14 +268,38 @@ class _ProfitReportState extends State<ProfitReport> {
 //Let associate be a model class with attributes name,gender and age and associateList be a list of associate model class.
 
     List<List<dynamic>> rows = List<List<dynamic>>();
-    rows.add(["Total Sells",0, ]);
-    rows.add(["Cost of Sales",0, ]);
-    rows.add(["Gross Of Profit/ Loss",0, ]);
-    rows.add(["Total Expense",-0, ]);
-    rows.add(["Net Profit/Loss Before Tax",0, ]);
-    rows.add(["Total Tax",-0, ]);
-    rows.add(["Net Profit/Loss After Tax",0, ]);
-
+    rows.add([
+      "From " + DateFormat('MMM dd, yyyy').format(selectedFromDate.toLocal()),
+      "To " + DateFormat('MMM dd, yyyy').format(selectedToDate.toLocal()),
+    ]);
+    rows.add([
+      "Total Sales",
+      0,
+    ]);
+    rows.add([
+      "Cost of Sales",
+      0,
+    ]);
+    rows.add([
+      "Gross Of Profit/ Loss",
+      0,
+    ]);
+    rows.add([
+      "Total Expense",
+      -0,
+    ]);
+    rows.add([
+      "Net Profit/Loss Before Tax",
+      0,
+    ]);
+    rows.add([
+      "Total Tax",
+      -0,
+    ]);
+    rows.add([
+      "Net Profit/Loss After Tax",
+      0,
+    ]);
 
 // convert rows to String and write as csv file
     File f = await _localFile;

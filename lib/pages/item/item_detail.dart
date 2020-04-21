@@ -1,7 +1,5 @@
 import 'package:barcode_flutter/barcode_flutter.dart';
-import 'package:barcode_scan/barcode_scan.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:storeRahisi/app_localizations.dart';
 import 'package:storeRahisi/models/index.dart';
@@ -80,7 +78,6 @@ class _ItemDetailState extends State<ItemDetail> {
                     spacing: 0.0, // gap between adjacent chips
                     runSpacing: 0.0, // gap between lines
                     children: <Widget>[
-                      chipDesign(AppLocalizations.of(context).translate('nothingFound'), Color(0xFF9575cd)),
                       chipDesign(AppLocalizations.of(context).translate('edit'), Color(0xFF4db6ac)),
                       sales.length == 0 && purchases.length == 0
                           ? chipDesign("Delete", Color(0xFFf06292))

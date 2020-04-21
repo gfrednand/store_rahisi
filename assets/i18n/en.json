@@ -98,5 +98,15 @@
     "profitReport": "Profit Report",
     "settings": "Settings",
     "helpAndFeedback": "Help and Feedback",
-    "selectSupplier": "Select Supplier"
+    "selectSupplier": "Select Supplier",
+    "addExpense": "Add Expense",
+    "responsiblePerson": "Responsible Person",
+    "amount": "Amount",
+    "expenseDetails": "Expense Details",
+    "date": "Date",
+    "editExpense": "Edit Expense",
+    "editPurchase": "Edit Purchase",
+    "purchaseDetails": "Purchase Details"
+
+    
 }

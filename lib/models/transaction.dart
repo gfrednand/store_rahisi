@@ -4,7 +4,7 @@
 
 import 'dart:convert';
 
-Transaction transactionFromJson(String str) => Transaction.fromMap(json.decode(str));
+// Transaction transactionFromJson(String str) => Transaction.fromMap(json.decode(str));
 
 String transactionToJson(Transaction data) => json.encode(data.toMap());
 
@@ -43,8 +43,8 @@ class Transaction {
         this.createdAt,
     });
 
-    factory Transaction.fromMap(Map<String, dynamic> json) => Transaction(
-        id: json["id"],
+    factory Transaction.fromMap(Map<String, dynamic> json, String id) => Transaction(
+        id: id??'',
         referenceNo: json["referenceNo"],
         clientId: json["clientId"],
         transactionType: json["transactionType"],

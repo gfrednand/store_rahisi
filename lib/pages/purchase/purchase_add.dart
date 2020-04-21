@@ -10,8 +10,9 @@ import 'package:storeRahisi/widgets/custom_modal_sheet.dart';
 
 class PurchaseAdd extends StatefulWidget {
   final String title;
+  final Purchase purchase;
 
-  const PurchaseAdd({Key key, this.title}) : super(key: key);
+  const PurchaseAdd({Key key, this.title, this.purchase}) : super(key: key);
 
   @override
   _PurchaseAddState createState() => _PurchaseAddState();
@@ -19,10 +20,11 @@ class PurchaseAdd extends StatefulWidget {
 
 class _PurchaseAddState extends State<PurchaseAdd> {
   Client _client;
-
+  bool isEditing = false;
   @override
   Widget build(BuildContext context) {
     ItemModel itemModel = Provider.of<ItemModel>(context);
+    isEditing = widget.purchase != null;
     return BaseView<PurchaseModel>(
         // onModelReady: (model) => model.getclients(),
         builder: (context, model, child) {
@@ -35,7 +37,7 @@ class _PurchaseAddState extends State<PurchaseAdd> {
                 onPressed: () {
                   _showModalSheetAppBar(
                       context,
-                      'Add Product',
+                      AppLocalizations.of(context).translate('addItem'),
                       AddItemForm(
                         purchaseModel: model,
                         items: itemModel.items ?? [],
@@ -43,7 +45,7 @@ class _PurchaseAddState extends State<PurchaseAdd> {
                       0.70);
                 },
                 foregroundColor: Colors.white,
-                label: Text('Add Item'),
+                label: Text(AppLocalizations.of(context).translate('addItem')),
                 icon: Icon(Icons.add),
                 backgroundColor: Theme.of(context).accentColor,
               ),
@@ -64,7 +66,11 @@ class _PurchaseAddState extends State<PurchaseAdd> {
   Column buildBody(PurchaseModel model, BuildContext context) {
     var items = model.selectedItems;
     ClientModel clientModel = Provider.of<ClientModel>(context);
-    List<Client> clients =clientModel.getByClientType(AppConstants.clientTypeSupplier);
+    List<Client> clients =
+        clientModel.getByClientType(AppConstants.clientTypeSupplier);
+    if (isEditing) {
+      _client = clientModel.getClientById(widget.purchase.clientId);
+    }
     return Column(
       children: <Widget>[
         Center(
@@ -73,7 +79,8 @@ class _PurchaseAddState extends State<PurchaseAdd> {
             width: double.infinity,
             child: DropdownButtonHideUnderline(
               child: new DropdownButton<Client>(
-                hint: Text(AppLocalizations.of(context).translate('selectSupplier')),
+                hint: Text(
+                    AppLocalizations.of(context).translate('selectSupplier')),
                 value: _client,
                 items: clients.map((Client value) {
                   return new DropdownMenuItem<Client>(
@@ -98,57 +105,68 @@ class _PurchaseAddState extends State<PurchaseAdd> {
             ? Container()
             : Flexible(
                 child: ListView.builder(
-                  itemCount: items.length,
-                  itemBuilder: (buildContext, index) => Card(
-                    child: ListTile(
-                      leading: ExcludeSemantics(
-                        child: CircleAvatar(
-                          radius: 30.0,
-                          backgroundColor: Theme.of(context).primaryColor,
-                          child: Text(
-                            items[index].name.substring(0, 2).toUpperCase(),
-                            style:
-                                TextStyle(color: Theme.of(context).accentColor),
+                    itemCount: items.length,
+                    itemBuilder: (buildContext, index) {
+                      ItemModel itemModel = Provider.of<ItemModel>(context);
+                      Item item = itemModel
+                          .getItemById(widget.purchase.items[index].id);
+                      return Card(
+                        child: ListTile(
+                          leading: ExcludeSemantics(
+                            child: CircleAvatar(
+                              radius: 30.0,
+                              backgroundColor: Theme.of(context).primaryColor,
+                              child: Text(
+                                item?.name?.substring(0, 2)?.toUpperCase() ??
+                                    '',
+                                style: TextStyle(
+                                    color: Theme.of(context).accentColor),
+                              ),
+                            ),
                           ),
+                          title: Text(
+                            '${item.name}',
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                AppLocalizations.of(context)
+                                        .translate('purchasePrice') +
+                                    ': ${items[index].purchasePrice} @1',
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              Text(
+                                AppLocalizations.of(context)
+                                        .translate('salePrice') +
+                                    ': ${items[index].salePrice} @1',
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              Text(
+                                AppLocalizations.of(context)
+                                        .translate('quantity') +
+                                    ': ${items[index].quantity}',
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ],
+                          ),
+                          trailing: IconButton(
+                              icon: Icon(Icons.delete_outline),
+                              onPressed: () {
+                                setState(() {
+                                  items.removeWhere(
+                                      (item) => item.id == items[index].id);
+                                });
+                              }),
+                          onTap: () {
+                            // Navigator.pushNamed(
+                            //     context, AppRoutes.purchase_detail,
+                            //     arguments: items[index]);
+                          },
                         ),
-                      ),
-                      title: Text(
-                        '${items[index].name}',
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            AppLocalizations.of(context).translate('purchasePrice')+': ${items[index].purchasePrice} @1',
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          Text(
-                            AppLocalizations.of(context).translate('salePrice')+': ${items[index].salePrice} @1',
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          Text(
-                           AppLocalizations.of(context).translate('quantity')+ ': ${items[index].quantity}',
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ],
-                      ),
-                      trailing: IconButton(
-                          icon: Icon(Icons.delete_outline),
-                          onPressed: () {
-                            setState(() {
-                              items.removeWhere(
-                                  (item) => item.id == items[index].id);
-                            });
-                          }),
-                      onTap: () {
-                        // Navigator.pushNamed(
-                        //     context, AppRoutes.purchase_detail,
-                        //     arguments: items[index]);
-                      },
-                    ),
-                  ),
-                ),
+                      );
+                    }),
               ),
       ],
     );
@@ -156,6 +174,7 @@ class _PurchaseAddState extends State<PurchaseAdd> {
 
   AppBar buildAppBar(PurchaseModel model, BuildContext context) {
     return AppBar(
+      centerTitle: true,
       title: Text(widget.title),
       actions: <Widget>[
         model.busy
@@ -188,6 +207,7 @@ class _PurchaseAddState extends State<PurchaseAdd> {
                       });
                       model.savePurchase(
                           data: Purchase(
+                              id: widget.purchase?.id ?? '',
                               clientId: _client.id,
                               companyName: _client.companyName,
                               items: model.selectedItems,
