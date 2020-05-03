@@ -24,6 +24,7 @@ class SaleModel extends BaseModel {
   PaymentModel _paymentModel = locator<PaymentModel>();
   CartModel _cartModel = locator<CartModel>();
   PurchaseModel _purchaseModel = locator<PurchaseModel>();
+  ExpenseModel _expenseModel = locator<ExpenseModel>();
 
   Sale _sale;
   bool get _editting => _sale != null;
@@ -268,10 +269,14 @@ class SaleModel extends BaseModel {
   }
 
   Map<String, dynamic> getTotalSales(DateTime fromDate, DateTime toDate) {
-    double purchaseAmount = 0;
+    double totalSales = 0;
     double beginningInventory = 0.0;
     double endingInventory = 0.0;
-
+    double totalExpenses = 0.0;
+    List<Expense> expenses = _expenseModel.generateReport(fromDate, toDate);
+    expenses.forEach((expense) {
+      totalExpenses = totalExpenses + expense.amount;
+    });
     if (_sales.length == 0) {
       listenToSales();
     }
@@ -283,12 +288,14 @@ class SaleModel extends BaseModel {
 
     sals.forEach((sale) {
       sale.items.forEach((item) {
-        purchaseAmount = (item.paidAmount * item.quantity) + purchaseAmount;
+        totalSales = (item.paidAmount * item.quantity) + totalSales;
       });
     });
     Map<String, dynamic> data = {};
-    data['totalSales'] = purchaseAmount;
-    data['costOfSales'] = beginningInventory + purchaseAmount - endingInventory;
+    data['totalSales'] = totalSales;
+    data['totalExpenses'] = totalExpenses;
+    data['costOfSales'] = beginningInventory + totalSales - endingInventory;
+    data['grossProfit'] =data['totalSales'] -  data['costOfSales'];
     return data;
   }
 }

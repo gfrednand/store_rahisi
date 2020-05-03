@@ -28,13 +28,13 @@ TextTheme _buildTextTheme(TextTheme base) {
 
 IconThemeData _buildIconTheme(IconThemeData base) {
   return base.copyWith(
-    color: Color(0xFFD7CCC8),
+    color:  Colors.white,
   );
 }
 
 ThemeData _buildLightTheme() {
-  const Color primaryColor = Color(0xFFD7CCC8);
-  const Color secondaryColor = Color(0xFF009688);
+  const Color primaryColor = Colors.white;
+  const Color secondaryColor = Colors.teal;
   final ColorScheme colorScheme = const ColorScheme.light().copyWith(
     primary: primaryColor,
     secondary: secondaryColor,
@@ -50,7 +50,7 @@ ThemeData _buildLightTheme() {
     toggleableActiveColor: const Color(0xFF1E88E5),
     splashColor: Colors.white24,
     splashFactory: InkRipple.splashFactory,
-    accentColor: Color(0xFF009688),
+    accentColor: Colors.teal,
     canvasColor: Colors.white,
     scaffoldBackgroundColor: Colors.white,
     backgroundColor: Colors.white,

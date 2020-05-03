@@ -11,33 +11,31 @@ class SaleList extends StatelessWidget {
     return BaseView<SaleModel>(
       onModelReady: (model) => model.listenToSales(),
       builder: (context, model, child) {
-        return Expanded(
-          child: ListView.builder(
-              shrinkWrap: true,
-              itemCount: model.sales.length,
-              itemBuilder: (context, index) {
-                var saleDate = new DateFormat('MMM dd, yyyy')
-                    .format(model.sales[index].saleDate);
-                return Card(
-                  child: ListTile(
-                    title: Text(saleDate),
-                    trailing: Text('${model.sales[index].grandTotal} /='),
-                    subtitle: Text(
-                        AppLocalizations.of(context).translate('totalSales') +
-                            ': ${model.sales[index].items.length}'),
-                    onTap: () {
-                      var arguments = {
-                        'sale': model.sales[index],
-                        'saleModel': model,
-                      };
+        return ListView.builder(
+            shrinkWrap: true,
+            itemCount: model.sales.length,
+            itemBuilder: (context, index) {
+              var saleDate = new DateFormat('MMM dd, yyyy')
+                  .format(model.sales[index].saleDate);
+              return Card(
+                child: ListTile(
+                  title: Text(saleDate),
+                  trailing: Text('${model.sales[index].grandTotal} /='),
+                  subtitle: Text(
+                      AppLocalizations.of(context).translate('totalSales') +
+                          ': ${model.sales[index].items.length}'),
+                  onTap: () {
+                    var arguments = {
+                      'sale': model.sales[index],
+                      'saleModel': model,
+                    };
 
-                      Navigator.pushNamed(context, AppRoutes.sale_detail,
-                          arguments: arguments);
-                    },
-                  ),
-                );
-              }),
-        );
+                    Navigator.pushNamed(context, AppRoutes.sale_detail,
+                        arguments: arguments);
+                  },
+                ),
+              );
+            });
       },
     );
   }

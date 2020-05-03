@@ -8,6 +8,7 @@ import 'package:storeRahisi/providers/index.dart';
 class PosItem extends StatefulWidget {
   final Item item;
   final int quantity;
+  final int initialCount;
   final double currentPrice;
   final double originalPrice;
   final double profit;
@@ -17,6 +18,7 @@ class PosItem extends StatefulWidget {
   const PosItem(
       {Key key,
       this.quantity,
+      this.initialCount,
       this.profit,
       this.item,
       this.currentPrice,
@@ -32,6 +34,13 @@ class PosItem extends StatefulWidget {
 class _PosItemState extends State<PosItem> {
   int _itemCount = 0;
   TextEditingController quantityController = new TextEditingController();
+  @override
+  void initState() {
+   if(widget.initialCount!=null){
+     _itemCount =widget.initialCount;
+   }
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,10 +48,10 @@ class _PosItemState extends State<PosItem> {
     CartModel cartModel = Provider.of<CartModel>(context);
     SaleModel saleModel = Provider.of<SaleModel>(context);
     PurchaseModel purchaseModel = Provider.of<PurchaseModel>(context);
-    int totalSales = saleModel.getTotalSaleByItemId(widget.item.id)??0;
-    int totalPurchases = purchaseModel.getTotalPurchaseByItemId(widget.item.id) ?? 0;
-    int inStock =
-        (totalPurchases  + widget.item.openingStock) - totalSales;
+    int totalSales = saleModel.getTotalSaleByItemId(widget.item.id) ?? 0;
+    int totalPurchases =
+        purchaseModel.getTotalPurchaseByItemId(widget.item.id) ?? 0;
+    int inStock = (totalPurchases + widget.item.openingStock) - totalSales;
 
     return new Container(
       padding: const EdgeInsets.symmetric(horizontal: 5.0),
@@ -60,10 +69,17 @@ class _PosItemState extends State<PosItem> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  Text('${widget.item.name} * $inStock',
-                      style: Theme.of(context).textTheme.headline6),
+                  Text(
+                    '${widget.item.name} x$_itemCount =${widget.currentPrice * _itemCount}  ',
+                  ),
                   SizedBox(
-                    height: 10.0,
+                    height: 5.0,
+                  ),
+                  Text(
+                    'In Stock $inStock ',
+                  ),
+                  SizedBox(
+                    height: 5.0,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -72,7 +88,7 @@ class _PosItemState extends State<PosItem> {
                       Text(
                         "\Tsh ${widget.currentPrice}",
                         style:
-                            TextStyle(fontSize: 16.0, color: Colors.green[900]),
+                            TextStyle(fontSize: 15.0, color: Colors.green[900]),
                       ),
                       SizedBox(
                         width: 8.0,
@@ -92,7 +108,8 @@ class _PosItemState extends State<PosItem> {
                       ),
                       widget.discount > 0
                           ? Text(
-                              "${widget.discount.toStringAsFixed(1)}\% " + AppLocalizations.of(context).translate('off'),
+                              "${widget.discount.toStringAsFixed(1)}\% " +
+                                  AppLocalizations.of(context).translate('off'),
                               style:
                                   TextStyle(fontSize: 12.0, color: Colors.grey),
                             )
@@ -105,6 +122,9 @@ class _PosItemState extends State<PosItem> {
                 ],
               ),
               Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   new IconButton(
                     icon: new Icon(Icons.remove_circle,
@@ -123,31 +143,54 @@ class _PosItemState extends State<PosItem> {
                       cartModel.setItem(widget.item);
                     },
                   ),
-                  // new Text(
-                  //   _itemCount.toString(),
-                  //   style: Theme.of(context).textTheme.headline4,
-                  // ),
-                  Container(
-                    width: 40.0,
-                    child: TextFormField(
-                      onChanged: (val) {
-                        if (int.parse(val) < inStock) {
-                          _itemCount = int.parse(val);
-                          setCartItem(cartModel);
-                        } else {
-                          _itemCount = 0;
+                  GestureDetector(
+                    onTap: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) => AlertDialog(
+                            title: Text('Quantity: Max= $inStock'),
+                            content: Container(
+                              width: 40.0,
+                              child: TextFormField(
+                                decoration: const InputDecoration(
+                                  hintText: '0',
+                                  contentPadding: const EdgeInsets.symmetric(
+                                      vertical: 40.0),
+                                ),
+                                keyboardType: TextInputType.number,
+                                controller: quantityController,
+                              ),
+                            ),
+                            actions: <Widget>[
+                              FlatButton(
+                                  child: const Text('OK'),
+                                  onPressed: () {
+                                    Navigator.pop(
+                                        context, quantityController.text);
+                                  }),
+                            ]),
+                      ).then<void>((value) {
+                        // The value passed to Navigator.pop() or null.
+                        if (value != null) {
+                          print(value);
+                          if (int.parse(value) < inStock ||
+                              int.parse(value) == inStock) {
+                            _itemCount = int.parse(value);
+                            setCartItem(cartModel);
+                          } else {
+                            quantityController = TextEditingController(
+                                text: _itemCount.toString());
+                          }
                         }
-                      },
-                      decoration: const InputDecoration(
-                        hintText: '0',
-                        contentPadding:
-                            const EdgeInsets.symmetric(vertical: 40.0),
-                      ),
-                      keyboardType: TextInputType.number,
-                      controller: quantityController,
+                      });
+                    },
+                    child: Container(
+                      width: 40.0,
+                      child: Text(_itemCount.toString(),
+                          textAlign: TextAlign.center,
+                          style: Theme.of(context).textTheme.headline6),
                     ),
                   ),
-
                   new IconButton(
                       icon: new Icon(Icons.add_circle,
                           color: Theme.of(context).accentColor),

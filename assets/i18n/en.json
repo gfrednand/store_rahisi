@@ -106,7 +106,10 @@
     "date": "Date",
     "editExpense": "Edit Expense",
     "editPurchase": "Edit Purchase",
-    "purchaseDetails": "Purchase Details"
+    "purchaseDetails": "Purchase Details",
+    "name": "Name",
+    "paymentHistory": "Payment History",
+    "makePayment": "Make Payment"
 
     
 }

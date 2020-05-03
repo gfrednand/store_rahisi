@@ -24,6 +24,9 @@ static const sale_report = "sale_report";
 static const profit_report = "profit_report";
 static const transaction_report = "transaction_report";
 static const settings = "settings";
+static const help = "help";
+static const checkout = "checkout";
+static const payment = "payment";
 
 
 }

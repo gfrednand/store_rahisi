@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:storeRahisi/constants/routes.dart';
+import 'package:storeRahisi/models/index.dart';
 import 'package:storeRahisi/pages/expense/expense_detail.dart';
 import 'package:storeRahisi/pages/expense/expense_list.dart';
 
@@ -7,12 +8,17 @@ import 'package:storeRahisi/pages/home_page.dart';
 import 'package:storeRahisi/pages/item/item_detail.dart';
 import 'package:storeRahisi/pages/layout_page.dart';
 import 'package:storeRahisi/pages/login_page.dart';
+import 'package:storeRahisi/pages/pos/Payment_Screen.dart';
+import 'package:storeRahisi/pages/pos/cart_page.dart';
 import 'package:storeRahisi/pages/pos/cart_items.dart';
+import 'package:storeRahisi/pages/pos/checkout_screen.dart';
+import 'package:storeRahisi/pages/pos/item_screen.dart';
 import 'package:storeRahisi/pages/purchase/purchase_detail.dart';
 import 'package:storeRahisi/pages/purchase/purchase_add.dart';
 import 'package:storeRahisi/pages/register_page.dart';
 import 'package:storeRahisi/pages/report/index.dart';
 import 'package:storeRahisi/pages/sale/sale_detail.dart';
+import 'package:storeRahisi/pages/settings/help_screen.dart';
 import 'package:storeRahisi/pages/settings/settings_page.dart';
 import 'package:storeRahisi/pages/splash_page.dart';
 import 'package:storeRahisi/pages/client/client_detail.dart';
@@ -92,7 +98,7 @@ class Router {
                   purchase: args['purchase'],
                 ));
         break;
-   
+
       case AppRoutes.cart_items:
         // var title = settings.arguments as String;
         return MaterialPageRoute(builder: (_) => CartItems());
@@ -114,6 +120,23 @@ class Router {
         break;
       case AppRoutes.settings:
         return MaterialPageRoute(builder: (_) => SettingsPage());
+        break;
+      case AppRoutes.checkout:
+        var clients = settings.arguments as List<Client>;
+        return MaterialPageRoute(
+            builder: (_) => CheckoutPage(
+                  clients: clients,
+                ));
+        break;
+      case AppRoutes.payment:
+        // var clients = settings.arguments as List<Client>;
+        return MaterialPageRoute(builder: (_) => PaymentPage());
+        break;
+      case AppRoutes.help:
+        return MaterialPageRoute(
+            builder: (_) => Item_Screen(
+                  toolbarname: 'tetetet',
+                ));
         break;
       case AppRoutes.expense:
         return MaterialPageRoute(builder: (_) => ExpenseList());

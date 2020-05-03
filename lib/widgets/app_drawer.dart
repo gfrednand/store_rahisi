@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:storeRahisi/app_localizations.dart';
+import 'package:storeRahisi/constants/linear_icons.dart';
 import 'package:storeRahisi/constants/routes.dart';
 import 'package:storeRahisi/models/user.dart';
 import 'package:storeRahisi/providers/auth_model.dart';
@@ -147,17 +148,22 @@ class _CustomDrawerState extends State<CustomDrawer> {
           children: <Widget>[
             // Divider(),
             ListTile(
-              leading: Icon(Icons.settings),
+              leading: Icon(LinearIcons.cog),
               title: Text(AppLocalizations.of(ctx).translate('settings')),
               onTap: () {
                 Navigator.pop(ctx);
                 Navigator.pushNamed(ctx, AppRoutes.settings);
               },
             ),
-            // ListTile(
-            //     leading: Icon(Icons.help),
-            //     title: Text(AppLocalizations.of(ctx)
-            //         .translate('helpAndFeedback')))
+            ListTile(
+              leading: Icon(Icons.help),
+              title:
+                  Text(AppLocalizations.of(ctx).translate('helpAndFeedback')),
+              onTap: () {
+                Navigator.pop(ctx);
+                Navigator.pushNamed(ctx, AppRoutes.help);
+              },
+            )
           ],
         ),
       ],

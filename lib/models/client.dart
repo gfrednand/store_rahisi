@@ -5,6 +5,7 @@
 import 'dart:convert';
 
 import 'package:intl/intl.dart';
+import 'package:storeRahisi/constants/app_constants.dart';
 
 // Client clientFromJson(String str) => Client.fromMap(json.decode(str));
 
@@ -77,4 +78,20 @@ class Client {
         "createdAt": createdAt,
         "updatedAt": updatedAt,
       };
+  factory Client.defaultCustomer() => Client(
+        id: 'd-01ef-01au-01lt-01ID',
+        companyName: 'Default Company',
+        clientType: AppConstants.clientTypeCustomer,
+        proviousDue: 0.0,
+        accountNo: '',
+        userId: '',
+        active: true,
+        contactPerson: 'default customer',
+        phoneNumber: '000000000',
+        email: 'default@mail.com',
+        address: '',
+        description: '',
+        createdAt: '',
+        updatedAt: '',
+      );
 }

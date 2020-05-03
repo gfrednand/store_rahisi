@@ -22,7 +22,7 @@ class _ProfitReportState extends State<ProfitReport> {
   DateTime selectedFromDate = DateTime.now();
   DateTime selectedToDate = DateTime.now();
   List<Item> items = [];
-   Map<String,dynamic> data;
+  Map<String, dynamic> data;
   String filePath;
   bool isSort = true;
   Future<Null> _selectFromDate(BuildContext context) async {
@@ -121,13 +121,14 @@ class _ProfitReportState extends State<ProfitReport> {
                   title: 'Generate',
                   onPressed: () {
                     setState(() {
-                    data =  saleModel.getTotalSales(selectedFromDate, selectedToDate);
+                      data = saleModel.getTotalSales(
+                          selectedFromDate, selectedToDate);
                     });
                   })),
-          data!=null
+          data != null
               ? Divider(thickness: 0.2, color: Colors.black)
               : Container(),
-          data!=null
+          data != null
               ? Flexible(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
@@ -143,7 +144,8 @@ class _ProfitReportState extends State<ProfitReport> {
                                 child: Text('Total Sales',
                                     textAlign: TextAlign.center)),
                             TableCell(
-                              child: Center(child: Text(data['totalSales'].toString())),
+                              child: Center(
+                                  child: Text(data['totalSales'].toString())),
                             ),
                           ]),
                           TableRow(children: [
@@ -151,7 +153,8 @@ class _ProfitReportState extends State<ProfitReport> {
                                 child: Text('Cost of Sales',
                                     textAlign: TextAlign.center)),
                             TableCell(
-                              child: Center(child: Text(data['totalSales'].toString())),
+                              child: Center(
+                                  child: Text(data['costOfSales'].toString())),
                             ),
                           ]),
                           TableRow(children: [
@@ -159,7 +162,8 @@ class _ProfitReportState extends State<ProfitReport> {
                                 child: Text('Gross Profit/Loss',
                                     textAlign: TextAlign.center)),
                             TableCell(
-                              child: Center(child: Text('0')),
+                              child: Center(
+                                  child: Text(data['grossProfit'].toString())),
                             ),
                           ]),
                           TableRow(children: [
@@ -167,7 +171,9 @@ class _ProfitReportState extends State<ProfitReport> {
                                 child: Text('Total Expense',
                                     textAlign: TextAlign.center)),
                             TableCell(
-                              child: Center(child: Text('(-)0')),
+                              child: Center(
+                                  child: Text(
+                                      '(-)${data['totalExpenses'].toString()}')),
                             ),
                           ]),
                           TableRow(children: [
@@ -211,7 +217,7 @@ class _ProfitReportState extends State<ProfitReport> {
                   ),
                 )
               : Container(),
-          data!=null
+          data != null
               ? RaisedButton(
                   child: Text('Send'),
                   onPressed: () async {

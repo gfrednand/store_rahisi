@@ -178,10 +178,15 @@ class ExpenseModel extends BaseModel {
   }
 
   List<Expense> generateReport(DateTime fromDate, DateTime toDate) {
-    _totalProfit = 0.0;
+    if (_expenses.length == 0) {
+      listenToExpenses();
+    }
+    List<Expense> expens = _expenses
+        .where((purchase) =>
+            purchase.date.isAfter(fromDate.add(const Duration(days: -1))) &&
+            purchase.date.isBefore(toDate.add(const Duration(days: 1))))
+        .toList();
 
-    return _expenses.map((item) {
-      return item;
-    }).toList();
+    return expens;
   }
 }

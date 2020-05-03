@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:storeRahisi/constants/ui_helpers.dart';
 
 import 'package:storeRahisi/models/index.dart';
+import 'package:storeRahisi/pages/pos/checkout_screen.dart';
 import 'package:storeRahisi/pages/pos/pos_item_list.dart';
 import 'package:storeRahisi/providers/sale_model.dart';
 import 'package:storeRahisi/widgets/busy_button.dart';
@@ -79,46 +80,68 @@ class _POSTotalBarState extends State<POSTotalBar> {
                   ),
                 ],
               ),
-              TextField(
-                controller: paidAmountController,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                    labelText: "Paid Amount",
-                    // prefixIcon: Icon(Icons.search),
-                    border: OutlineInputBorder()),
-              ),
+              // TextField(
+              //   controller: paidAmountController,
+              //   keyboardType: TextInputType.number,
+              //   decoration: InputDecoration(
+              //       labelText: "Paid Amount",
+              //       // prefixIcon: Icon(Icons.search),
+              //       border: OutlineInputBorder()),
+              // ),
               //  SizedBox(height: 12.0),
                      verticalSpaceSmall,
               widget.total <= 0
                   ? new Container()
-                  : BusyButton(
-                      title: 'Sell',
-                      enabled: paidAmountController.text == null,
-                      onPressed: () async {
-                        List<Item> items = [];
-                        List<Cart> c = List.from(widget.carts);
-                        c.forEach((cart) {
-                          items.add(Item(
-                              name: '',
-                              id: cart.itemId,
-                              paidAmount: cart.paidAmount,
-                              quantity: cart.quantity));
-                        });
-                        double tax = 0.0;
-                        double discount = 0.0;
+                  :            Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          alignment: Alignment.center,
+                          child: OutlineButton(
+                              borderSide:
+                                  BorderSide(color: Colors.amber.shade500),
+                              child: const Text('CONFIRM ORDER'),
+                              textColor: Colors.amber.shade500,
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => CheckoutPage()));
+                              },
+                              shape: new OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(30.0),
+                              )),
+                        ),
+                      ),
+                    //   BusyButton(
+                    //   title: 'Sell',
+                    //   enabled: paidAmountController.text == null,
+                    //   onPressed: () async {
+                    //     List<Item> items = [];
+                    //     List<Cart> c = List.from(widget.carts);
+                    //     c.forEach((cart) {
+                    //       items.add(Item(
+                    //           name: '',
+                    //           id: cart.itemId,
+                    //           paidAmount: cart.paidAmount,
+                    //           quantity: cart.quantity));
+                    //     });
+                    //     double tax = 0.0;
+                    //     double discount = 0.0;
 
-                        await widget.saleModel.saveSale(
-                            data: Sale(
-                                discount: discount,
-                                grandTotal: (widget.total + tax) - discount,
-                                paymentMethod: 'Cash',
-                                paidAmount:
-                                    double.parse(paidAmountController.text),
-                                subTotal: widget.total - discount,
-                                tax: tax,
-                                items: items));
-                      },
-                    )
+                    //     await widget.saleModel.saveSale(
+                    //         data: Sale(
+                    //             discount: discount,
+                    //             grandTotal: (widget.total + tax) - discount,
+                    //             paymentMethod: 'Cash',
+                    //             paidAmount:
+                    //                 double.parse(paidAmountController.text),
+                    //             subTotal: widget.total - discount,
+                    //             tax: tax,
+                    //             items: items));
+                    //   },
+                    // )
+                  
+              
             ],
           ),
         ),

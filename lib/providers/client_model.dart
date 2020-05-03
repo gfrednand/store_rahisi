@@ -3,6 +3,7 @@ import 'dart:async';
 // import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:storeRahisi/locator.dart';
 import 'package:storeRahisi/providers/base_model.dart';
+import 'package:storeRahisi/providers/cart_model.dart';
 import 'package:storeRahisi/services/api.dart';
 import 'package:storeRahisi/models/client.dart';
 import 'package:storeRahisi/services/dialog_service.dart';
@@ -16,9 +17,13 @@ class ClientModel extends BaseModel {
 
   List<Client> _clients = [];
   List<Client> get clients => _clients;
+  CartModel _cartModel = locator<CartModel>();
 
   Client _client;
   Client get client => _client;
+  Client _checkedClient = Client.defaultCustomer();
+  Client get checkedClient =>
+      _cartModel.carts.length > 0 ? _checkedClient : Client.defaultCustomer();
 
   bool get _editting => _client != null;
   final DialogService _dialogService = locator<DialogService>();
@@ -102,6 +107,10 @@ class ClientModel extends BaseModel {
 
   void setEdittingclient(Client edittingclient) {
     _client = edittingclient;
+  }
+
+  void setCheckedclient(Client client) {
+    _checkedClient = client;
   }
 
   updateClient(Client data, String id) async {

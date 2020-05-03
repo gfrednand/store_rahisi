@@ -64,7 +64,7 @@ class _ClientFormState extends State<ClientForm> {
                       TextFormField(
                         decoration: InputDecoration(
                             labelText: AppLocalizations.of(context)
-                                    .translate('nothingFound') +
+                                    .translate('companyName') +
                                 '*',
                             hintText: "John Store"),
                         controller: nameController,

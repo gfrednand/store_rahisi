@@ -8,31 +8,37 @@ class CartModel extends BaseModel {
   Cart get item => _cart;
 
   setItem(Item i) {
-    bool isItemFound = false;
-    if (_carts != null) {
-      for (int itemcount = 0; itemcount < _carts.length; itemcount++) {
-        Cart item = _carts[itemcount];
-        if (item.itemId == i.id) {
-          item.quantity = i.quantity;
-          if (i.quantity == 0) {
-            removeItem(i);
-          }
-          isItemFound = true;
-          break;
-        }
-      }
-    } else {
-      _carts = new List();
-    }
+    // bool isItemFound = false;
+    // if (_carts != null) {
+    //   for (int itemcount = 0; itemcount < _carts.length; itemcount++) {
+    //     Cart item = _carts[itemcount];
+    //     if (item.itemId == i.id) {
+    //       item.quantity = i.quantity;
+    //       if (i.quantity == 0) {
+    //         removeItem(i);
+    //       }
+    //       isItemFound = true;
+    //       break;
+    //     }
+    //   }
+    // } else {
+    //   _carts = new List();
+    // }
 
-    if (!isItemFound) {
-      // items..add(action.item);
-      if (i.quantity > 0) {
-        _carts = List.from(_carts)
-          ..add(Cart(
-              itemId: i.id, paidAmount: i.salePrice, quantity: i.quantity));
-      }
-    }
+    // if (!isItemFound) {
+    //   // items..add(action.item);
+    //   if (i.quantity > 0) {
+    //     _carts = List.from(_carts)
+    //       ..add(Cart(
+    //           itemId: i.id, paidAmount: i.salePrice, quantity: i.quantity));
+
+
+    //   }
+    // }
+    _carts.add(Cart.defaultValue('iuhriehgfv'));
+    _carts.add(Cart.defaultValue('iuhriehgfv'));
+    _carts.add(Cart.defaultValue('iuhriehgfv'));
+    _carts.add(Cart.defaultValue('iuhriehgfv'));
     notifyListeners();
   }
 
@@ -42,6 +48,13 @@ class CartModel extends BaseModel {
 
   removeAllItems() {
     _carts = [];
+  }
+
+  getCartItemById(String id) {
+   return _carts.firstWhere(
+      (cart) => cart.itemId == id,
+      orElse: () => null,
+    );
   }
 
   double get totalPrice => _carts.fold(

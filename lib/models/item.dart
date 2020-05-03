@@ -136,4 +136,6 @@ class Item {
         'paidAmount': paidAmount,
         'quantity': quantity,
       };
+
+      factory Item.initialValue()=>Item(name: 'Nothing Found',active: true,alertQty: 0,barcode: '',category: '',description: '',id: '',inStock: 0,openingStock: 0, unit: '');
 }

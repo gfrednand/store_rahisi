@@ -30,4 +30,9 @@ class Cart {
         "quantity": quantity,
         "paidAmount": paidAmount,
     };
+        factory Cart.defaultValue(String id) => Cart(
+        itemId: id,
+        quantity: 5,
+        paidAmount: 900.0,
+    );
 }

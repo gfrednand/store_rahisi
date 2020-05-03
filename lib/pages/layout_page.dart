@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:storeRahisi/app_localizations.dart';
 import 'package:storeRahisi/constants/app_constants.dart';
+import 'package:storeRahisi/constants/linear_icons.dart';
 import 'package:storeRahisi/constants/routes.dart';
 import 'package:storeRahisi/models/item.dart';
 import 'package:storeRahisi/models/user.dart';
@@ -18,6 +19,7 @@ import 'package:storeRahisi/pages/client/client_form.dart';
 import 'package:storeRahisi/pages/client/client_list.dart';
 import 'package:storeRahisi/providers/auth_model.dart';
 import 'package:storeRahisi/providers/cart_model.dart';
+import 'package:storeRahisi/providers/index.dart';
 import 'package:storeRahisi/providers/item_model.dart';
 import 'package:storeRahisi/widgets/app_drawer.dart';
 import 'package:storeRahisi/widgets/cart_button.dart';
@@ -56,7 +58,7 @@ class _LayoutPageState extends State<LayoutPage> with TickerProviderStateMixin {
           vsync: this,
         ),
         _NavigationIconView(
-          icon: const Icon(Icons.ac_unit),
+          icon: const Icon(LinearIcons.users),
           title: AppLocalizations.of(context).translate('clients'),
           vsync: this,
         ),
@@ -122,7 +124,7 @@ class _LayoutPageState extends State<LayoutPage> with TickerProviderStateMixin {
                     : Container(),
                 model.currentUser != null
                     ? ListTile(
-                        leading: Icon(Icons.phone),
+                        leading: Icon(LinearIcons.phone),
                         title: Text("${model.currentUser.phoneNumber}"),
                         subtitle: Text(AppLocalizations.of(context)
                             .translate('phoneNumber')),
@@ -172,6 +174,7 @@ class _LayoutPageState extends State<LayoutPage> with TickerProviderStateMixin {
 
   _buildActions(BuildContext context, AuthModel model) {
     CartModel cartModel = Provider.of<CartModel>(context);
+    ClientModel clientModel = Provider.of<ClientModel>(context);
     return <Widget>[
       _currentIndex == 0
           ? IconButton(
@@ -189,7 +192,7 @@ class _LayoutPageState extends State<LayoutPage> with TickerProviderStateMixin {
           : _currentIndex == 3 && cartModel.carts.length > 0
               ? CartButton(
                   onPressed: () {
-                    Navigator.of(context).pushNamed(AppRoutes.cart_items);
+                    Navigator.of(context).pushNamed(AppRoutes.checkout,arguments: clientModel.clients);
                   },
                   itemCount: cartModel.carts.length)
               : Container(),
@@ -288,6 +291,7 @@ class _LayoutPageState extends State<LayoutPage> with TickerProviderStateMixin {
                     drawer: CustomDrawer(context, model.currentUser),
                     appBar: AppBar(
                       centerTitle: true,
+                      // backgroundColor: Colors.white,
                       // automaticallyImplyLeading: false,
                       title: Text(_title(context)),
                       actions: _buildActions(context, model),
@@ -298,7 +302,9 @@ class _LayoutPageState extends State<LayoutPage> with TickerProviderStateMixin {
                         ],
                       ),
                     ),
-                    body: _buildTransitionsStack(),
+                    body: 
+                    
+                      _buildTransitionsStack(),
                     floatingActionButton:
                         floatingActionButton(context, colorScheme),
                     bottomNavigationBar: buildBottomNavigationBar(
@@ -310,6 +316,7 @@ class _LayoutPageState extends State<LayoutPage> with TickerProviderStateMixin {
                 drawer: CustomDrawer(context, model.currentUser),
                 appBar: AppBar(
                   centerTitle: true,
+                  // backgroundColor: Colors.white,
                   // automaticallyImplyLeading: false,
                   title: Text(_title(context)),
                   actions: _buildActions(context, model),

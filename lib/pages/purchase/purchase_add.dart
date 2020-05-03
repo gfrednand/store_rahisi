@@ -109,7 +109,7 @@ class _PurchaseAddState extends State<PurchaseAdd> {
                     itemBuilder: (buildContext, index) {
                       ItemModel itemModel = Provider.of<ItemModel>(context);
                       Item item = itemModel
-                          .getItemById(widget.purchase.items[index].id);
+                          .getItemById(items[index].id);
                       return Card(
                         child: ListTile(
                           leading: ExcludeSemantics(
