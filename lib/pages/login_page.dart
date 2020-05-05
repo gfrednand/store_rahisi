@@ -41,11 +41,12 @@ class LoginPage extends StatelessWidget {
         // onModelReady: (model) => model.getUserDetails(),
         builder: (context, model, child) {
       return Scaffold(
-        body: BusyOverlay(
-          show: model.busy,
-          child: Container(
+          body: BusyOverlay(
+        show: model.busy,
+        child: Container(
           width: pageSize.width,
           height: pageSize.height,
+          color: Theme.of(context).colorScheme.primaryVariant,
           padding: const EdgeInsets.all(20.0),
           child: Center(
             child: SingleChildScrollView(
@@ -59,12 +60,13 @@ class LoginPage extends StatelessWidget {
                         AppLocalizations.of(context).translate('appTitle'),
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            color: Theme.of(context).accentColor,
+                            color: Theme.of(context).colorScheme.onPrimary,
                             fontSize: 25.0),
                       ),
                     ),
                     InputField(
-                      placeholder: AppLocalizations.of(context).translate('email'),
+                      placeholder:
+                          AppLocalizations.of(context).translate('email'),
                       isReadOnly: model.busy,
                       controller: emailInputController,
                       textInputType: TextInputType.emailAddress,
@@ -72,10 +74,10 @@ class LoginPage extends StatelessWidget {
                     verticalSpaceSmall,
                     InputField(
                       isReadOnly: model.busy,
-                      placeholder: AppLocalizations.of(context).translate('password'),
+                      placeholder:
+                          AppLocalizations.of(context).translate('password'),
                       password: true,
                       controller: pwdInputController,
-              
                     ),
                     verticalSpaceMedium,
                     Row(
@@ -83,7 +85,8 @@ class LoginPage extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         BusyButton(
-                          title: AppLocalizations.of(context).translate('login'),
+                          title:
+                              AppLocalizations.of(context).translate('login'),
                           enabled: !model.busy,
                           onPressed: () {
                             if (_loginFormKey.currentState.validate()) {
@@ -99,9 +102,11 @@ class LoginPage extends StatelessWidget {
                     SizedBox(
                       height: 20.0,
                     ),
-                    Text(AppLocalizations.of(context).translate('dontHaveAccount')),
+                    Text(AppLocalizations.of(context)
+                        .translate('dontHaveAccount')),
                     FlatButton(
-                      child: Text(AppLocalizations.of(context).translate('registerHere')),
+                      child: Text(AppLocalizations.of(context)
+                          .translate('registerHere')),
                       onPressed: () {
                         model.navigateToSignUp();
                       },
@@ -111,8 +116,8 @@ class LoginPage extends StatelessWidget {
               ),
             ),
           ),
-        ),)
-      );
+        ),
+      ));
     });
   }
 }

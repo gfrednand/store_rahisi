@@ -13,7 +13,7 @@ class SplashPage extends StatelessWidget {
         onModelReady: (model) => model.handleStartUpLogic(),
         builder: (context, model, child) {
           return Scaffold(
-            backgroundColor: Theme.of(context).primaryColor,
+            backgroundColor: Theme.of(context).colorScheme.primaryVariant,
             body: new Center(
                 child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -27,7 +27,7 @@ class SplashPage extends StatelessWidget {
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 30.0,
-                      color: Theme.of(context).accentColor,
+                      color: Theme.of(context).colorScheme.onPrimary,
                     ),
                   ),
                 ),
@@ -35,7 +35,7 @@ class SplashPage extends StatelessWidget {
                   child: CircularProgressIndicator(
                     strokeWidth: 3,
                     valueColor: AlwaysStoppedAnimation<Color>(
-                      Theme.of(context).accentColor,
+                      Theme.of(context).colorScheme.onPrimary,
                     ),
                   ),
                 ),
@@ -45,7 +45,7 @@ class SplashPage extends StatelessWidget {
                     child: Text(
                       'V 0.1',
                       style: TextStyle(
-                          color: Theme.of(context).accentColor, fontSize: 15.0),
+                          color: Theme.of(context).colorScheme.onPrimary, fontSize: 15.0),
                     ),
                   ),
                 )

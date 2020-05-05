@@ -65,7 +65,9 @@ class MyApp extends StatelessWidget {
           onGenerateRoute: (settings) => MaterialPageRoute(
               builder: (context) => DialogManager(child: child)),
         ),
-        theme: darkAppTheme,
+        theme: AppTheme.lightTheme,
+        darkTheme: AppTheme.darkTheme,
+
         navigatorKey: locator<NavigationService>().navigatorKey,
         initialRoute: AppRoutes.splash,
         onGenerateRoute: Router.generateRoute,

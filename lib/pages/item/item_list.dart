@@ -99,30 +99,35 @@ class _ItemListState extends State<ItemList> {
                           model.items[index].category = model
                               .getCategoryById(model.items[index].categoryId)
                               ?.name;
-                          return Card(
-                            elevation: selectedIndex != null &&
-                                    selectedIndex == index &&
-                                    isLargeScreen
-                                ? 10
-                                : 2,
-                            child: Container(
+                          return Container(
+                            padding: const EdgeInsets.only(top: 16.0),
+                            child: Card(
                               color: selectedIndex != null &&
                                       selectedIndex == index &&
                                       isLargeScreen
-                                  ? Colors.red[50]
-                                  : Colors.white,
+                                  ? Theme.of(context).colorScheme.primaryVariant
+                                  : Theme.of(context).colorScheme.primary,
+                              elevation: selectedIndex != null &&
+                                      selectedIndex == index &&
+                                      isLargeScreen
+                                  ? 10
+                                  : 2,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20)),
+                              margin:
+                                  const EdgeInsets.symmetric(horizontal: 20),
                               child: ListTile(
                                 leading: ExcludeSemantics(
                                   child: CircleAvatar(
                                     radius: 25.0,
-                                    backgroundColor:
-                                        Theme.of(context).primaryColor,
+                                    // backgroundColor:
+                                    // Theme.of(context).primaryColor,
                                     child: Text(
                                       model.items[index].name
                                           .substring(0, 2)
                                           .toUpperCase(),
                                       style: TextStyle(
-                                        color: Theme.of(context).accentColor,
+                                        // color: Theme.of(context).accentColor,
                                         fontWeight: selectedIndex != null &&
                                                 selectedIndex == index
                                             ? FontWeight.bold
@@ -134,13 +139,11 @@ class _ItemListState extends State<ItemList> {
                                 title: Text(
                                   '${model.items[index].name.toUpperCase()}',
                                   overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                    color: color,
-                                  ),
+                              style: Theme.of(context).textTheme.bodyText2,
                                 ),
                                 subtitle: Text(
-                                  '${model.items[index].category ?? ''}',
-                                  overflow: TextOverflow.ellipsis,
+                                  '${model.items[index].category}',
+                                  overflow: TextOverflow.ellipsis,style:  Theme.of(context).textTheme.bodyText1,
                                 ),
                                 trailing: Text(
                                   '${model.items[index].inStock} ${model.items[index].unit}',
@@ -173,9 +176,9 @@ class _ItemListState extends State<ItemList> {
                       )
                 : Center(
                     child: CircularProgressIndicator(
-                      valueColor:
-                          AlwaysStoppedAnimation(Theme.of(context).accentColor),
-                    ),
+                        // valueColor:
+                        //     AlwaysStoppedAnimation(Theme.of(context).accentColor),
+                        ),
                   )),
       ],
     );

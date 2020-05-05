@@ -372,7 +372,7 @@ class _LayoutPageState extends State<LayoutPage> with TickerProviderStateMixin {
             },
             child: Icon(
               Icons.add,
-              color: colorScheme.onPrimary,
+              // color: colorScheme.onPrimary,
             ),
             tooltip: AppLocalizations.of(context).translate('add'),
           )
