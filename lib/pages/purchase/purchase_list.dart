@@ -69,7 +69,7 @@ class _PurchaseListState extends State<PurchaseList> {
                       model.purchases[index].companyName = client?.companyName;
 
                       List<Payment> payments = paymentModel
-                          .getPaymentsByPurchaseId(model.purchases[index].id);
+                          .getPaymentsByReferenceNo(model.purchases[index].id);
                       double paidAmount = 0.0;
                       payments.forEach((payment) {
                         paidAmount = paidAmount + payment.amount;

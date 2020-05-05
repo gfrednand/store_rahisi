@@ -192,7 +192,8 @@ class _LayoutPageState extends State<LayoutPage> with TickerProviderStateMixin {
           : _currentIndex == 3 && cartModel.carts.length > 0
               ? CartButton(
                   onPressed: () {
-                    Navigator.of(context).pushNamed(AppRoutes.checkout,arguments: clientModel.clients);
+                    Navigator.of(context).pushNamed(AppRoutes.checkout,
+                        arguments: clientModel.clients);
                   },
                   itemCount: cartModel.carts.length)
               : Container(),
@@ -302,9 +303,7 @@ class _LayoutPageState extends State<LayoutPage> with TickerProviderStateMixin {
                         ],
                       ),
                     ),
-                    body: 
-                    
-                      _buildTransitionsStack(),
+                    body: _buildTransitionsStack(),
                     floatingActionButton:
                         floatingActionButton(context, colorScheme),
                     bottomNavigationBar: buildBottomNavigationBar(
@@ -342,11 +341,11 @@ class _LayoutPageState extends State<LayoutPage> with TickerProviderStateMixin {
                   ? DefaultTabController.of(context).index
                   : 0;
               _currentIndex == 0
-                  ? _showModalSheetAppBar(
-                      context,
-                      AppLocalizations.of(context).translate('addItem'),
-                      ItemForm(),
-                      0.67)
+                  ? Navigator.pushNamed(context, AppRoutes.item_form,
+                      arguments: {
+                          'title':
+                              AppLocalizations.of(context).translate('addItem'),
+                        })
                   : _currentIndex == 1
                       ? _showModalSheetAppBar(
                           context,
@@ -367,8 +366,8 @@ class _LayoutPageState extends State<LayoutPage> with TickerProviderStateMixin {
                           ? Navigator.pushNamed(context, AppRoutes.purchase_add,
                               arguments: {
                                   'title': AppLocalizations.of(context)
-                                  .translate('addPurchase'),
-                                } )
+                                      .translate('addPurchase'),
+                                })
                           : Container();
             },
             child: Icon(

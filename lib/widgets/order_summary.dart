@@ -14,94 +14,78 @@ class OrderSummary extends StatefulWidget {
 }
 
 class _OrderSummaryState extends State<OrderSummary> {
-  bool isSort = true;
   @override
   Widget build(BuildContext context) {
-    Size screenSize = MediaQuery.of(context).size;
     ItemModel itemModel = Provider.of<ItemModel>(context);
 
-    
     return ListView.builder(
-        // shrinkWrap: true,
-        // physics: NeverScrollableScrollPhysics(),
+        shrinkWrap: true,
+        physics: AlwaysScrollableScrollPhysics(),
+        scrollDirection: Axis.vertical,
         itemCount: widget.cartModel.carts.length,
         itemBuilder: (context, index) {
           if (index < widget.cartModel.carts.length) {
             Item item =
                 itemModel.getItemById(widget.cartModel.carts[index].itemId);
-
-            return Container(
-              margin: const EdgeInsets.symmetric(horizontal: 10.0),
-              width: screenSize.width,
+            return Dismissible(
+              key: Key(widget.cartModel.carts[index].itemId),
+              direction: DismissDirection.endToStart,
+              secondaryBackground: slideLeftBackground(),
+              background: slideLeftBackground(),
               child: Card(
-                child: Container(
-                  margin: const EdgeInsets.only(right: 10.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      ListTile(
-                        onTap: () => {},
-                        title: Text(
-                          '${item?.name ?? ''}(${widget.cartModel.carts[index]?.quantity.toString()})',
-                        ),
-                        subtitle: Text(
-                          'Tshs ${(widget.cartModel.carts[index].quantity * widget.cartModel.carts[index].paidAmount).toString()}/=',
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        trailing: IconButton(
-                          icon: Icon(
-                            Icons.delete,
-                            color: Theme.of(context).errorColor,
-                          ),
-                          onPressed: () => showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  title: Text(AppLocalizations.of(context)
-                                      .translate('deleteFromCart')),
-                                  content: Text(AppLocalizations.of(context)
-                                      .translate('areYouSure')),
-                                  actions: <Widget>[
-                                    Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      children: <Widget>[
-                                        FlatButton(
-                                            child: Text(
-                                                AppLocalizations.of(context)
-                                                    .translate('cancel')),
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                            }),
-                                        Container(
-                                          color: Colors.grey,
-                                          width: 1.0,
-                                          height: 24.0,
-                                        ),
-                                        FlatButton(
-                                            child: Text(
-                                                AppLocalizations.of(context)
-                                                    .translate('ok')),
-                                            onPressed: () {
-                                              setState(() {
-                                                widget.cartModel
-                                                    .removeItem(item);
-                                              });
-                                              Navigator.of(context).pop();
-                                            })
-                                      ],
-                                    ),
-                                  ],
-                                );
-                              }),
-                        ),
-                      ),
-                    ],
+                child: ListTile(
+                  onTap: () => {},
+                  title: Text(
+                    '${item?.name ?? ''}',
+                  ),
+                  subtitle: Text(
+                    'Tshs ${(widget.cartModel.carts[index].quantity * widget.cartModel.carts[index].paidAmount).toString()}/=',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  trailing: Text(
+                    '${widget.cartModel.carts[index]?.quantity.toString()}',
                   ),
                 ),
               ),
+              confirmDismiss: (direction) async {
+                if (direction == DismissDirection.endToStart) {
+                  final bool res = await showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          content: Text(
+                              "Are you sure you want to remove ${item.name.toUpperCase()}?"),
+                          actions: <Widget>[
+                            FlatButton(
+                              child: Text(
+                                "Cancel",
+                                style: TextStyle(color: Colors.black),
+                              ),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                            FlatButton(
+                              child: Text(
+                                "Delete",
+                                style: TextStyle(color: Colors.red),
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  widget.cartModel.removeItem(item);
+                                });
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                          ],
+                        );
+                      });
+                  return res;
+                } else {
+                  // TODO: Navigate to edit page;
+                }
+              },
             );
           } else {
             return Card(child: Text("data"));
@@ -229,5 +213,34 @@ class _OrderSummaryState extends State<OrderSummary> {
     //     ),
     //   ],
     // );
+  }
+
+  Widget slideLeftBackground() {
+    return Container(
+      color: Colors.red,
+      child: Align(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: <Widget>[
+            Icon(
+              Icons.delete,
+              color: Colors.white,
+            ),
+            Text(
+              " Delete",
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w700,
+              ),
+              textAlign: TextAlign.right,
+            ),
+            SizedBox(
+              width: 20,
+            ),
+          ],
+        ),
+        alignment: Alignment.centerRight,
+      ),
+    );
   }
 }

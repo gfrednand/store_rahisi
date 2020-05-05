@@ -2,6 +2,7 @@ import 'package:barcode_flutter/barcode_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:storeRahisi/app_localizations.dart';
+import 'package:storeRahisi/constants/routes.dart';
 import 'package:storeRahisi/models/index.dart';
 import 'package:storeRahisi/models/item.dart';
 import 'package:storeRahisi/pages/item/item_form.dart';
@@ -93,7 +94,6 @@ class _ItemDetailWidgetState extends State<ItemDetailWidget> {
                             spacing: 0.0, // gap between adjacent chips
                             runSpacing: 0.0, // gap between lines
                             children: <Widget>[
-            
                               chipDesign(
                                   AppLocalizations.of(context)
                                       .translate('edit'),
@@ -195,8 +195,9 @@ class _ItemDetailWidgetState extends State<ItemDetailWidget> {
 
                               PaymentModel paymentModel =
                                   Provider.of<PaymentModel>(context);
-                              List<Payment> payments = paymentModel
-                                  .getPaymentsByPurchaseId(purchases[index].id);
+                              List<Payment> payments =
+                                  paymentModel.getPaymentsByReferenceNo(
+                                      purchases[index].id);
                               purchases[index].paidAmount = 0.0;
                               payments.forEach((payment) {
                                 purchases[index].paidAmount =
@@ -329,13 +330,10 @@ class _ItemDetailWidgetState extends State<ItemDetailWidget> {
         label == AppLocalizations.of(context).translate('delete')
             ? widget.itemModel.removeItem(widget.item.id)
             : label == AppLocalizations.of(context).translate('edit')
-                ? _showModalSheetAppBar(
-                    context,
-                    AppLocalizations.of(context).translate('editItem'),
-                    ItemForm(
-                      item: widget.item,
-                    ),
-                    0.81)
+                ? Navigator.pushNamed(context, AppRoutes.item_form, arguments: {
+                    'title': AppLocalizations.of(context).translate('editItem'),
+                    'item': widget.item
+                  })
                 : _showToast(
                     label + AppLocalizations.of(context).translate('selected'),
                     color,

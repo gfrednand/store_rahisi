@@ -57,7 +57,7 @@ class PaymentModel extends BaseModel {
     });
   }
 
-  List<Payment> getPaymentsByPurchaseId(String id) {
+  List<Payment> getPaymentsByReferenceNo(String id) {
     if (_payments.length == 0) {
       listenToPayments();
     }
@@ -85,7 +85,6 @@ class PaymentModel extends BaseModel {
       result = await Api(path: 'payments', companyId: currentUser.companyId)
           .addDocument(data.toMap());
     } else {
-      print('*********************${data.toMap()}');
 
       result = await Api(path: 'payments', companyId: currentUser.companyId)
           .updateDocument(data.toMap(), data.id);

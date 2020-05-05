@@ -1,7 +1,6 @@
 import 'package:barcode_scan/barcode_scan.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:intl/intl.dart';
 import 'package:storeRahisi/app_localizations.dart';
 import 'package:storeRahisi/constants/ui_helpers.dart';
 import 'package:storeRahisi/models/item.dart';
@@ -14,10 +13,11 @@ import '../base_view.dart';
 
 class ItemForm extends StatefulWidget {
   final Item item;
+  final String title;
 
   ItemForm({
     Key key,
-    this.item,
+    this.item, this.title,
   }) : super(key: key);
 
   @override
@@ -61,141 +61,144 @@ class _ItemFormState extends State<ItemForm> {
           model.setEdittingItem(widget.item);
         }
       },
-      builder: (context, model, child) => Container(
-        padding: const EdgeInsets.all(20.0),
-        child: SingleChildScrollView(
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                InputField(
-                  smallVersion: true,
-                  isReadOnly: model.busy,
-                  placeholder: AppLocalizations.of(context).translate('itemName') +'*',
-                  controller: nameController,
-                ),
-                verticalSpaceSmall,
-                ExpansionList<String>(
+      builder: (context, model, child) =>  Scaffold(
+        appBar: AppBar(title: Text(widget.title),),
+        body: Container(
+          padding: const EdgeInsets.all(20.0),
+          child: SingleChildScrollView(
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  InputField(
+                    smallVersion: true,
                     isReadOnly: model.busy,
-                    items: [
-                      'Beer',
-                      'Cider',
-                      'Spirits',
-                      'Wine',
-                      'Bottled Water',
-                      'Soft Drinks',
-                      'Juice',
-                      'Energy Drinks',
-                      'Hot Drinks'
-                    ],
-                    title: isEditing
-                        ? widget.item.category
-                        : model.selectedCategory,
-                    onItemSelected: model.setSelectedCategory),
-                verticalSpaceSmall,
-                ExpansionList<String>(
-                    isReadOnly: model.busy,
-                    items: ['Kg', 'Unit', 'Lt', 'Psc'],
-                    title: isEditing ? widget.item.unit : model.selectedUnit,
-                    onItemSelected: model.setSelectedUnit),
-                verticalSpaceSmall,
-                // InputField(
-                //   smallVersion: true,
-                //   isReadOnly: model.busy,
-                //   placeholder: 'Purchase Price',
-                //   controller: purchasePriceController,
-                //   textInputType: TextInputType.numberWithOptions(),
-                // ),
-                // verticalSpaceSmall,
-
-                // InputField(
-                //   smallVersion: true,
-                //   isReadOnly: model.busy,
-                //   placeholder: 'Sale Price',
-                //   controller: salePriceController,
-                //   textInputType: TextInputType.numberWithOptions(),
-                // ),
-                // verticalSpaceSmall,
-                InputField(
-                  smallVersion: true,
-                  isReadOnly: model.busy,
-                  placeholder: AppLocalizations.of(context).translate('openingStock'),
-                  controller: openingStockController,
-                  textInputType: TextInputType.numberWithOptions(),
-                ),
-                verticalSpaceSmall,
-                InputField(
-                  smallVersion: true,
-                  isReadOnly: model.busy,
-                  placeholder: AppLocalizations.of(context).translate('alertQuantity'),
-                  controller: alertQtyController,
-                  textInputType: TextInputType.numberWithOptions(),
-                ),
-                verticalSpaceSmall,
-                InputField(
-                  smallVersion: true,
-                  isReadOnly: model.busy,
-                  placeholder: AppLocalizations.of(context).translate('description'),
-                  controller: descriptionController,
-                ),
-                verticalSpaceSmall,
-                new Column(
-                  children: <Widget>[
-                    barcode == ''
-                        ? Container()
-                        : BarCodeImage(
-                            params: CodabarBarCodeParams(
-                              barcode,
-                            ),
-                          ),
-                    new FlatButton(
-                        onPressed: scan, child: new Text(AppLocalizations.of(context).translate('scanBarcode'))),
-                  ],
-                ),
-                verticalSpaceSmall,
-
-                Center(
-                  child: BusyButton(
-                    title: AppLocalizations.of(context).translate('submit'),
-                    busy: model.busy,
-                    onPressed: () async {
-                      if (_formKey.currentState.validate()) {
-                        // If the form is valid, display a Snackbar.
-                        model.saveItem(
-                            data: Item(
-                          id: widget.item?.id ?? '',
-                          category: widget.item?.category ?? '',
-                          unit: widget.item?.unit ?? '',
-                          alertQty: int.parse(alertQtyController.text),
-                          description: descriptionController.text,
-                          name: nameController.text,
-                          barcode: barcode,
-                          updatedAt: isEditing?  DateTime.now(): null,
-                          openingStock: int.parse(openingStockController.text),
-                          // salePrice: double.parse(salePriceController.text),
-                          // purchasePrice:
-                          //     double.parse(purchasePriceController.text),
-                          userId: null,
-                        ));
-                        _formKey.currentState.reset();
-                      }
-                    },
+                    placeholder: AppLocalizations.of(context).translate('itemName') +'*',
+                    controller: nameController,
                   ),
-                ),
+                  verticalSpaceSmall,
+                  ExpansionList<String>(
+                      isReadOnly: model.busy,
+                      items: [
+                        'Beer',
+                        'Cider',
+                        'Spirits',
+                        'Wine',
+                        'Bottled Water',
+                        'Soft Drinks',
+                        'Juice',
+                        'Energy Drinks',
+                        'Hot Drinks'
+                      ],
+                      title: isEditing
+                          ? widget.item.category
+                          : model.selectedCategory,
+                      onItemSelected: model.setSelectedCategory),
+                  verticalSpaceSmall,
+                  ExpansionList<String>(
+                      isReadOnly: model.busy,
+                      items: ['Kg', 'Unit', 'Lt', 'Psc'],
+                      title: isEditing ? widget.item.unit : model.selectedUnit,
+                      onItemSelected: model.setSelectedUnit),
+                  verticalSpaceSmall,
+                  // InputField(
+                  //   smallVersion: true,
+                  //   isReadOnly: model.busy,
+                  //   placeholder: 'Purchase Price',
+                  //   controller: purchasePriceController,
+                  //   textInputType: TextInputType.numberWithOptions(),
+                  // ),
+                  // verticalSpaceSmall,
 
-                SizedBox(
-                  width: double.infinity,
-                  child: FlatButton(
-                      child: Text(AppLocalizations.of(context).translate('cancel'),style: TextStyle(color: Colors.grey[800]),),
-                      onPressed: () {
-                        Navigator.pop(context);
-                      }),
-                ),
-                // Padding(
-                //     padding: EdgeInsets.only(
-                //         bottom: MediaQuery.of(context).viewInsets.bottom)),
-              ],
+                  // InputField(
+                  //   smallVersion: true,
+                  //   isReadOnly: model.busy,
+                  //   placeholder: 'Sale Price',
+                  //   controller: salePriceController,
+                  //   textInputType: TextInputType.numberWithOptions(),
+                  // ),
+                  // verticalSpaceSmall,
+                  InputField(
+                    smallVersion: true,
+                    isReadOnly: model.busy,
+                    placeholder: AppLocalizations.of(context).translate('openingStock'),
+                    controller: openingStockController,
+                    textInputType: TextInputType.numberWithOptions(),
+                  ),
+                  verticalSpaceSmall,
+                  InputField(
+                    smallVersion: true,
+                    isReadOnly: model.busy,
+                    placeholder: AppLocalizations.of(context).translate('alertQuantity'),
+                    controller: alertQtyController,
+                    textInputType: TextInputType.numberWithOptions(),
+                  ),
+                  verticalSpaceSmall,
+                  InputField(
+                    smallVersion: true,
+                    isReadOnly: model.busy,
+                    placeholder: AppLocalizations.of(context).translate('description'),
+                    controller: descriptionController,
+                  ),
+                  verticalSpaceSmall,
+                  new Column(
+                    children: <Widget>[
+                      barcode == ''
+                          ? Container()
+                          : BarCodeImage(
+                              params: CodabarBarCodeParams(
+                                barcode,
+                              ),
+                            ),
+                      new FlatButton(
+                          onPressed: scan, child: new Text(AppLocalizations.of(context).translate('scanBarcode'))),
+                    ],
+                  ),
+                  verticalSpaceSmall,
+
+                  Center(
+                    child: BusyButton(
+                      title: AppLocalizations.of(context).translate('submit'),
+                      busy: model.busy,
+                      onPressed: () async {
+                        if (_formKey.currentState.validate()) {
+                          // If the form is valid, display a Snackbar.
+                          model.saveItem(
+                              data: Item(
+                            id: widget.item?.id ?? '',
+                            category: widget.item?.category ?? '',
+                            unit: widget.item?.unit ?? '',
+                            alertQty: int.parse(alertQtyController.text),
+                            description: descriptionController.text,
+                            name: nameController.text,
+                            barcode: barcode,
+                            updatedAt: isEditing?  DateTime.now(): null,
+                            openingStock: int.parse(openingStockController.text),
+                            // salePrice: double.parse(salePriceController.text),
+                            // purchasePrice:
+                            //     double.parse(purchasePriceController.text),
+                            userId: null,
+                          ));
+                          _formKey.currentState.reset();
+                        }
+                      },
+                    ),
+                  ),
+
+                  SizedBox(
+                    width: double.infinity,
+                    child: FlatButton(
+                        child: Text(AppLocalizations.of(context).translate('cancel'),style: TextStyle(color: Colors.grey[800]),),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        }),
+                  ),
+                  // Padding(
+                  //     padding: EdgeInsets.only(
+                  //         bottom: MediaQuery.of(context).viewInsets.bottom)),
+                ],
+              ),
             ),
           ),
         ),

@@ -67,7 +67,7 @@ class _PurchaseDetailWidgetState extends State<PurchaseDetailWidget> {
     PaymentModel paymentModel = Provider.of<PaymentModel>(context);
     List<Payment> payments = widget.purchase == null
         ? []
-        : paymentModel.getPaymentsByPurchaseId(widget.purchase.id);
+        : paymentModel.getPaymentsByReferenceNo(widget.purchase.id);
 
     double dueAmount = widget.purchase == null
         ? 0

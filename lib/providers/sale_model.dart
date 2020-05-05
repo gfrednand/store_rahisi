@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:storeRahisi/constants/routes.dart';
 import 'package:storeRahisi/locator.dart';
 import 'package:storeRahisi/models/index.dart';
 import 'package:storeRahisi/providers/base_model.dart';
@@ -148,6 +149,7 @@ class SaleModel extends BaseModel {
   }
 
   saveSale({@required Sale data}) async {
+
     setBusy(true);
     var result;
 
@@ -170,6 +172,7 @@ class SaleModel extends BaseModel {
     } else {
       await _paymentModel.savePayment(
           data: Payment(
+         
               amount: data.paidAmount,
               method: data.paymentMethod,
               referenceNo: data.referenceNumber,
@@ -188,6 +191,7 @@ class SaleModel extends BaseModel {
       _navigationService.pop();
     } else {
       _navigationService.pop();
+      _navigationService.navigateTo(routeName: AppRoutes.layout);
     }
   }
 
@@ -295,7 +299,7 @@ class SaleModel extends BaseModel {
     data['totalSales'] = totalSales;
     data['totalExpenses'] = totalExpenses;
     data['costOfSales'] = beginningInventory + totalSales - endingInventory;
-    data['grossProfit'] =data['totalSales'] -  data['costOfSales'];
+    data['grossProfit'] = data['totalSales'] - data['costOfSales'];
     return data;
   }
 }

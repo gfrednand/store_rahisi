@@ -125,7 +125,6 @@ class _PosItemListState extends State<PosItemList> {
 
   _buildProductsListWidget(BuildContext context) {
     CartModel cartModel = Provider.of<CartModel>(context);
-    ClientModel clientModel = Provider.of<ClientModel>(context);
     return BaseView<ItemModel>(
         onModelReady: (model) => model.listenToItems(),
         builder: (context, model, child) {
@@ -135,7 +134,6 @@ class _PosItemListState extends State<PosItemList> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Expanded(
-                flex: 6,
                 child: ListView.builder(
                     shrinkWrap: true,
                     itemCount: model.items.length,
@@ -170,6 +168,8 @@ class _PosItemListState extends State<PosItemList> {
                       disco = disco * 100;
                       Cart cart =
                           cartModel.getCartItemById(model.items[index].id);
+
+                          // print(cart.toString());
                       return filter == null || filter == ''
                           ? new PosItem(
                               profit: profit,
@@ -188,6 +188,7 @@ class _PosItemListState extends State<PosItemList> {
                                   quantity: quantity,
                                   item: model.items[index],
                                   // purchase: purchase,
+                                  initialCount:cart.quantity,
                                   currentPrice: cur,
                                   originalPrice: org,
                                   discount: disco / org,
@@ -195,13 +196,13 @@ class _PosItemListState extends State<PosItemList> {
                               : new Container();
                     }),
               ),
-              const Expanded(child: SizedBox()),
-              // const Divider(height: 1.0, color: Colors.grey),
+          //  Expanded(child: SizedBox()),
+              // // const Divider(height: 1.0, color: Colors.grey),
               cartModel.carts.length > 0
-                  ? Expanded(
-                      flex: 1,
-                      child: TotalBar(cartModel: cartModel, route: AppRoutes.checkout,),
-                    )
+                  ? TotalBar(
+                    cartModel: cartModel,
+                    route: AppRoutes.checkout,
+                  )
                   : Container(),
             ],
           );
