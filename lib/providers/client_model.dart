@@ -10,7 +10,7 @@ import 'package:storeRahisi/services/dialog_service.dart';
 import 'package:storeRahisi/services/navigation_service.dart';
 
 class ClientModel extends BaseModel {
-  // Api Api(path: 'items', companyId: currentUser.companyId) = locator<Api>();
+  // Api Api(path: 'items', companyId: currentUser?.companyId) = locator<Api>();
 
   String _documentID;
   String get documentID => _documentID;
@@ -42,7 +42,7 @@ class ClientModel extends BaseModel {
 
   fetchClients() async {
     setBusy(true);
-    var result = await Api(path: 'clients', companyId: currentUser.companyId)
+    var result = await Api(path: 'clients', companyId: currentUser?.companyId)
         .getDataCollection();
     _clients = result.documents
         .map((doc) => Client.fromMap(doc.data, doc.documentID))
@@ -51,7 +51,7 @@ class ClientModel extends BaseModel {
   }
 
   listenToClients() async {
-    Api(path: 'clients', companyId: currentUser.companyId)
+    Api(path: 'clients', companyId: currentUser?.companyId)
         .streamDataCollection()
         .listen((snapShot) {
       if (snapShot.documents.isNotEmpty) {
@@ -85,7 +85,7 @@ class ClientModel extends BaseModel {
 
   getClientByIdFromServer(String id) async {
     setBusy(true);
-    var doc = await Api(path: 'clients', companyId: currentUser.companyId)
+    var doc = await Api(path: 'clients', companyId: currentUser?.companyId)
         .getDocumentById(id);
     _client = Client.fromMap(doc.data, doc.documentID);
     setBusy(false);
@@ -99,7 +99,7 @@ class ClientModel extends BaseModel {
       cancelTitle: 'No',
     );
     if (dialogResponse.confirmed) {
-      await Api(path: 'clients', companyId: currentUser.companyId)
+      await Api(path: 'clients', companyId: currentUser?.companyId)
           .removeDocument(id);
       _navigationService.pop();
     }
@@ -115,7 +115,7 @@ class ClientModel extends BaseModel {
 
   updateClient(Client data, String id) async {
     setBusy(true);
-    await Api(path: 'clients', companyId: currentUser.companyId)
+    await Api(path: 'clients', companyId: currentUser?.companyId)
         .updateDocument(data.toMap(), id);
     setBusy(false);
   }
@@ -127,10 +127,10 @@ class ClientModel extends BaseModel {
 
     data.userId = currentUser?.id;
     if (!_editting) {
-      result = await Api(path: 'clients', companyId: currentUser.companyId)
+      result = await Api(path: 'clients', companyId: currentUser?.companyId)
           .addDocument(data.toMap());
     } else {
-      result = await Api(path: 'clients', companyId: currentUser.companyId)
+      result = await Api(path: 'clients', companyId: currentUser?.companyId)
           .updateDocument(data.toMap(), data.id);
     }
 

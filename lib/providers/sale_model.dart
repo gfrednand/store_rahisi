@@ -41,14 +41,14 @@ class SaleModel extends BaseModel {
 
   fetchSales() async {
     setBusy(true);
-    var result = await Api(path: 'sales', companyId: currentUser.companyId)
+    var result = await Api(path: 'sales', companyId: currentUser?.companyId)
         .getDataCollection();
     _sales = result.documents.map((doc) => Sale.fromFirestore(doc)).toList();
     setBusy(false);
   }
 
   listenToSales() async {
-    Api(path: 'sales', companyId: currentUser.companyId)
+    Api(path: 'sales', companyId: currentUser?.companyId)
         .streamDataCollection()
         .listen((snapshot) {
       if (snapshot.documents.isNotEmpty) {
@@ -128,7 +128,7 @@ class SaleModel extends BaseModel {
 
   getSaleByIdFromServer(String id) async {
     setBusy(true);
-    var doc = await Api(path: 'sales', companyId: currentUser.companyId)
+    var doc = await Api(path: 'sales', companyId: currentUser?.companyId)
         .getDocumentById(id);
     _sale = Sale.fromFirestore(doc);
     setBusy(false);
@@ -142,7 +142,7 @@ class SaleModel extends BaseModel {
       cancelTitle: 'No',
     );
     if (dialogResponse.confirmed) {
-      await Api(path: 'sales', companyId: currentUser.companyId)
+      await Api(path: 'sales', companyId: currentUser?.companyId)
           .removeDocument(id);
       _navigationService.pop();
     }
@@ -156,10 +156,10 @@ class SaleModel extends BaseModel {
     data.userId = currentUser?.id;
 
     if (!_editting) {
-      result = await Api(path: 'sales', companyId: currentUser.companyId)
+      result = await Api(path: 'sales', companyId: currentUser?.companyId)
           .addDocument(data.toMap());
     } else {
-      result = await Api(path: 'sales', companyId: currentUser.companyId)
+      result = await Api(path: 'sales', companyId: currentUser?.companyId)
           .updateDocument(data.toMap(), data.id);
     }
     setBusy(false);

@@ -16,6 +16,7 @@ String itemToJson(Item data) => json.encode(data.toMap());
 class Item {
   String id;
   String name;
+  String categoryId;
   String category;
   String unit;
   String description;
@@ -42,6 +43,7 @@ class Item {
     this.id,
     this.userId,
     @required this.name,
+    this.categoryId,
     this.category,
     DateTime createdAt,
     this.updatedAt,
@@ -71,7 +73,7 @@ class Item {
       id: doc.documentID,
       userId: json['userId'],
       name: json['name'],
-      category: json['category'],
+      categoryId: json['category'],
       unit: json['unit'],
       description: json['description'],
       salePrice: json['salePrice']?.toDouble(),
@@ -91,7 +93,7 @@ class Item {
         id: id ?? '',
         userId: json['userId'],
         name: json['name'],
-        category: json['category'],
+        categoryId: json['category'],
         unit: json['unit'],
         description: json['description'],
         salePrice: json['salePrice']?.toDouble(),
@@ -110,7 +112,7 @@ class Item {
         'id': id,
         'userId': userId,
         'name': name,
-        'category': category,
+        'category': categoryId,
         'unit': unit,
         'description': description,
         'salePrice': salePrice,
@@ -137,5 +139,5 @@ class Item {
         'quantity': quantity,
       };
 
-      factory Item.initialValue()=>Item(name: 'Nothing Found',active: true,alertQty: 0,barcode: '',category: '',description: '',id: '',inStock: 0,openingStock: 0, unit: '');
+      factory Item.initialValue()=>Item(name: 'Nothing Found',active: true,alertQty: 0,barcode: '',categoryId: '',description: '',id: '',inStock: 0,openingStock: 0, unit: '');
 }

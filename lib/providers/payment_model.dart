@@ -24,7 +24,7 @@ class PaymentModel extends BaseModel {
 
   fetchPayments() async {
     setBusy(true);
-    var result = await Api(path: 'payments', companyId: currentUser.companyId)
+    var result = await Api(path: 'payments', companyId: currentUser?.companyId)
         .getDataCollection();
     _payments = result.documents
         .map((doc) => Payment.fromMap(doc.data, doc.documentID))
@@ -34,7 +34,7 @@ class PaymentModel extends BaseModel {
   }
 
   listenToPayments() async {
-    Api(path: 'payments', companyId: currentUser.companyId)
+    Api(path: 'payments', companyId: currentUser?.companyId)
         .streamDataCollection()
         .listen((snapshot) {
       if (snapshot.documents.isNotEmpty) {
@@ -72,7 +72,7 @@ class PaymentModel extends BaseModel {
       cancelTitle: 'No',
     );
     if (dialogResponse.confirmed) {
-      await Api(path: 'payments', companyId: currentUser.companyId)
+      await Api(path: 'payments', companyId: currentUser?.companyId)
           .removeDocument(id);
       _navigationService.pop();
     }
@@ -82,11 +82,11 @@ class PaymentModel extends BaseModel {
     // setBusy(true);
     var result;
     if (!_editting) {
-      result = await Api(path: 'payments', companyId: currentUser.companyId)
+      result = await Api(path: 'payments', companyId: currentUser?.companyId)
           .addDocument(data.toMap());
     } else {
 
-      result = await Api(path: 'payments', companyId: currentUser.companyId)
+      result = await Api(path: 'payments', companyId: currentUser?.companyId)
           .updateDocument(data.toMap(), data.id);
     }
 

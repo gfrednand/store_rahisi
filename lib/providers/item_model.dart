@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:storeRahisi/locator.dart';
+import 'package:storeRahisi/models/category.dart';
 import 'package:storeRahisi/models/item.dart';
 import 'package:storeRahisi/providers/base_model.dart';
 import 'package:storeRahisi/providers/index.dart';
@@ -10,16 +11,20 @@ import 'package:storeRahisi/services/dialog_service.dart';
 import 'package:storeRahisi/services/navigation_service.dart';
 
 class ItemModel extends BaseModel {
-  // Api Api(path: 'items', companyId: currentUser.companyId) = locator<Api>();
+  // Api Api(path: 'items', companyId: currentUser?.companyId) = locator<Api>();
   static String _unitConst = 'Select a Product Unit';
   static String _categoryConst = 'Select a Product Category';
 
   final StreamController<List<Item>> _itemsController =
       StreamController<List<Item>>.broadcast();
+  final StreamController<List<Category>> _categoriesController =
+      StreamController<List<Category>>.broadcast();
 
   List<Item> _items = [];
+  List<Category> _categories = [];
   List<Item> _searchItems;
   List<Item> get items => _items;
+  List<Category> get categories => _categories;
   List<Item> get searchItems => _searchItems;
 
   final DialogService _dialogService = locator<DialogService>();
@@ -50,7 +55,7 @@ class ItemModel extends BaseModel {
 
   fetchItems() async {
     setBusy(true);
-    var result = await Api(path: 'items', companyId: currentUser.companyId)
+    var result = await Api(path: 'items', companyId: currentUser?.companyId)
         .getDataCollection();
     _items = result.documents
         .map((doc) => Item.fromMap(doc.data, doc.documentID))
@@ -59,7 +64,7 @@ class ItemModel extends BaseModel {
   }
 
   listenToItems() async {
-    Api(path: 'items', companyId: currentUser.companyId)
+    Api(path: 'items', companyId: currentUser?.companyId)
         .streamDataCollection()
         .listen((snapshot) {
       if (snapshot.documents.isNotEmpty) {
@@ -71,10 +76,33 @@ class ItemModel extends BaseModel {
       }
     });
 
-    _itemsController.stream.listen((purchaseData) {
-      List<Item> updatedClients = purchaseData;
-      if (updatedClients != null && updatedClients.length > 0) {
-        _items = updatedClients;
+    _itemsController.stream.listen((itemData) {
+      List<Item> updatedItem = itemData;
+      if (updatedItem != null && updatedItem.length > 0) {
+        _items = updatedItem;
+        notifyListeners();
+      }
+    });
+  }
+
+  listenToCategories() async {
+    Api(path: 'categories', companyId: currentUser?.companyId)
+        .streamDataCollection()
+        .listen((snapshot) {
+      if (snapshot.documents.isNotEmpty) {
+        var itms = snapshot.documents
+            .map((doc) => Category.fromMap(doc.data, doc.documentID))
+            .toList();
+
+        // Add the itms onto the controller
+        _categoriesController.add(itms);
+      }
+    });
+
+    _categoriesController.stream.listen((categoryData) {
+      List<Category> updatedCategory = categoryData;
+      if (updatedCategory != null && updatedCategory.length > 0) {
+        _categories = updatedCategory;
         notifyListeners();
       }
     });
@@ -96,9 +124,16 @@ class ItemModel extends BaseModel {
     );
   }
 
+  Category getCategoryById(String id) {
+    return _categories.firstWhere(
+      (item) => item.id == id,
+      orElse: () => null,
+    );
+  }
+
   getItemByIdFromServer(String id) async {
     setBusy(true);
-    var doc = await Api(path: 'items', companyId: currentUser.companyId)
+    var doc = await Api(path: 'items', companyId: currentUser?.companyId)
         .getDocumentById(id);
     _item = Item.fromMap(doc.data, doc.documentID);
     setBusy(false);
@@ -112,13 +147,13 @@ class ItemModel extends BaseModel {
       cancelTitle: 'No',
     );
     if (dialogResponse.confirmed) {
-      await Api(path: 'items', companyId: currentUser.companyId)
+      await Api(path: 'items', companyId: currentUser?.companyId)
           .removeDocument(id);
       _navigationService.pop();
     }
   }
 
-  saveItem({@required Item data}) async {
+  Future<bool> saveItem({@required Item data}) async {
     setBusy(true);
     var result;
     if (_selectedUnit != _unitConst) {
@@ -126,14 +161,14 @@ class ItemModel extends BaseModel {
     }
 
     if (_selectedCategory != _categoryConst) {
-      data.category = _selectedCategory;
+      data.categoryId = _selectedCategory;
     }
     data.userId = currentUser?.id;
     if (!_editting) {
-      result = await Api(path: 'items', companyId: currentUser.companyId)
+      result = await Api(path: 'items', companyId: currentUser?.companyId)
           .addDocument(data.toMap());
     } else {
-      result = await Api(path: 'items', companyId: currentUser.companyId)
+      result = await Api(path: 'items', companyId: currentUser?.companyId)
           .updateDocument(data.toMap(), data.id);
     }
 
@@ -144,19 +179,38 @@ class ItemModel extends BaseModel {
         title: 'Cound not create item',
         description: result,
       );
+      return false;
     } else {
-      await _dialogService.showDialog(
-        title: 'Item successfully Added',
-        description: 'Item has been created',
-      );
+      _navigationService.pop();
+      return true;
+    }
+  }
+
+  Future<bool> saveCategory({@required Category data}) async {
+    setBusy(true);
+    var result;
+
+    if (!_editting) {
+      result = await Api(path: 'categories', companyId: currentUser?.companyId)
+          .addDocument(data.toMap());
+    } else {
+      result = await Api(path: 'categories', companyId: currentUser?.companyId)
+          .updateDocument(data.toMap(), data.id);
     }
 
-    if (_editting) {
-      _navigationService.pop();
-      _navigationService.pop();
+    setBusy(false);
+
+    if (result is String) {
+      await _dialogService.showDialog(
+        title: 'Cound not create Category',
+        description: result,
+      );
     } else {
       _navigationService.pop();
+      return true;
     }
+
+    return false;
   }
 
   void setEdittingItem(Item edittingItem) {

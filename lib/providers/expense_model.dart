@@ -10,7 +10,7 @@ import 'package:storeRahisi/services/dialog_service.dart';
 import 'package:storeRahisi/services/navigation_service.dart';
 
 class ExpenseModel extends BaseModel {
-  // Api Api(path: 'expenses', companyId: currentUser.companyId) = locator<Api>();
+  // Api Api(path: 'expenses', companyId: currentUser?.companyId) = locator<Api>();
   static String _unitConst = 'Select a Product Unit';
   static String _categoryConst = 'Select a Product Category';
 
@@ -49,7 +49,7 @@ class ExpenseModel extends BaseModel {
 
   fetchExpenses() async {
     setBusy(true);
-    var result = await Api(path: 'expenses', companyId: currentUser.companyId)
+    var result = await Api(path: 'expenses', companyId: currentUser?.companyId)
         .getDataCollection();
     _expenses = result.documents
         .map((doc) => Expense.fromMap(doc.data, doc.documentID))
@@ -58,7 +58,7 @@ class ExpenseModel extends BaseModel {
   }
 
   listenToExpenses() async {
-    Api(path: 'expenses', companyId: currentUser.companyId)
+    Api(path: 'expenses', companyId: currentUser?.companyId)
         .streamDataCollection()
         .listen((snapshot) {
       if (snapshot.documents.isNotEmpty) {
@@ -98,7 +98,7 @@ class ExpenseModel extends BaseModel {
 
   getExpenseByIdFromServer(String id) async {
     setBusy(true);
-    var doc = await Api(path: 'expenses', companyId: currentUser.companyId)
+    var doc = await Api(path: 'expenses', companyId: currentUser?.companyId)
         .getDocumentById(id);
     _expense = Expense.fromMap(doc.data, doc.documentID);
     setBusy(false);
@@ -112,7 +112,7 @@ class ExpenseModel extends BaseModel {
       cancelTitle: 'No',
     );
     if (dialogResponse.confirmed) {
-      await Api(path: 'expenses', companyId: currentUser.companyId)
+      await Api(path: 'expenses', companyId: currentUser?.companyId)
           .removeDocument(id);
       _navigationService.pop();
     }
@@ -124,10 +124,10 @@ class ExpenseModel extends BaseModel {
 
     data.userId = currentUser?.id;
     if (!_editting) {
-      result = await Api(path: 'expenses', companyId: currentUser.companyId)
+      result = await Api(path: 'expenses', companyId: currentUser?.companyId)
           .addDocument(data.toMap());
     } else {
-      result = await Api(path: 'expenses', companyId: currentUser.companyId)
+      result = await Api(path: 'expenses', companyId: currentUser?.companyId)
           .updateDocument(data.toMap(), data.id);
     }
 

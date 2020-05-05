@@ -67,7 +67,7 @@ class PurchaseModel extends BaseModel {
 
   fetchPurchases() async {
     setBusy(true);
-    var result = await Api(path: 'purchases', companyId: currentUser.companyId)
+    var result = await Api(path: 'purchases', companyId: currentUser?.companyId)
         .getDataCollection();
     _purchases = result.documents
         .map((doc) => Purchase.fromMap(doc.data, doc.documentID))
@@ -76,7 +76,7 @@ class PurchaseModel extends BaseModel {
   }
 
   listenToPurchases() async {
-    Api(path: 'purchases', companyId: currentUser.companyId)
+    Api(path: 'purchases', companyId: currentUser?.companyId)
         .streamDataCollection()
         .listen((snapshot) {
       if (snapshot.documents.isNotEmpty) {
@@ -178,7 +178,7 @@ class PurchaseModel extends BaseModel {
 
   getPurchaseByIdFromServer(String id) async {
     setBusy(true);
-    var doc = await Api(path: 'purchases', companyId: currentUser.companyId)
+    var doc = await Api(path: 'purchases', companyId: currentUser?.companyId)
         .getDocumentById(id);
     _purchase = Purchase.fromMap(doc.data, doc.documentID);
     setBusy(false);
@@ -192,7 +192,7 @@ class PurchaseModel extends BaseModel {
       cancelTitle: 'No',
     );
     if (dialogResponse.confirmed) {
-      await Api(path: 'purchases', companyId: currentUser.companyId)
+      await Api(path: 'purchases', companyId: currentUser?.companyId)
           .removeDocument(id);
       _navigationService.pop();
     }
@@ -204,12 +204,12 @@ class PurchaseModel extends BaseModel {
 
     data.userId = currentUser?.id;
     if (!_editting) {
-      result = await Api(path: 'purchases', companyId: currentUser.companyId)
+      result = await Api(path: 'purchases', companyId: currentUser?.companyId)
           .addDocument(data.toMap());
 
       // data.items
     } else {
-      result = await Api(path: 'purchases', companyId: currentUser.companyId)
+      result = await Api(path: 'purchases', companyId: currentUser?.companyId)
           .updateDocument(data.toMap(), data.id);
     }
 

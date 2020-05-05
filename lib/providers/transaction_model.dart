@@ -19,7 +19,7 @@ class TransactionModel extends BaseModel {
   fetchTransactions() async {
     setBusy(true);
     var result =
-        await Api(path: 'transactions', companyId: currentUser.companyId)
+        await Api(path: 'transactions', companyId: currentUser?.companyId)
             .getDataCollection();
     _transactions = result.documents
         .map((doc) => Transaction.fromMap(doc.data, doc.documentID))
@@ -29,7 +29,7 @@ class TransactionModel extends BaseModel {
   }
 
   listenToTransactions() async {
-    Api(path: 'transactions', companyId: currentUser.companyId)
+    Api(path: 'transactions', companyId: currentUser?.companyId)
         .streamDataCollection()
         .listen((snapshot) {
       if (snapshot.documents.isNotEmpty) {
@@ -56,12 +56,12 @@ class TransactionModel extends BaseModel {
     // setBusy(true);
     var result;
     if (!_editting) {
-      result = await Api(path: 'transactions', companyId: currentUser.companyId)
+      result = await Api(path: 'transactions', companyId: currentUser?.companyId)
           .addDocument(data.toMap());
     } else {
       print('*********************${data.toMap()}');
 
-      result = await Api(path: 'transactions', companyId: currentUser.companyId)
+      result = await Api(path: 'transactions', companyId: currentUser?.companyId)
           .updateDocument(data.toMap(), data.id);
     }
 

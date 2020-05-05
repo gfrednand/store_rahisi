@@ -5,6 +5,7 @@ import 'package:storeRahisi/pages/expense/expense_detail.dart';
 import 'package:storeRahisi/pages/expense/expense_list.dart';
 
 import 'package:storeRahisi/pages/home_page.dart';
+import 'package:storeRahisi/pages/item/category_form.dart';
 import 'package:storeRahisi/pages/item/item_detail.dart';
 import 'package:storeRahisi/pages/item/item_form.dart';
 import 'package:storeRahisi/pages/layout_page.dart';
@@ -73,6 +74,14 @@ class Router {
             builder: (_) => ItemForm(
                   title: args['title'],
                   item: args['item'],
+                ));
+        break;
+      case AppRoutes.category_form:
+        var args = settings.arguments as Map<String, dynamic>;
+        return MaterialPageRoute(
+            builder: (_) => CategoryForm(
+                  title: args['title'],
+                  category: args['category'],
                 ));
         break;
       case AppRoutes.sale_detail:

@@ -21,6 +21,7 @@ TextTheme _buildTextTheme(TextTheme base) {
   return base.apply(
     // bodyColor:  Color(0xFF212121),
     // displayColor:  Color(0xFF212121),
+    
     fontFamily:  'Montserrat',
     
   );
@@ -28,7 +29,7 @@ TextTheme _buildTextTheme(TextTheme base) {
 
 IconThemeData _buildIconTheme(IconThemeData base) {
   return base.copyWith(
-    color:  Colors.white,
+    color:  Colors.teal,
   );
 }
 

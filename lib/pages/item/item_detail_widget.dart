@@ -115,7 +115,7 @@ class _ItemDetailWidgetState extends State<ItemDetailWidget> {
                                 ),
                           Text(widget.item.barcode ?? ''),
                           ListTile(
-                            title: Text('${widget.item.category}'),
+                            title: Text('${widget.item.categoryId}'),
                             subtitle: Text(AppLocalizations.of(context)
                                 .translate('category')),
                           ),

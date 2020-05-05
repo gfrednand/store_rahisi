@@ -6,5 +6,6 @@ export 'sale.dart';
 export 'expense.dart';
 export 'user.dart';
 export 'payment.dart';
+export 'category.dart';
 export 'client.dart';
 export 'transaction.dart';

@@ -57,41 +57,35 @@ class _ItemListState extends State<ItemList> {
       PurchaseModel purchaseModel, SaleModel saleModel) {
     return Column(
       children: [
-          Wrap(
-                spacing: 0.0, // gap between adjacent chips
-                runSpacing: 0.0, // gap between lines
-                children: <Widget>[
-                  chipDesign('All',
-                      Color(0xFF4db6ac)),
-                  chipDesign('Soft Drinks',
-                      Colors.grey),
-                  chipDesign('Beer',
-                       Colors.grey),
-                  chipDesign('Water',
-                       Colors.grey),
-                  chipDesign('Juice',
-                       Colors.grey),
-                ],
-              ),
-              Divider(
-                thickness: 10.0,
-              ),
+        Wrap(
+          spacing: 0.0, // gap between adjacent chips
+          runSpacing: 0.0, // gap between lines
+          children: <Widget>[
+            chipDesign('All', Color(0xFF4db6ac)),
+            ...model.categories
+                .map((element) => chipDesign(element.name, Colors.grey))
+                .toList()
+          ],
+        ),
+        Divider(
+          thickness: 10.0,
+        ),
         Scrollbar(
             child: !model.busy
                 ? model.items == null
                     ? Center(
-                        child: Text(
-                            AppLocalizations.of(context).translate('nothingFound')),
+                        child: Text(AppLocalizations.of(context)
+                            .translate('nothingFound')),
                       )
                     : ListView.builder(
-                      scrollDirection: Axis.vertical,
-                      shrinkWrap: true,
+                        scrollDirection: Axis.vertical,
+                        shrinkWrap: true,
                         itemCount: model.items.length,
                         itemBuilder: (buildContext, index) {
                           model.items[index].totalPurchase = purchaseModel
                               .getTotalPurchaseByItemId(model.items[index].id);
-                          model.items[index].totalSales =
-                              saleModel.getTotalSaleByItemId(model.items[index].id);
+                          model.items[index].totalSales = saleModel
+                              .getTotalSaleByItemId(model.items[index].id);
                           model.items[index].inStock =
                               (model.items[index].totalPurchase +
                                       model.items[index].openingStock) -
@@ -102,6 +96,9 @@ class _ItemListState extends State<ItemList> {
                                       model.items[index].alertQty
                                   ? Colors.green
                                   : Colors.orange;
+                          model.items[index].category = model
+                              .getCategoryById(model.items[index].categoryId)
+                              ?.name;
                           return Card(
                             elevation: selectedIndex != null &&
                                     selectedIndex == index &&
@@ -118,7 +115,8 @@ class _ItemListState extends State<ItemList> {
                                 leading: ExcludeSemantics(
                                   child: CircleAvatar(
                                     radius: 25.0,
-                                    backgroundColor: Theme.of(context).primaryColor,
+                                    backgroundColor:
+                                        Theme.of(context).primaryColor,
                                     child: Text(
                                       model.items[index].name
                                           .substring(0, 2)
@@ -138,11 +136,10 @@ class _ItemListState extends State<ItemList> {
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
                                     color: color,
-                            
                                   ),
                                 ),
                                 subtitle: Text(
-                                  '${model.items[index].description ?? ''}',
+                                  '${model.items[index].category ?? ''}',
                                   overflow: TextOverflow.ellipsis,
                                 ),
                                 trailing: Text(
@@ -183,10 +180,10 @@ class _ItemListState extends State<ItemList> {
       ],
     );
   }
-    Widget chipDesign(String label, Color color) {
+
+  Widget chipDesign(String label, Color color) {
     return GestureDetector(
-      onTap: () {
-      },
+      onTap: () {},
       child: Container(
         child: Chip(
           label: Text(

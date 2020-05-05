@@ -14,6 +14,7 @@ static const client = "client";
 static const client_detail = "client_detail";
 static const item_detail = "item_detail";
 static const item_form = "item_form";
+static const category_form = "category_form";
 static const expense_detail = "expense_detail";
 static const purchase_detail = "purchase_detail";
 static const purchase_add = "purchase_add";
