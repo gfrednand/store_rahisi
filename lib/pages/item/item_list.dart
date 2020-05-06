@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:storeRahisi/constants/routes.dart';
+import 'package:storeRahisi/constants/ui_helpers.dart';
 import 'package:storeRahisi/models/index.dart';
 import 'package:storeRahisi/pages/base_view.dart';
 import 'package:storeRahisi/pages/item/item_detail.dart';
@@ -99,78 +100,93 @@ class _ItemListState extends State<ItemList> {
                           model.items[index].category = model
                               .getCategoryById(model.items[index].categoryId)
                               ?.name;
-                          return Container(
-                            padding: const EdgeInsets.only(top: 16.0),
-                            child: Card(
-                              color: selectedIndex != null &&
-                                      selectedIndex == index &&
-                                      isLargeScreen
-                                  ? Theme.of(context).colorScheme.primaryVariant
-                                  : Theme.of(context).colorScheme.primary,
-                              elevation: selectedIndex != null &&
-                                      selectedIndex == index &&
-                                      isLargeScreen
-                                  ? 10
-                                  : 2,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20)),
-                              margin:
-                                  const EdgeInsets.symmetric(horizontal: 20),
-                              child: ListTile(
-                                leading: ExcludeSemantics(
-                                  child: CircleAvatar(
-                                    radius: 25.0,
-                                    // backgroundColor:
-                                    // Theme.of(context).primaryColor,
-                                    child: Text(
-                                      model.items[index].name
-                                          .substring(0, 2)
-                                          .toUpperCase(),
-                                      style: TextStyle(
-                                        // color: Theme.of(context).accentColor,
-                                        fontWeight: selectedIndex != null &&
-                                                selectedIndex == index
-                                            ? FontWeight.bold
-                                            : FontWeight.normal,
+                          return Column(
+                            children: [
+                              Divider(
+                                height: 12.0,
+                              ),
+                              Container(
+                                // padding: const EdgeInsets.only(top: 16.0),
+                                color: selectedIndex != null &&
+                                        selectedIndex == index &&
+                                        isLargeScreen
+                                    ? Theme.of(context).colorScheme.primary
+                                    : Theme.of(context)
+                                        .colorScheme
+                                        .primaryVariant,
+                                child: ListTile(
+                                  leading: ExcludeSemantics(
+                                    child: CircleAvatar(
+                                      radius: 25.0,
+                                      backgroundColor: Theme.of(context)
+                                          .colorScheme
+                                          .onPrimary,
+                                      child: Text(
+                                        model.items[index].name
+                                            .substring(0, 2)
+                                            .toUpperCase(),
+                                        style: TextStyle(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .primary,
+                                          fontWeight: selectedIndex != null &&
+                                                  selectedIndex == index
+                                              ? FontWeight.bold
+                                              : FontWeight.normal,
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                                title: Text(
-                                  '${model.items[index].name.toUpperCase()}',
-                                  overflow: TextOverflow.ellipsis,
-                              style: Theme.of(context).textTheme.bodyText2,
-                                ),
-                                subtitle: Text(
-                                  '${model.items[index].category}',
-                                  overflow: TextOverflow.ellipsis,style:  Theme.of(context).textTheme.bodyText1,
-                                ),
-                                trailing: Text(
-                                  '${model.items[index].inStock} ${model.items[index].unit}',
-                                  style: TextStyle(
-                                    color: color,
-                                    fontWeight: FontWeight.bold,
+                                  title: Row(
+                                    children: <Widget>[
+                                      Text(
+                                        '${model.items[index].name.toUpperCase()}',
+                                        overflow: TextOverflow.ellipsis,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1,
+                                      ),
+                                      SizedBox(
+                                        width: 16.0,
+                                      ),
+                                      Text(
+                                        '${model.items[index].inStock} ${model.items[index].unit}',
+                                        style: TextStyle(
+                                          color: color,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ),
-                                onTap: () {
-                                  if (isLargeScreen) {
-                                    selectedValue = model.items[index];
-                                    setState(() {
-                                      selectedIndex = index;
-                                    });
-                                  } else {
-                                    var arguments = {
-                                      'item': model.items[index],
-                                      'itemModel': model,
-                                    };
+                                  subtitle: Text(
+                                    '${model.items[index].category}',
+                                    overflow: TextOverflow.ellipsis,
+                                    style:
+                                        Theme.of(context).textTheme.subtitle2,
+                                  ),
+                                  trailing: Icon(
+                                    Icons.arrow_forward_ios,
+                                  ),
+                                  onTap: () {
+                                    if (isLargeScreen) {
+                                      selectedValue = model.items[index];
+                                      setState(() {
+                                        selectedIndex = index;
+                                      });
+                                    } else {
+                                      var arguments = {
+                                        'item': model.items[index],
+                                        'itemModel': model,
+                                      };
 
-                                    Navigator.pushNamed(
-                                        context, AppRoutes.item_detail,
-                                        arguments: arguments);
-                                  }
-                                },
+                                      Navigator.pushNamed(
+                                          context, AppRoutes.item_detail,
+                                          arguments: arguments);
+                                    }
+                                  },
+                                ),
                               ),
-                            ),
+                            ],
                           );
                         },
                       )

@@ -32,6 +32,7 @@ void setupLocator() {
 
   locator.registerLazySingleton(() => ClientModel());
   locator.registerLazySingleton(() => AppLanguage());
+  locator.registerLazySingleton(() => AppThemeModel());
   locator.registerLazySingleton(() => ItemModel());
   locator.registerLazySingleton(() => PurchaseModel());
   locator.registerLazySingleton(() => PaymentModel());

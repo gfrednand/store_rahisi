@@ -8,3 +8,5 @@ export 'purchase_model.dart';
 export 'sale_model.dart';
 export 'expense_model.dart';
 export 'client_model.dart';
+export 'client_model.dart';
+export 'apptheme_model.dart';

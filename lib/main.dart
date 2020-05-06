@@ -31,6 +31,7 @@ class MyApp extends StatelessWidget {
         // StreamProvider<FirebaseUser>.value(value:  FirebaseAuth.instance.onAuthStateChanged),
         ChangeNotifierProvider(create: (_) => locator<AuthModel>()),
         ChangeNotifierProvider(create: (_) => locator<AppLanguage>()),
+        ChangeNotifierProvider(create: (_) => locator<AppThemeModel>()),
         ChangeNotifierProvider(create: (_) => locator<PurchaseModel>()),
         ChangeNotifierProvider.value(value: locator<ItemModel>()),
         ChangeNotifierProvider.value(value: locator<ClientModel>()),
@@ -67,7 +68,9 @@ class MyApp extends StatelessWidget {
         ),
         theme: AppTheme.lightTheme,
         darkTheme: AppTheme.darkTheme,
-
+        themeMode: locator<AppThemeModel>().isDarkModeOn
+            ? ThemeMode.dark
+            : ThemeMode.light,
         navigatorKey: locator<NavigationService>().navigatorKey,
         initialRoute: AppRoutes.splash,
         onGenerateRoute: Router.generateRoute,

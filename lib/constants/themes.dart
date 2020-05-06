@@ -1,73 +1,105 @@
 import 'package:flutter/material.dart';
 
 class AppTheme {
+  //
   AppTheme._();
 
-  static Color _iconColor = Colors.blueAccent.shade200;
+  static const Color _lightWhiteGreyColor = Color(0xFFF1F1F1);
+  static const Color _lightWhiteColor = Color(0xFFFFFFFF);
+  static const Color _lightDarkGreyColor = Color(0xFF657786);
+  // static const Color _lightVariantColor = Color(0XFFE1E1E1);
+  static const Color _lightBlueColor = Color(0xFF1DA1F2);
 
-  static const Color _lightPrimaryColor = Colors.white;
-  static const Color _lightPrimaryVariantColor = Color(0XFFE1E1E1);
-  static const Color _lightSecondaryColor = Colors.green;
-  static const Color _lightOnPrimaryColor = Colors.black;
-
-  static const Color _darkPrimaryColor = Colors.white24;
-  static const Color _darkPrimaryVariantColor = Colors.black;
-  static const Color _darkSecondaryColor = Colors.white;
-  static const Color _darkOnPrimaryColor = Colors.white;
+  static const Color _darkBlack7Color = Color(0xFF14171A);
+  static const Color _darkBlackColor = Colors.black87;
+  static const Color _darkDarkGreyColor = Color(0xFF657786);
+  // static const Color _darkVariantColor = Color(0XFFE1E1E1);
+  static const Color _darkBlueColor = Color(0xFF1DA1F2);
 
   static final ThemeData lightTheme = ThemeData(
-    scaffoldBackgroundColor: _lightPrimaryVariantColor,
+    scaffoldBackgroundColor: _lightWhiteColor,
     appBarTheme: AppBarTheme(
-      color: _lightPrimaryVariantColor,
-      iconTheme: IconThemeData(color: _lightOnPrimaryColor),
+      color: _lightWhiteGreyColor,
+      iconTheme: IconThemeData(
+        color: _lightBlueColor,
+      ),
+    ),
+    bottomNavigationBarTheme: BottomNavigationBarThemeData(
+        backgroundColor: _lightWhiteGreyColor,
+        selectedItemColor: _lightBlueColor,
+        unselectedItemColor: _lightDarkGreyColor,
+        unselectedIconTheme: IconThemeData(size: 23.0),
+        selectedIconTheme: IconThemeData(size: 26.0)),
+    floatingActionButtonTheme: FloatingActionButtonThemeData(
+      foregroundColor: _lightWhiteColor,
+      backgroundColor: _lightBlueColor,
     ),
     colorScheme: ColorScheme.light(
-      primary: _lightPrimaryColor,
-      primaryVariant: _lightPrimaryVariantColor,
-      secondary: _lightSecondaryColor,
-      onPrimary: _lightOnPrimaryColor,
+      primary: Colors.white,
+      onPrimary: _lightBlueColor,
+      primaryVariant: Colors.white38,
+      secondary: _darkBlack7Color,
     ),
-    iconTheme: IconThemeData(
-      color: _iconColor,
+    cardTheme: CardTheme(
+      color: Colors.teal,
     ),
-    textTheme: _lightTextTheme,
+    iconTheme: IconThemeData(color: _lightBlueColor),
+    tabBarTheme: TabBarTheme(labelColor:_lightDarkGreyColor ),
+    textTheme: TextTheme(
+      headline6: TextStyle(
+        color: Colors.black,
+        // fontSize: 20.0,
+      ),
+      subtitle2: TextStyle(
+        color: Colors.black54,
+        // fontSize: 18.0,
+      ),
+    ),
   );
 
   static final ThemeData darkTheme = ThemeData(
-    scaffoldBackgroundColor: _darkPrimaryVariantColor,
+    dividerTheme: DividerThemeData(color: _lightWhiteColor),
+    scaffoldBackgroundColor:_darkBlackColor,
     appBarTheme: AppBarTheme(
-      color: _darkPrimaryVariantColor,
-      iconTheme: IconThemeData(color: _darkOnPrimaryColor),
+      color: _darkBlack7Color,
+      iconTheme: IconThemeData(
+        color: Colors.white,
+      ),
+    ),
+    bottomNavigationBarTheme: BottomNavigationBarThemeData(
+        backgroundColor: _darkBlack7Color,
+        selectedItemColor: _lightBlueColor,
+        unselectedItemColor: _lightDarkGreyColor,
+        unselectedIconTheme: IconThemeData(size: 23.0),
+        selectedIconTheme: IconThemeData(size: 26.0)),
+    floatingActionButtonTheme: FloatingActionButtonThemeData(
+      foregroundColor: _lightWhiteColor,
+      backgroundColor: _lightBlueColor,
     ),
     colorScheme: ColorScheme.light(
-      primary: _darkPrimaryColor,
-      primaryVariant: _darkPrimaryVariantColor,
-      secondary: _darkSecondaryColor,
-      onPrimary: _darkOnPrimaryColor,
+      primary: Colors.white,
+      onPrimary: Colors.black54,
+      primaryVariant: Colors.black,
+      secondary: _lightWhiteColor,
+    ),
+    cardTheme: CardTheme(
+      color: Colors.black,
     ),
     iconTheme: IconThemeData(
-      color: _iconColor,
+      color: Colors.white54,
     ),
-    textTheme: _darkTextTheme,
+    textTheme: TextTheme(
+      headline6: TextStyle(
+        color: Colors.white,
+        fontSize: 20.0,
+      ),
+      bodyText1: TextStyle(
+        color: Colors.white,
+      ),
+      subtitle2: TextStyle(
+        color: Colors.white70,
+        // fontSize: 18.0,
+      ),
+    ),
   );
-
-  static final TextTheme _lightTextTheme = TextTheme(
-    headline5: _lightScreenHeadingTextStyle,
-    bodyText2: _lightScreenTaskNameTextStyle,
-    bodyText1: _lightScreenTaskDurationTextStyle,
-  );
-
-  static final TextTheme _darkTextTheme = TextTheme(
-    headline5: _darkScreenHeadingTextStyle,
-    bodyText2: _darkScreenTaskNameTextStyle,
-    bodyText1: _darkScreenTaskDurationTextStyle,
-  );
-
-  static final TextStyle _lightScreenHeadingTextStyle = TextStyle(fontSize: 48.0, color: _lightOnPrimaryColor);
-  static final TextStyle _lightScreenTaskNameTextStyle = TextStyle(fontSize: 20.0, color: _lightOnPrimaryColor);
-  static final TextStyle _lightScreenTaskDurationTextStyle = TextStyle(fontSize: 16.0, color: Colors.grey);
-
-  static final TextStyle _darkScreenHeadingTextStyle = _lightScreenHeadingTextStyle.copyWith(color: _darkOnPrimaryColor);
-  static final TextStyle _darkScreenTaskNameTextStyle = _lightScreenTaskNameTextStyle.copyWith(color: _darkOnPrimaryColor);
-  static final TextStyle _darkScreenTaskDurationTextStyle = _lightScreenTaskDurationTextStyle;
 }

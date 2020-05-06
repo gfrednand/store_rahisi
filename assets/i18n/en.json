@@ -40,7 +40,7 @@
     "itemName": "Product Name",
     "selectItemCategory": "Select Product Category",
     "selectItemUnit": "Select Product Unit",
-    "scanBarcode": "Scan Barcode",
+    "scanBarcode": "Select here to scan for barcode",
     "client": "Client",
     "customer": "Customer",
     "noSales": "No Sales",

@@ -78,7 +78,9 @@ class _ItemFormState extends State<ItemForm> {
       },
       builder: (context, model, child) => Scaffold(
         appBar: AppBar(
-          title: Text(widget.title),
+          centerTitle: true,
+          title:
+              Text(widget.title, style: Theme.of(context).textTheme.headline6),
           // actions: <Widget>[
           //   new IconButton(icon: const Icon(Icons.save), onPressed: () {})
           // ],
@@ -97,7 +99,7 @@ class _ItemFormState extends State<ItemForm> {
                         controller: nameController,
                         validator: requiredValidator,
                         decoration: new InputDecoration(
-                          hintText: "Name",
+                          labelText: "Name",
                         ),
                       ),
                     ),
@@ -109,7 +111,7 @@ class _ItemFormState extends State<ItemForm> {
                         controller: openingStockController,
                         validator: requiredValidator,
                         decoration: new InputDecoration(
-                          hintText: "Opening Stock",
+                          labelText: "Opening Stock",
                         ),
                       ),
                     ),
@@ -121,7 +123,8 @@ class _ItemFormState extends State<ItemForm> {
                         controller: alertQtyController,
                         validator: requiredValidator,
                         decoration: new InputDecoration(
-                          hintText: "Alert Quantity",
+                          // hintText: "Alert Quantity",
+                          labelText: "Alert Quantity"
                         ),
                       ),
                     ),
@@ -144,10 +147,19 @@ class _ItemFormState extends State<ItemForm> {
                                   barcode,
                                 ),
                               ),
+                        verticalSpaceTiny,
                         new FlatButton(
                             onPressed: scan,
-                            child: new Text(AppLocalizations.of(context)
-                                .translate('scanBarcode'))),
+                            child: new Text(
+                              AppLocalizations.of(context)
+                                  .translate('scanBarcode'),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .subtitle2
+                                  .copyWith(
+                                      fontStyle: FontStyle.italic,
+                                      decoration: TextDecoration.underline),
+                            )),
                       ],
                     ),
 
@@ -411,7 +423,10 @@ class _ItemFormState extends State<ItemForm> {
                           arguments: arguments);
                     },
                     child: Text(
-                      'Add Category',
+                      'Select here to add Category',
+                      style: Theme.of(context).textTheme.subtitle2.copyWith(
+                          fontStyle: FontStyle.italic,
+                          decoration: TextDecoration.underline),
                     )),
               ]);
   }

@@ -36,7 +36,8 @@ class _CategoryFormState extends State<CategoryForm> {
     return BaseView<ItemModel>(
       builder: (context, model, child) => Scaffold(
         appBar: AppBar(
-          title: Text('Add Category'),
+          centerTitle: true,
+          title: Text('Add Category', style: Theme.of(context).textTheme.headline6),
         ),
         body: Form(
           key: _formKey,
@@ -49,7 +50,7 @@ class _CategoryFormState extends State<CategoryForm> {
                   validator: requiredValidator,
                   controller: categoryController,
                   decoration: new InputDecoration(
-                    hintText: "Category",
+                    labelText: "Category",
                   ),
                 ),
               ),

@@ -125,6 +125,9 @@ class ItemModel extends BaseModel {
   }
 
   Category getCategoryById(String id) {
+    if (_categories.length == 0) {
+      listenToCategories();
+    }
     return _categories.firstWhere(
       (item) => item.id == id,
       orElse: () => null,

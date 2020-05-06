@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:storeRahisi/app_localizations.dart';
 import 'package:storeRahisi/constants/routes.dart';
+import 'package:storeRahisi/constants/ui_helpers.dart';
 import 'package:storeRahisi/models/index.dart';
 import 'package:storeRahisi/models/item.dart';
 import 'package:storeRahisi/pages/item/item_form.dart';
@@ -74,16 +75,14 @@ class _ItemDetailWidgetState extends State<ItemDetailWidget> {
             child: SizedBox(
                 child: Column(children: [
               TabBar(
-                isScrollable: true,
+                isScrollable: false,
                 // indicator: CircleTabIndicator(
                 //     color: Theme.of(context).accentColor, radius: 3),
                 tabs: [
                   for (final tab in tabs) Tab(text: tab),
                 ],
               ),
-              Divider(
-                thickness: 2.0,
-              ),
+              verticalSpaceTiny,
               Expanded(
                 child: TabBarView(
                   children: <Widget>[
@@ -106,67 +105,87 @@ class _ItemDetailWidgetState extends State<ItemDetailWidget> {
                           Divider(
                             thickness: 10.0,
                           ),
-                          widget.item.barcode == null
+                          widget.item.barcode == null ||
+                                  widget.item.barcode == ''
                               ? Container()
                               : BarCodeImage(
                                   params: CodabarBarCodeParams(
                                     widget.item.barcode ?? '',
                                   ),
-                                
                                 ),
-                          Text(widget.item.barcode ?? '',style: Theme.of(context).textTheme.bodyText2, ),
+                          Text(
+                            widget.item.barcode ?? '',
+                            style: Theme.of(context).textTheme.bodyText1,
+                          ),
+                          // LinearProgressIndicator(
+                          //     backgroundColor:
+                          //         Color.fromRGBO(209, 224, 224, 0.2),
+                          //     value: widget.item.inStock / widget.item.alertQty,
+                          //     valueColor: AlwaysStoppedAnimation(Colors.green)),
                           ListTile(
                             title: Text(
                               '${widget.item.category}',
-                              style: Theme.of(context).textTheme.bodyText2,
+                              style: Theme.of(context).textTheme.bodyText1,
                             ),
                             subtitle: Text(
                               AppLocalizations.of(context)
                                   .translate('category'),
-                              style: Theme.of(context).textTheme.bodyText1,
+                              style: Theme.of(context).textTheme.subtitle2,
                             ),
                           ),
                           Divider(
                             thickness: 10.0,
                           ),
                           ListTile(
-                            leading: Icon(Icons.add_to_queue,color: Theme.of(context).iconTheme.color,),
+                            leading: Icon(
+                              Icons.add_to_queue,
+                              color: Theme.of(context).iconTheme.color,
+                            ),
                             title: Text(
                               '${widget.item.openingStock} ${widget.item.unit}',
-                              style: Theme.of(context).textTheme.bodyText2,
+                              style: Theme.of(context).textTheme.bodyText1,
                             ),
                             subtitle: Text(
                               AppLocalizations.of(context)
                                   .translate('openingStock'),
-                              style: Theme.of(context).textTheme.bodyText1,
+                              style: Theme.of(context).textTheme.subtitle2,
                             ),
                           ),
                           ListTile(
-                            leading: Icon(Icons.add_to_queue,color: Theme.of(context).iconTheme.color,),
+                            leading: Icon(
+                              Icons.add_to_queue,
+                              color: Theme.of(context).iconTheme.color,
+                            ),
                             title: Text(
                               '${widget.item.totalPurchase ?? 0} ${widget.item.unit}',
-                              style: Theme.of(context).textTheme.bodyText2,
+                              style: Theme.of(context).textTheme.bodyText1,
                             ),
                             subtitle: Text(
                               AppLocalizations.of(context)
                                   .translate('totalPurchase'),
-                              style: Theme.of(context).textTheme.bodyText1,
+                              style: Theme.of(context).textTheme.subtitle2,
                             ),
                           ),
                           ListTile(
-                            leading: Icon(Icons.remove_from_queue,color: Theme.of(context).iconTheme.color,),
+                            leading: Icon(
+                              Icons.remove_from_queue,
+                              color: Theme.of(context).iconTheme.color,
+                            ),
                             title: Text(
                               '${widget.item.totalSales ?? 0} ${widget.item.unit}',
-                              style: Theme.of(context).textTheme.bodyText2,
+                              style: Theme.of(context).textTheme.bodyText1,
                             ),
                             subtitle: Text(
                               AppLocalizations.of(context)
                                   .translate('totalSales'),
-                              style: Theme.of(context).textTheme.bodyText1,
+                              style: Theme.of(context).textTheme.subtitle2,
                             ),
                           ),
                           ListTile(
-                            leading: Icon(Icons.inbox,color: Theme.of(context).iconTheme.color,),
+                            leading: Icon(
+                              Icons.inbox,
+                              color: Theme.of(context).iconTheme.color,
+                            ),
                             title: Text(
                               '${widget.item.inStock ?? 0}  ${widget.item.unit}',
                               style: TextStyle(
@@ -176,7 +195,6 @@ class _ItemDetailWidgetState extends State<ItemDetailWidget> {
                               AppLocalizations.of(context).translate('inStock'),
                               style: TextStyle(
                                   color: color, fontWeight: FontWeight.bold),
-                              
                             ),
                           ),
                           Divider(
@@ -185,31 +203,33 @@ class _ItemDetailWidgetState extends State<ItemDetailWidget> {
                           ListTile(
                             title: Text(
                               '${widget.item.alertQty} ${widget.item.unit}',
-                              style: Theme.of(context).textTheme.bodyText2,
+                              style: Theme.of(context).textTheme.bodyText1,
                             ),
                             subtitle: Text(
                               AppLocalizations.of(context)
                                   .translate('alertQuantity'),
-                              style: Theme.of(context).textTheme.bodyText1,
+                              style: Theme.of(context).textTheme.subtitle2,
                             ),
                           ),
                           Divider(
                             thickness: 10.0,
                           ),
-                          ListTile(
-                            title: Text(
-                              '${widget.item.description}',
-                              style: Theme.of(context).textTheme.bodyText2,
-                            ),
-                            subtitle: Text(
-                              AppLocalizations.of(context)
-                                  .translate('description'),
-                              style: Theme.of(context).textTheme.bodyText1,
-                            ),
-                          ),
-                          Divider(
-                            thickness: 10.0,
-                          ),
+                          widget.item.description == null ||
+                                  widget.item.description == ''
+                              ? Container()
+                              : ListTile(
+                                  title: Text(
+                                    '${widget.item.description}',
+                                    style:
+                                        Theme.of(context).textTheme.bodyText1,
+                                  ),
+                                  subtitle: Text(
+                                    AppLocalizations.of(context)
+                                        .translate('description'),
+                                    style:
+                                        Theme.of(context).textTheme.subtitle2,
+                                  ),
+                                ),
                         ],
                       ),
                     ),
@@ -257,7 +277,7 @@ class _ItemDetailWidgetState extends State<ItemDetailWidget> {
                                     '${purchases[index]?.purchaseDate}',
                                     overflow: TextOverflow.ellipsis,
                                     style:
-                                        Theme.of(context).textTheme.bodyText2,
+                                        Theme.of(context).textTheme.bodyText1,
                                   ),
                                   subtitle: Column(
                                     crossAxisAlignment:
@@ -323,7 +343,7 @@ class _ItemDetailWidgetState extends State<ItemDetailWidget> {
                                     '${sales[index]?.saleDate}',
                                     overflow: TextOverflow.ellipsis,
                                     style:
-                                        Theme.of(context).textTheme.bodyText2,
+                                        Theme.of(context).textTheme.bodyText1,
                                   ),
                                   subtitle: Column(
                                     crossAxisAlignment:
@@ -336,7 +356,7 @@ class _ItemDetailWidgetState extends State<ItemDetailWidget> {
                                         overflow: TextOverflow.ellipsis,
                                         style: Theme.of(context)
                                             .textTheme
-                                            .bodyText1,
+                                            .subtitle2,
                                       ),
                                       Text(
                                         AppLocalizations.of(context)
@@ -345,7 +365,7 @@ class _ItemDetailWidgetState extends State<ItemDetailWidget> {
                                         overflow: TextOverflow.ellipsis,
                                         style: Theme.of(context)
                                             .textTheme
-                                            .bodyText1,
+                                            .subtitle2,
                                       ),
                                     ],
                                   ),

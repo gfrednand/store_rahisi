@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:storeRahisi/pages/pos/cart_page.dart';
-
+import 'package:storeRahisi/providers/index.dart';
 
 class SettingsPage extends StatefulWidget {
   final String toolbarname;
@@ -25,9 +26,10 @@ class Setting extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
+    AppThemeModel appThemeModel = Provider.of<AppThemeModel>(context);
     final ThemeData theme = Theme.of(context);
-    final TextStyle dialogTextStyle =
-        theme.textTheme.subhead.copyWith(color: theme.textTheme.caption.color);
+    final TextStyle dialogTextStyle = theme.textTheme.subtitle1
+        .copyWith(color: theme.textTheme.caption.color);
 
     IconData _backIcon() {
       switch (Theme.of(context).platform) {
@@ -192,7 +194,7 @@ class Setting extends State<SettingsPage> {
                                               Navigator.pop(context,
                                                   DialogDemoAction.disagree);
                                             }),
-                                      /*  FlatButton(
+                                        /*  FlatButton(
                                             child: const Text('AGREE'),
                                             onPressed: () {
                                               Navigator.pop(context,
@@ -237,7 +239,7 @@ class Setting extends State<SettingsPage> {
                                                 Navigator.pop(context,
                                                     DialogDemoAction.disagree);
                                               }),
-                                         /* FlatButton(
+                                          /* FlatButton(
                                               child: const Text('AGREE'),
                                               onPressed: () {
                                                 Navigator.pop(context,
@@ -248,7 +250,27 @@ class Setting extends State<SettingsPage> {
                     ],
                   ),
                 )),
-              )
+              ),
+              Spacer(),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Row(
+                  children: <Widget>[
+                    Text(
+                      'Dark Mode',
+                      style: theme.textTheme.bodyText1,
+                    ),
+                    Spacer(),
+                    Switch(
+                        value: appThemeModel.isDarkModeOn,
+                        onChanged: (booleanValue) {
+                          setState(() {
+                            appThemeModel.updateTheme(booleanValue);
+                          });
+                        }),
+                  ],
+                ),
+              ),
             ],
           ),
         ));

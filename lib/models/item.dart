@@ -82,7 +82,7 @@ class Item {
       alertQty: json['alertQty'],
       barcode: json['barcode'],
       createdAt: DateTime.tryParse(json["createdAt"].toString()),
-      updatedAt: json["updatedAt"],
+      updatedAt: DateTime.tryParse(json["updatedAt"].toString()),
       openingStock: json['openingStock'],
       quantity: json['quantity'],
       active: json['active'],

@@ -143,10 +143,10 @@ class _LayoutPageState extends State<LayoutPage> with TickerProviderStateMixin {
                 SizedBox(
                   width: double.infinity,
                   child: FlatButton(
-                      color: Theme.of(context).primaryColor,
+                      // color: Theme.of(context).primaryColor,
                       child: Text(
                         AppLocalizations.of(context).translate('logout'),
-                        style: TextStyle(color: Theme.of(context).accentColor),
+                        // style: TextStyle(color: Theme.of(context).colorScheme.),
                       ),
                       onPressed: () async {
                         bool loggedOut = await model.logout();
@@ -294,7 +294,8 @@ class _LayoutPageState extends State<LayoutPage> with TickerProviderStateMixin {
                       centerTitle: true,
                       // backgroundColor: Colors.white,
                       // automaticallyImplyLeading: false,
-                      title: Text(_title(context)),
+                   
+                      title: Text(_title(context), style: Theme.of(context).textTheme.headline6,),
                       actions: _buildActions(context, model),
                       bottom: TabBar(
                         isScrollable: false,
@@ -305,7 +306,7 @@ class _LayoutPageState extends State<LayoutPage> with TickerProviderStateMixin {
                     ),
                     body: _buildTransitionsStack(),
                     floatingActionButton:
-                        floatingActionButton(context, colorScheme),
+                        floatingActionButton(context),
                     bottomNavigationBar: buildBottomNavigationBar(
                         bottomNavigationBarItems, textTheme, colorScheme),
                   );
@@ -317,13 +318,13 @@ class _LayoutPageState extends State<LayoutPage> with TickerProviderStateMixin {
                   centerTitle: true,
                   // backgroundColor: Colors.white,
                   // automaticallyImplyLeading: false,
-                  title: Text(_title(context)),
+                   title: Text(_title(context), style: Theme.of(context).textTheme.headline6,),
                   actions: _buildActions(context, model),
                 ),
                 // resizeToAvoidBottomPadding: true,
                 // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
                 floatingActionButton:
-                    floatingActionButton(context, colorScheme),
+                    floatingActionButton(context),
                 body: Center(
                   child: _buildTransitionsStack(),
                 ),
@@ -333,7 +334,7 @@ class _LayoutPageState extends State<LayoutPage> with TickerProviderStateMixin {
   }
 
   StatelessWidget floatingActionButton(
-      BuildContext context, ColorScheme colorScheme) {
+      BuildContext context) {
     return _currentIndex == 0 || _currentIndex == 1 || _currentIndex == 2
         ? FloatingActionButton(
             onPressed: () {
@@ -372,7 +373,7 @@ class _LayoutPageState extends State<LayoutPage> with TickerProviderStateMixin {
             },
             child: Icon(
               Icons.add,
-              // color: colorScheme.onPrimary,
+              // color: Theme.of(context).iconTheme.;,
             ),
             tooltip: AppLocalizations.of(context).translate('add'),
           )
@@ -397,9 +398,9 @@ class _LayoutPageState extends State<LayoutPage> with TickerProviderStateMixin {
           _navigationViews[_currentIndex].controller.forward();
         });
       },
-      selectedItemColor: colorScheme.secondary,
+      // selectedItemColor: colorScheme.secondary,
       // unselectedItemColor: colorScheme.onPrimary.withOpacity(0.4),
-      backgroundColor: colorScheme.primary,
+      // backgroundColor: colorScheme.primary,
     );
   }
 }

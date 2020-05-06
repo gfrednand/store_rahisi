@@ -14,12 +14,12 @@ class ItemDetail extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          centerTitle: true,
           title: item.name == null
               ? Text(AppLocalizations.of(context).translate('itemDetails'))
-              : Text(
-                  '${item.name.toUpperCase()}',
+              : Text('${item.name.toUpperCase()}',
                   overflow: TextOverflow.ellipsis,
-                ),
+                  style: Theme.of(context).textTheme.headline6),
         ),
         body: ItemDetailWidget(
           item: item,
