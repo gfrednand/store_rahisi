@@ -32,21 +32,24 @@ class _OrderSummaryState extends State<OrderSummary> {
               direction: DismissDirection.endToStart,
               secondaryBackground: slideLeftBackground(),
               background: slideLeftBackground(),
-              child: Card(
-                child: ListTile(
-                  onTap: () => {},
-                  title: Text(
-                    '${item?.name ?? ''}',
+              child: Column(
+                children: [
+                  Divider(height:5.0),
+                  ListTile(
+                    onTap: () => {},
+                    title: Text(
+                      '${item?.name?.toUpperCase() ?? ''}',
+                    ),
+                    subtitle: Text(
+                      'Tshs ${(widget.cartModel.carts[index].quantity * widget.cartModel.carts[index].paidAmount).toString()}/=',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    trailing: Text(
+                      '${widget.cartModel.carts[index]?.quantity.toString()}',
+                    ),
                   ),
-                  subtitle: Text(
-                    'Tshs ${(widget.cartModel.carts[index].quantity * widget.cartModel.carts[index].paidAmount).toString()}/=',
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  trailing: Text(
-                    '${widget.cartModel.carts[index]?.quantity.toString()}',
-                  ),
-                ),
+                ],
               ),
               confirmDismiss: (direction) async {
                 if (direction == DismissDirection.endToStart) {

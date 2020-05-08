@@ -6,12 +6,15 @@ import 'package:storeRahisi/models/index.dart';
 import 'package:storeRahisi/providers/item_model.dart';
 import 'package:storeRahisi/providers/payment_model.dart';
 import 'package:storeRahisi/widgets/busy_button.dart';
+import 'package:storeRahisi/widgets/toast.dart';
 
 class PurchasePaymentForm extends StatefulWidget {
   final double dueAmount;
   final Purchase purchase;
+  final TabController tabController;
 
-  const PurchasePaymentForm({Key key, this.dueAmount, this.purchase})
+  const PurchasePaymentForm(
+      {Key key, this.dueAmount, this.purchase, this.tabController})
       : super(key: key);
   @override
   _PurchasePaymentFormState createState() => _PurchasePaymentFormState();
@@ -47,7 +50,8 @@ class _PurchasePaymentFormState extends State<PurchasePaymentForm> {
                   return InputDecorator(
                     decoration: InputDecoration(
                       icon: const Icon(Icons.texture),
-                      labelText: AppLocalizations.of(context).translate('paymentMethod'),
+                      labelText: AppLocalizations.of(context)
+                          .translate('paymentMethod'),
                     ),
                     child: new DropdownButtonHideUnderline(
                       child: new DropdownButton(
@@ -59,7 +63,11 @@ class _PurchasePaymentFormState extends State<PurchasePaymentForm> {
                             state.didChange(newValue);
                           });
                         },
-                        items: [AppLocalizations.of(context).translate('cash'), AppLocalizations.of(context).translate('cheque'), AppLocalizations.of(context).translate('others')].map((String value) {
+                        items: [
+                          AppLocalizations.of(context).translate('cash'),
+                          AppLocalizations.of(context).translate('cheque'),
+                          AppLocalizations.of(context).translate('others')
+                        ].map((String value) {
                           return new DropdownMenuItem(
                             value: value,
                             child: new Text(value),
@@ -92,19 +100,29 @@ class _PurchasePaymentFormState extends State<PurchasePaymentForm> {
                 child: BusyButton(
                   title: AppLocalizations.of(context).translate('submit'),
                   busy: paymentModel.busy,
-                  onPressed: () async {
+                  onPressed: () {
                     if (_formKey.currentState.validate()) {
                       // If the form is valid, display a Snackbar.
-                      paymentModel.savePayment(
-                          data: Payment(
+                      paymentModel
+                          .savePayment(
+                              data: Payment(
                         amount: double.parse(paidAmountController.text),
                         method: _paymentMethod,
                         type: 'Debit',
                         note: descriptionController.text,
-                        referenceNo: widget.purchase.id,
+                        referenceNo: widget.purchase.referenceNumber,
                         clientId: widget.purchase.id,
                         userId: null,
-                      ));
+                      ))
+                          .then((success) {
+                        if (success) {
+                          Toast.show(
+                              message:
+                                  '${paidAmountController.text} Paid Successful',
+                              context: context);
+                          widget.tabController.animateTo(1);
+                        }
+                      });
                       _formKey.currentState.reset();
                     }
                   },

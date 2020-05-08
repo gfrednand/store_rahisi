@@ -11,21 +11,27 @@ class SaleDetail extends StatelessWidget {
   const SaleDetail({Key key, this.sale, this.saleModel}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    List<String> tabs = [AppLocalizations.of(context).translate('details'), AppLocalizations.of(context).translate('items')];
-ClientModel clientModel = Provider.of<ClientModel>(context);
-        Client client = clientModel.getClientById(
-                              sale.clientId);
-                        
+    List<String> tabs = [
+      AppLocalizations.of(context).translate('details'),
+      AppLocalizations.of(context).translate('items')
+    ];
+    ClientModel clientModel = Provider.of<ClientModel>(context);
+    Client client = clientModel.getClientById(sale.clientId);
+
+    if (sale.clientId == Client.defaultCustomer().id) {
+      client = Client.defaultCustomer();
+    }
+
     return DefaultTabController(
       length: tabs.length,
       child: Scaffold(
         appBar: AppBar(
           title: sale.saleDate == null
-              ? Text(AppLocalizations.of(context).translate('customerDetails'))
-              : Text(
-                  '${sale.saleDate}',
+              ? Text(AppLocalizations.of(context).translate('customerDetails'),
+                  style: Theme.of(context).textTheme.headline6)
+              : Text('${sale.saleDate}',
                   overflow: TextOverflow.ellipsis,
-                ),
+                  style: Theme.of(context).textTheme.headline6),
           bottom: TabBar(
             isScrollable: false,
             tabs: [
@@ -40,27 +46,33 @@ ClientModel clientModel = Provider.of<ClientModel>(context);
                 children: <Widget>[
                   ListTile(
                     title: Text('${sale.referenceNumber}'),
-                    subtitle: Text(AppLocalizations.of(context).translate('referenceNumber')),
+                    subtitle: Text(AppLocalizations.of(context)
+                        .translate('referenceNumber')),
                   ),
                   ListTile(
-                    title: Text('${client?.companyName}'),
-                    subtitle: Text(AppLocalizations.of(context).translate('customer')),
+                    title: Text('${client?.contactPerson}'),
+                    subtitle: Text(
+                        AppLocalizations.of(context).translate('customer')),
                   ),
                   ListTile(
                     title: Text('${sale.paymentMethod}'),
-                    subtitle: Text(AppLocalizations.of(context).translate('paymentMethod')),
+                    subtitle: Text(AppLocalizations.of(context)
+                        .translate('paymentMethod')),
                   ),
                   ListTile(
                     title: Text('${sale.grandTotal}'),
-                    subtitle: Text(AppLocalizations.of(context).translate('grandTotal')),
+                    subtitle: Text(
+                        AppLocalizations.of(context).translate('grandTotal')),
                   ),
                   ListTile(
                     title: Text('${sale.tax}'),
-                    subtitle: Text(AppLocalizations.of(context).translate('tax')),
+                    subtitle:
+                        Text(AppLocalizations.of(context).translate('tax')),
                   ),
                   ListTile(
                     title: Text('${sale.discount}'),
-                    subtitle: Text(AppLocalizations.of(context).translate('discount')),
+                    subtitle: Text(
+                        AppLocalizations.of(context).translate('discount')),
                   ),
                   Divider(
                     thickness: 10.0,
@@ -72,42 +84,47 @@ ClientModel clientModel = Provider.of<ClientModel>(context);
                 itemCount: sale.items.length,
                 itemBuilder: (buildContext, index) {
                   ItemModel itemModel = Provider.of<ItemModel>(context);
-                  Item item =
-                      itemModel.getItemById(sale.items[index].id);
-                  return Card(
-                    child: ListTile(
-                      leading: ExcludeSemantics(
-                        child: CircleAvatar(
-                          radius: 30.0,
-                          backgroundColor: Theme.of(context).primaryColor,
-                          child: Text(
-                            item?.name?.substring(0, 2)?.toUpperCase(),
-                            style:
-                                TextStyle(color: Theme.of(context).accentColor),
+                  Item item = itemModel.getItemById(sale.items[index].id);
+                  return Column(
+                    children: [
+                      Divider(height: 5.0),
+                      ListTile(
+                        leading: ExcludeSemantics(
+                          child: CircleAvatar(
+                            radius: 25.0,
+                            backgroundColor:
+                                Theme.of(context).colorScheme.onPrimary,
+                            child: Text(
+                              item?.name?.substring(0, 2)?.toUpperCase(),
+                              style: TextStyle(
+                                color: Theme.of(context).colorScheme.primary,
+                              ),
+                            ),
                           ),
                         ),
+                        title: Text(
+                          '${item?.name}',
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              AppLocalizations.of(context)
+                                      .translate('paidAmount') +
+                                  ': ${sale.items[index].paidAmount} x ${sale.items[index].quantity} = ${sale.items[index].paidAmount * sale.items[index].quantity}',
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
+                        ),
+                        onTap: () {
+                          // Navigator.pushNamed(
+                          //     context, AppRoutes.purchase_detail,
+                          //     arguments: items[index]);
+                        },
                       ),
-                      title: Text(
-                        '${item?.name}',
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            AppLocalizations.of(context).translate('paidAmount') +': ${sale.items[index].paidAmount} @1',
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ],
-                      ),
-                      trailing:
-                          Text('${sale.items[index].quantity}'),
-                      onTap: () {
-                        // Navigator.pushNamed(
-                        //     context, AppRoutes.purchase_detail,
-                        //     arguments: items[index]);
-                      },
-                    ),
+                    ],
                   );
                 }),
           ],

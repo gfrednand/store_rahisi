@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:storeRahisi/constants/routes.dart';
 import 'package:storeRahisi/models/index.dart';
+import 'package:storeRahisi/pages/client/client_form.dart';
 import 'package:storeRahisi/pages/expense/expense_detail.dart';
 import 'package:storeRahisi/pages/expense/expense_list.dart';
 
@@ -15,6 +16,7 @@ import 'package:storeRahisi/pages/pos/cart_page.dart';
 import 'package:storeRahisi/pages/pos/cart_items.dart';
 import 'package:storeRahisi/pages/pos/checkout_screen.dart';
 import 'package:storeRahisi/pages/pos/item_screen.dart';
+import 'package:storeRahisi/pages/purchase/add_item_form.dart';
 import 'package:storeRahisi/pages/purchase/purchase_detail.dart';
 import 'package:storeRahisi/pages/purchase/purchase_add.dart';
 import 'package:storeRahisi/pages/register_page.dart';
@@ -60,6 +62,14 @@ class Router {
                   clientModel: args['clientModel'],
                 ));
         break;
+      case AppRoutes.client_form:
+        var args = settings.arguments as Map<String, dynamic>;
+        return slideUpTransitionpageRouteBuilder(ClientForm(
+          client: args['client'],
+          title: args['title'],
+          clientType: args['clientType'],
+        ));
+        break;
       case AppRoutes.item_detail:
         var args = settings.arguments as Map<String, dynamic>;
         return MaterialPageRoute(
@@ -70,11 +80,19 @@ class Router {
         break;
       case AppRoutes.item_form:
         var args = settings.arguments as Map<String, dynamic>;
-        return MaterialPageRoute(
-            builder: (_) => ItemForm(
-                  title: args['title'],
-                  item: args['item'],
-                ));
+        return slideUpTransitionpageRouteBuilder(ItemForm(
+          title: args['title'],
+          item: args['item'],
+        ));
+
+        break;
+      case AppRoutes.item_purchase_form:
+        var args = settings.arguments as Map<String, dynamic>;
+        return slideUpTransitionpageRouteBuilder(ItemPurchaseForm(
+          title: args['title'],
+          purchaseModel: args['purchaseModel'],
+          items: args['items'],
+        ));
         break;
       case AppRoutes.category_form:
         var args = settings.arguments as Map<String, dynamic>;
@@ -110,13 +128,11 @@ class Router {
         break;
       case AppRoutes.purchase_add:
         var args = settings.arguments as Map<String, dynamic>;
-        return MaterialPageRoute(
-            builder: (_) => PurchaseAdd(
-                  title: args['title'],
-                  purchase: args['purchase'],
-                ));
+        return slideUpTransitionpageRouteBuilder(PurchaseAdd(
+          title: args['title'],
+          purchase: args['purchase'],
+        ));
         break;
-
       case AppRoutes.cart_items:
         // var title = settings.arguments as String;
         return MaterialPageRoute(builder: (_) => CartItems());
@@ -151,10 +167,7 @@ class Router {
         return MaterialPageRoute(builder: (_) => PaymentPage());
         break;
       case AppRoutes.help:
-        return MaterialPageRoute(
-            builder: (_) => Item_Screen(
-                  toolbarname: 'tetetet',
-                ));
+        return MaterialPageRoute(builder: (_) => SettingsPage());
         break;
       case AppRoutes.expense:
         return MaterialPageRoute(builder: (_) => ExpenseList());
@@ -170,5 +183,23 @@ class Router {
                   ),
                 ));
     }
+  }
+
+  static PageRouteBuilder slideUpTransitionpageRouteBuilder(Widget page) {
+    return PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) => page,
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          var begin = Offset(0.0, 1.0);
+          var end = Offset.zero;
+          var curve = Curves.fastOutSlowIn;
+
+          var tween =
+              Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+          return SlideTransition(
+            position: animation.drive(tween),
+            child: child,
+          );
+        });
   }
 }

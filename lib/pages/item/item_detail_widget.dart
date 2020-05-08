@@ -258,62 +258,79 @@ class _ItemDetailWidgetState extends State<ItemDetailWidget> {
                                     purchases[index].paidAmount +
                                         payment.amount;
                               });
-                              return Card(
-                                child: ListTile(
-                                  leading: ExcludeSemantics(
-                                    child: CircleAvatar(
-                                      radius: 25.0,
-                                      backgroundColor:
-                                          Theme.of(context).primaryColor,
-                                      child: Text(
-                                        'P',
-                                        style: TextStyle(
-                                            color:
-                                                Theme.of(context).accentColor),
+                              return Column(
+                                children: [
+                                  Divider(
+                                    height: 5.0,
+                                  ),
+                                  ListTile(
+                                    leading: ExcludeSemantics(
+                                      child: CircleAvatar(
+                                        radius: 25.0,
+                                        backgroundColor: Theme.of(context)
+                                            .colorScheme
+                                            .onPrimary,
+                                        child: Text(
+                                          'P',
+                                          style: TextStyle(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .primary,
+                                          ),
+                                        ),
                                       ),
                                     ),
+                                    title: Text(
+                                      '${purchases[index]?.purchaseDate}',
+                                      overflow: TextOverflow.ellipsis,
+                                      style:
+                                          Theme.of(context).textTheme.bodyText1,
+                                    ),
+                                    subtitle: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          AppLocalizations.of(context)
+                                                  .translate('billNo') +
+                                              ': ${purchases[index]?.referenceNumber}',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .subtitle2,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                        Text(
+                                          AppLocalizations.of(context)
+                                                  .translate('supplier') +
+                                              ': ${purchases[index]?.companyName}',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .subtitle2,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                        Text(
+                                          AppLocalizations.of(context)
+                                                  .translate('paid') +
+                                              ': ${purchases[index]?.paidAmount}/=',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .subtitle2,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ],
+                                    ),
+                                    trailing: Text(
+                                        '${purchases[index]?.grandTotalAmount}/='),
+                                    onTap: () {
+                                      // var arguments = {
+                                      //   'purchase': purchases[index],
+                                      //   'purchaseModel': purchaseModel,
+                                      // };
+                                      // Navigator.pushNamed(context, AppRoutes.purchase_detail,
+                                      //     arguments: arguments);
+                                    },
                                   ),
-                                  title: Text(
-                                    '${purchases[index]?.purchaseDate}',
-                                    overflow: TextOverflow.ellipsis,
-                                    style:
-                                        Theme.of(context).textTheme.bodyText1,
-                                  ),
-                                  subtitle: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        AppLocalizations.of(context)
-                                                .translate('billNo') +
-                                            ': ${purchases[index]?.referenceNumber}',
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                      Text(
-                                        AppLocalizations.of(context)
-                                                .translate('supplier') +
-                                            ': ${purchases[index]?.companyName}',
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                      Text(
-                                        AppLocalizations.of(context)
-                                                .translate('paid') +
-                                            ': ${purchases[index]?.paidAmount}/=',
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    ],
-                                  ),
-                                  trailing: Text(
-                                      '${purchases[index]?.grandTotalAmount}/='),
-                                  onTap: () {
-                                    // var arguments = {
-                                    //   'purchase': purchases[index],
-                                    //   'purchaseModel': purchaseModel,
-                                    // };
-                                    // Navigator.pushNamed(context, AppRoutes.purchase_detail,
-                                    //     arguments: arguments);
-                                  },
-                                ),
+                                ],
                               );
                             }),
                     sales.length == 0
@@ -324,62 +341,70 @@ class _ItemDetailWidgetState extends State<ItemDetailWidget> {
                         : ListView.builder(
                             itemCount: sales.length,
                             itemBuilder: (buildContext, index) {
-                              return Card(
-                                child: ListTile(
-                                  leading: ExcludeSemantics(
-                                    child: CircleAvatar(
-                                      radius: 25.0,
-                                      backgroundColor:
-                                          Theme.of(context).primaryColor,
-                                      child: Text(
-                                        'S',
-                                        style: TextStyle(
-                                            color:
-                                                Theme.of(context).accentColor),
+                              return Column(
+                                children: [
+                                  Divider(
+                                    height: 5.0,
+                                  ),
+                                  ListTile(
+                                    leading: ExcludeSemantics(
+                                      child: CircleAvatar(
+                                        radius: 25.0,
+                                        backgroundColor: Theme.of(context)
+                                            .colorScheme
+                                            .onPrimary,
+                                        child: Text(
+                                          'S',
+                                          style: TextStyle(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .primary,
+                                          ),
+                                        ),
                                       ),
                                     ),
+                                    title: Text(
+                                      '${sales[index]?.saleDate}',
+                                      overflow: TextOverflow.ellipsis,
+                                      style:
+                                          Theme.of(context).textTheme.bodyText1,
+                                    ),
+                                    subtitle: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          AppLocalizations.of(context)
+                                                  .translate('refNo') +
+                                              ': ${sales[index]?.referenceNumber}',
+                                          overflow: TextOverflow.ellipsis,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .subtitle2,
+                                        ),
+                                        Text(
+                                          AppLocalizations.of(context)
+                                                  .translate('paid') +
+                                              ' ${sales[index]?.grandTotal}/=',
+                                          overflow: TextOverflow.ellipsis,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .subtitle2,
+                                        ),
+                                      ],
+                                    ),
+                                    trailing:
+                                        Text('${sales[index]?.paymentMethod}'),
+                                    onTap: () {
+                                      // var arguments = {
+                                      //   'purchase': purchases[index],
+                                      //   'purchaseModel': purchaseModel,
+                                      // };
+                                      // Navigator.pushNamed(context, AppRoutes.purchase_detail,
+                                      //     arguments: arguments);
+                                    },
                                   ),
-                                  title: Text(
-                                    '${sales[index]?.saleDate}',
-                                    overflow: TextOverflow.ellipsis,
-                                    style:
-                                        Theme.of(context).textTheme.bodyText1,
-                                  ),
-                                  subtitle: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        AppLocalizations.of(context)
-                                                .translate('refNo') +
-                                            ': ${sales[index]?.referenceNumber}',
-                                        overflow: TextOverflow.ellipsis,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .subtitle2,
-                                      ),
-                                      Text(
-                                        AppLocalizations.of(context)
-                                                .translate('paid') +
-                                            ' ${sales[index]?.grandTotal}/=',
-                                        overflow: TextOverflow.ellipsis,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .subtitle2,
-                                      ),
-                                    ],
-                                  ),
-                                  trailing:
-                                      Text('${sales[index]?.paymentMethod}'),
-                                  onTap: () {
-                                    // var arguments = {
-                                    //   'purchase': purchases[index],
-                                    //   'purchaseModel': purchaseModel,
-                                    // };
-                                    // Navigator.pushNamed(context, AppRoutes.purchase_detail,
-                                    //     arguments: arguments);
-                                  },
-                                ),
+                                ],
                               );
                             }),
                   ],

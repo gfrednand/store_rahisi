@@ -56,15 +56,13 @@ class _PosItemListState extends State<PosItemList> {
               });
             },
             isScrollable: false,
-            indicator: CircleTabIndicator(
-                color: Theme.of(context).accentColor, radius: 3),
+            // indicator: CircleTabIndicator(
+            //     color: Theme.of(context).accentColor, radius: 3),
             tabs: [
               for (final tab in tabs) Tab(text: tab),
             ],
           ),
-          Divider(
-            thickness: 2.0,
-          ),
+  
           selectedIndex == 0 && isSearch
               ? Padding(
                   padding: const EdgeInsets.all(4.0),
@@ -202,6 +200,7 @@ class _PosItemListState extends State<PosItemList> {
                   ? TotalBar(
                     cartModel: cartModel,
                     route: AppRoutes.checkout,
+                    subtitle: 'Proceeds to Checkout',
                   )
                   : Container(),
             ],

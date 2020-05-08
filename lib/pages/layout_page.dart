@@ -261,10 +261,10 @@ class _LayoutPageState extends State<LayoutPage> with TickerProviderStateMixin {
         : _currentIndex == 1
             ? TabBarView(children: [
                 ClientList(
-                  clientType: AppConstants.clientTypeSupplier,
+                  clientType: AppConstants.clientTypeCustomer,
                 ),
                 ClientList(
-                  clientType: AppConstants.clientTypeCustomer,
+                  clientType: AppConstants.clientTypeSupplier,
                 ),
               ])
             : _currentIndex == 2
@@ -277,8 +277,8 @@ class _LayoutPageState extends State<LayoutPage> with TickerProviderStateMixin {
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
     List<String> tabs = [
-      AppLocalizations.of(context).translate('suppliers'),
       AppLocalizations.of(context).translate('customers'),
+      AppLocalizations.of(context).translate('suppliers'),
     ];
     var bottomNavigationBarItems = _navigationViews
         .map<BottomNavigationBarItem>((navigationView) => navigationView.item)
@@ -294,19 +294,24 @@ class _LayoutPageState extends State<LayoutPage> with TickerProviderStateMixin {
                       centerTitle: true,
                       // backgroundColor: Colors.white,
                       // automaticallyImplyLeading: false,
-                   
-                      title: Text(_title(context), style: Theme.of(context).textTheme.headline6,),
+
+                      title: Text(
+                        _title(context),
+                        style: Theme.of(context).textTheme.headline6,
+                      ),
                       actions: _buildActions(context, model),
                       bottom: TabBar(
-                        isScrollable: false,
+                        isScrollable: MediaQuery.of(context).orientation ==
+                                Orientation.landscape
+                            ? true
+                            : false,
                         tabs: [
                           for (final tab in tabs) Tab(text: tab),
                         ],
                       ),
                     ),
                     body: _buildTransitionsStack(),
-                    floatingActionButton:
-                        floatingActionButton(context),
+                    floatingActionButton: floatingActionButton(context),
                     bottomNavigationBar: buildBottomNavigationBar(
                         bottomNavigationBarItems, textTheme, colorScheme),
                   );
@@ -318,13 +323,15 @@ class _LayoutPageState extends State<LayoutPage> with TickerProviderStateMixin {
                   centerTitle: true,
                   // backgroundColor: Colors.white,
                   // automaticallyImplyLeading: false,
-                   title: Text(_title(context), style: Theme.of(context).textTheme.headline6,),
+                  title: Text(
+                    _title(context),
+                    style: Theme.of(context).textTheme.headline6,
+                  ),
                   actions: _buildActions(context, model),
                 ),
                 // resizeToAvoidBottomPadding: true,
                 // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-                floatingActionButton:
-                    floatingActionButton(context),
+                floatingActionButton: floatingActionButton(context),
                 body: Center(
                   child: _buildTransitionsStack(),
                 ),
@@ -333,8 +340,7 @@ class _LayoutPageState extends State<LayoutPage> with TickerProviderStateMixin {
               ));
   }
 
-  StatelessWidget floatingActionButton(
-      BuildContext context) {
+  StatelessWidget floatingActionButton(BuildContext context) {
     return _currentIndex == 0 || _currentIndex == 1 || _currentIndex == 2
         ? FloatingActionButton(
             onPressed: () {
@@ -348,21 +354,23 @@ class _LayoutPageState extends State<LayoutPage> with TickerProviderStateMixin {
                               AppLocalizations.of(context).translate('addItem'),
                         })
                   : _currentIndex == 1
-                      ? _showModalSheetAppBar(
-                          context,
-                          tabIndex == 0
-                              ? AppLocalizations.of(context).translate('add') +
-                                  ' ' +
-                                  AppConstants.clientTypeSupplier
-                              : AppLocalizations.of(context).translate('add') +
-                                  ' ' +
-                                  AppConstants.clientTypeCustomer,
-                          ClientForm(
-                            clientType: tabIndex == 0
-                                ? AppConstants.clientTypeSupplier
-                                : AppConstants.clientTypeCustomer,
-                          ),
-                          0.7)
+                      ? tabIndex == 0
+                          ? Navigator.pushNamed(context, AppRoutes.client_form,
+                              arguments: {
+                                  'title': AppLocalizations.of(context)
+                                          .translate('add') +
+                                      ' ' +
+                                      AppConstants.clientTypeCustomer,
+                                  'clientType': AppConstants.clientTypeCustomer
+                                })
+                          : Navigator.pushNamed(context, AppRoutes.client_form,
+                              arguments: {
+                                  'title': AppLocalizations.of(context)
+                                          .translate('add') +
+                                      ' ' +
+                                      AppConstants.clientTypeSupplier,
+                                  'clientType': AppConstants.clientTypeSupplier
+                                })
                       : _currentIndex == 2
                           ? Navigator.pushNamed(context, AppRoutes.purchase_add,
                               arguments: {

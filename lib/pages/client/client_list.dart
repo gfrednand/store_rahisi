@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:storeRahisi/app_localizations.dart';
+import 'package:storeRahisi/constants/app_constants.dart';
 import 'package:storeRahisi/constants/routes.dart';
 import 'package:storeRahisi/models/index.dart';
 import 'package:storeRahisi/pages/base_view.dart';
@@ -40,7 +42,7 @@ class _ClientListState extends State<ClientList> {
               Expanded(
                 flex: 2,
                 child: !model.busy
-                    ? model.clients == null
+                    ? model.clients.length == 0
                         ? Center(
                             child: Text(AppLocalizations.of(context)
                                 .translate('nothingFound')),
@@ -70,57 +72,103 @@ class _ClientListState extends State<ClientList> {
       List<Client> clients, BuildContext context, ClientModel model) {
     return Scrollbar(
       child: ListView.builder(
-        itemCount: clients.length,
-        itemBuilder: (buildContext, index) => Card(
-          elevation:
-              selectedIndex != null && selectedIndex == index ? 10.0 : 2.0,
-          child: Container(
-            color:
-                selectedIndex != null && selectedIndex == index && isLargeScreen
-                    ? Colors.red[50]
-                    : Colors.white,
-            child: ListTile(
-              leading: ExcludeSemantics(
-                child: CircleAvatar(
-                  radius: 30.0,
-                  backgroundColor: Theme.of(context).primaryColor,
-                  child: Text(
-                    clients[index].companyName.substring(0, 2).toUpperCase(),
-                    style: TextStyle(color: Theme.of(context).accentColor),
+          itemCount: clients.length,
+          itemBuilder: (buildContext, index) {
+            String displayName =
+                clients[index].clientType == AppConstants.clientTypeSupplier
+                    ? clients[index].companyName
+                    : clients[index].contactPerson;
+            SaleModel saleModel = Provider.of<SaleModel>(context);
+            List<Sale> sales =
+                saleModel.getSaleHistoryByClientId(clients[index].id);
+            double totalDueAmount = 0.0;
+            sales.forEach((sale) {
+              double totalPaidAmount = 0.0;
+              sale.items.forEach((item) {
+                totalPaidAmount = totalPaidAmount + item.paidAmount;
+              });
+              totalDueAmount =
+                  totalDueAmount + (sale.grandTotal - totalPaidAmount);
+            });
+
+            return Column(
+              children: [
+                Divider(
+                  height: 5.0,
+                ),
+                Container(
+                  color: selectedIndex != null &&
+                          selectedIndex == index &&
+                          isLargeScreen
+                      ? Colors.red[50]
+                      : totalDueAmount > 0.0
+                          ?  Colors.amber
+                          : Theme.of(context).colorScheme.primaryVariant,
+                  child: ListTile(
+                    leading: ExcludeSemantics(
+                      child: CircleAvatar(
+                        radius: 25.0,
+                        backgroundColor:
+                            Theme.of(context).colorScheme.onPrimary,
+                        child: Text(
+                          displayName.substring(0, 2).toUpperCase(),
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.primary,
+                            fontWeight:
+                                selectedIndex != null && selectedIndex == index
+                                    ? FontWeight.bold
+                                    : FontWeight.normal,
+                          ),
+                        ),
+                      ),
+                    ),
+                    title: Hero(
+                      tag: '${clients[index].id}__heroTag',
+                      child: Text(displayName,
+                          overflow: TextOverflow.ellipsis,
+                          style: Theme.of(context).textTheme.bodyText1),
+                    ),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        totalDueAmount == 0.0
+                            ? Container()
+                            : Text(
+                                'Due $totalDueAmount',
+                                overflow: TextOverflow.ellipsis,
+                                style: Theme.of(context).textTheme.subtitle2,
+                              ),
+                        Text(
+                          '${clients[index].phoneNumber}',
+                          overflow: TextOverflow.ellipsis,
+                          style: Theme.of(context).textTheme.subtitle2,
+                        ),
+                      ],
+                    ),
+                    trailing: Icon(
+                      Icons.arrow_forward_ios,
+                      color: Theme.of(context).iconTheme.color,
+                    ),
+                    onTap: () {
+                      if (isLargeScreen) {
+                        selectedValue = model.clients[index];
+                        setState(() {
+                          selectedIndex = index;
+                        });
+                      } else {
+                        var arguments = {
+                          'client': clients[index],
+                          'clientModel': model,
+                        };
+                        Navigator.pushNamed(context, AppRoutes.client_detail,
+                            arguments: arguments);
+                      }
+                    },
                   ),
                 ),
-              ),
-              title: Hero(
-                tag: '${clients[index].id}__heroTag',
-                child: Text(
-                  '${clients[index].companyName}',
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(),
-                ),
-              ),
-              subtitle: Text(
-                '${clients[index].phoneNumber}',
-                overflow: TextOverflow.ellipsis,
-              ),
-              onTap: () {
-                if (isLargeScreen) {
-                  selectedValue = model.clients[index];
-                  setState(() {
-                    selectedIndex = index;
-                  });
-                } else {
-                  var arguments = {
-                    'client': clients[index],
-                    'clientModel': model,
-                  };
-                  Navigator.pushNamed(context, AppRoutes.client_detail,
-                      arguments: arguments);
-                }
-              },
-            ),
-          ),
-        ),
-      ),
+              ],
+            );
+          }),
     );
   }
 }

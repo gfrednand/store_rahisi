@@ -53,151 +53,89 @@ class _PosItemState extends State<PosItem> {
         purchaseModel.getTotalPurchaseByItemId(widget.item.id) ?? 0;
     int inStock = (totalPurchases + widget.item.openingStock) - totalSales;
 
-    return new Container(
-      padding: const EdgeInsets.symmetric(horizontal: 5.0),
-      width: screenSize.width,
-      child: new Card(
-        elevation: 2.0,
-        child: Padding(
-          padding: const EdgeInsets.only(
-            left: 10.0,
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  Text(
-                    '${widget.item.name} x$_itemCount =${widget.currentPrice * _itemCount}  ',
-                  ),
-                  SizedBox(
-                    height: 5.0,
-                  ),
-                  Text(
-                    'In Stock $inStock ',
-                  ),
-                  SizedBox(
-                    height: 5.0,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Text(
-                        "\Tsh ${widget.currentPrice}",
-                        style:
-                            TextStyle(fontSize: 15.0, color: Colors.green[900]),
-                      ),
-                      SizedBox(
-                        width: 8.0,
-                      ),
-                      widget.originalPrice > 0
-                          ? Text(
-                              "\Tsh ${widget.originalPrice}",
-                              style: TextStyle(
-                                fontSize: 12.0,
-                                color: Colors.red,
-                                decoration: TextDecoration.lineThrough,
-                              ),
-                            )
-                          : Text(""),
-                      SizedBox(
-                        width: 8.0,
-                      ),
-                      widget.discount > 0
-                          ? Text(
-                              "${widget.discount.toStringAsFixed(1)}\% " +
-                                  AppLocalizations.of(context).translate('off'),
-                              style:
-                                  TextStyle(fontSize: 12.0, color: Colors.grey),
-                            )
-                          : Text("")
-                    ],
-                  ),
-                  SizedBox(
-                    height: 8.0,
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  new IconButton(
-                    icon: new Icon(Icons.remove_circle,
-                        color: Theme.of(context).accentColor),
-                    onPressed: () {
-                      setState(() {
-                        if (_itemCount != 0) {
-                          _itemCount--;
-
-                          quantityController = new TextEditingController(
-                              text: _itemCount.toString());
-                        }
-                      });
-                      widget.item.salePrice = widget.currentPrice;
-                      widget.item.quantity = _itemCount;
-                      cartModel.setItem(widget.item);
-                    },
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) => AlertDialog(
-                            title: Text('Quantity: Max= $inStock'),
-                            content: Container(
-                              width: 40.0,
-                              child: TextFormField(
-                                decoration: const InputDecoration(
-                                  hintText: '0',
-                                  contentPadding: const EdgeInsets.symmetric(
-                                      vertical: 40.0),
-                                ),
-                                keyboardType: TextInputType.number,
-                                controller: quantityController,
-                              ),
-                            ),
-                            actions: <Widget>[
-                              FlatButton(
-                                  child: const Text('OK'),
-                                  onPressed: () {
-                                    Navigator.pop(
-                                        context, quantityController.text);
-                                  }),
-                            ]),
-                      ).then<void>((value) {
-                        // The value passed to Navigator.pop() or null.
-                        if (value != null) {
-                          print(value);
-                          if (int.parse(value) < inStock ||
-                              int.parse(value) == inStock) {
-                            _itemCount = int.parse(value);
-                            setCartItem(cartModel);
-                          } else {
-                            quantityController = TextEditingController(
-                                text: _itemCount.toString());
-                          }
-                        }
-                      });
-                    },
-                    child: Container(
-                      width: 40.0,
-                      child: Text(_itemCount.toString(),
-                          textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.headline6),
+    return Column(
+      children: [
+        Divider(height: 5.0,),
+        new Container(
+          padding: const EdgeInsets.symmetric(horizontal: 5.0),
+          width: screenSize.width,
+          child: Padding(
+            padding: const EdgeInsets.only(
+              left: 10.0,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Text(
+                      '${widget.item.name?.toUpperCase()} x$_itemCount =${widget.currentPrice * _itemCount}  ',
+                      style: TextStyle(fontWeight: FontWeight.bold),
                     ),
-                  ),
-                  new IconButton(
-                      icon: new Icon(Icons.add_circle,
+                    SizedBox(
+                      height: 5.0,
+                    ),
+                    Text(
+                      'In Stock $inStock ',
+                    ),
+                    SizedBox(
+                      height: 5.0,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Text(
+                          "\Tsh ${widget.currentPrice}",
+                          style:
+                              TextStyle(fontSize: 15.0, color: Colors.green[900]),
+                        ),
+                        SizedBox(
+                          width: 8.0,
+                        ),
+                        widget.originalPrice > 0
+                            ? Text(
+                                "\Tsh ${widget.originalPrice}",
+                                style: TextStyle(
+                                  fontSize: 12.0,
+                                  color: Colors.red,
+                                  decoration: TextDecoration.lineThrough,
+                                ),
+                              )
+                            : Text(""),
+                        SizedBox(
+                          width: 8.0,
+                        ),
+                        widget.discount > 0
+                            ? Text(
+                                "${widget.discount.toStringAsFixed(1)}\% " +
+                                    AppLocalizations.of(context).translate('off'),
+                                style:
+                                    TextStyle(fontSize: 12.0, color: Colors.grey),
+                              )
+                            : Text("")
+                      ],
+                    ),
+                    SizedBox(
+                      height: 8.0,
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    new IconButton(
+                      icon: new Icon(Icons.remove_circle,
                           color: Theme.of(context).accentColor),
                       onPressed: () {
                         setState(() {
-                          if (_itemCount < inStock) {
-                            _itemCount++;
+                          if (_itemCount != 0) {
+                            _itemCount--;
+
                             quantityController = new TextEditingController(
                                 text: _itemCount.toString());
                           }
@@ -205,13 +143,78 @@ class _PosItemState extends State<PosItem> {
                         widget.item.salePrice = widget.currentPrice;
                         widget.item.quantity = _itemCount;
                         cartModel.setItem(widget.item);
-                      }),
-                ],
-              )
-            ],
+                      },
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) => AlertDialog(
+                              title: Text('Quantity: Max= $inStock'),
+                              content: Container(
+                                width: 40.0,
+                                child: TextFormField(
+                                  decoration: const InputDecoration(
+                                    hintText: '0',
+                                    contentPadding: const EdgeInsets.symmetric(
+                                        vertical: 40.0),
+                                  ),
+                                  keyboardType: TextInputType.number,
+                                  controller: quantityController,
+                                ),
+                              ),
+                              actions: <Widget>[
+                                FlatButton(
+                                    child: const Text('OK'),
+                                    onPressed: () {
+                                      Navigator.pop(
+                                          context, quantityController.text);
+                                    }),
+                              ]),
+                        ).then<void>((value) {
+                          // The value passed to Navigator.pop() or null.
+                          if (value != null) {
+                            // print(value);
+                            if (int.parse(value) < inStock ||
+                                int.parse(value) == inStock) {
+                              _itemCount = int.parse(value);
+                              setCartItem(cartModel);
+                            } else {
+                              quantityController = TextEditingController(
+                                  text: _itemCount.toString());
+                            }
+                          }
+                        });
+                      },
+                      child: Container(
+                        width: 40.0,
+                        child: Text(_itemCount.toString(),
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context).textTheme.headline6),
+                      ),
+                    ),
+                    new IconButton(
+                        icon: new Icon(Icons.add_circle,
+                            color: Theme.of(context).accentColor),
+                        onPressed: () {
+                          setState(() {
+                            if (_itemCount < inStock) {
+                              _itemCount++;
+                              quantityController = new TextEditingController(
+                                  text: _itemCount.toString());
+                            }
+                          });
+                          widget.item.salePrice = widget.currentPrice;
+                          widget.item.quantity = _itemCount;
+                          cartModel.setItem(widget.item);
+                        }),
+                  ],
+                )
+              ],
+            ),
           ),
         ),
-      ),
+      ],
     );
   }
 

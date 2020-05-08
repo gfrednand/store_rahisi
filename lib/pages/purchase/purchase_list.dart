@@ -56,7 +56,7 @@ class _PurchaseListState extends State<PurchaseList> {
       ClientModel clientModel, PaymentModel paymentModel) {
     return Scrollbar(
         child: !model.busy
-            ? model.purchases == null
+            ? model.purchases.length == 0
                 ? Center(
                     child: Text(
                         AppLocalizations.of(context).translate('nothingFound')),
@@ -68,8 +68,9 @@ class _PurchaseListState extends State<PurchaseList> {
                           .getClientById(model.purchases[index].clientId);
                       model.purchases[index].companyName = client?.companyName;
 
-                      List<Payment> payments = paymentModel
-                          .getPaymentsByReferenceNo(model.purchases[index].id);
+                      List<Payment> payments =
+                          paymentModel.getPaymentsByReferenceNo(
+                              model.purchases[index].referenceNumber);
                       double paidAmount = 0.0;
                       payments.forEach((payment) {
                         paidAmount = paidAmount + payment.amount;
@@ -77,77 +78,89 @@ class _PurchaseListState extends State<PurchaseList> {
                       model.purchases[index].paidAmount = paidAmount;
                       var purchaseDate = new DateFormat('MMM dd, yyyy')
                           .format(model.purchases[index].purchaseDate);
-                      return Card(
-                        elevation: selectedIndex != null &&
-                                selectedIndex == index &&
-                                isLargeScreen
-                            ? 10
-                            : 2,
-                        child: Container(
-                          color: selectedIndex != null &&
-                                  selectedIndex == index &&
-                                  isLargeScreen
-                              ? Colors.red[50]
-                              : Colors.white,
-                          child: ListTile(
-                            leading: ExcludeSemantics(
-                              child: CircleAvatar(
-                                radius: 30.0,
-                                backgroundColor: Theme.of(context).primaryColor,
-                                child: Text(
-                                  'P',
-                                  style: TextStyle(
-                                      color: Theme.of(context).accentColor),
+                      return Column(
+                        children: [
+                          Divider(
+                            height: 5.0,
+                          ),
+                          Container(
+                            color: selectedIndex != null &&
+                                    selectedIndex == index &&
+                                    isLargeScreen
+                                ? Colors.red[50]
+                                : Theme.of(context).colorScheme.primaryVariant,
+                            child: ListTile(
+                              leading: ExcludeSemantics(
+                                child: CircleAvatar(
+                                  radius: 25.0,
+                                  backgroundColor:
+                                      Theme.of(context).colorScheme.onPrimary,
+                                  child: Text(
+                                    'P',
+                                    style: TextStyle(
+                                      color:
+                                          Theme.of(context).colorScheme.primary,
+                                    ),
+                                  ),
                                 ),
                               ),
+                              title: Text(
+                                '$purchaseDate',
+                                style: Theme.of(context).textTheme.headline6,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              subtitle: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    AppLocalizations.of(context)
+                                            .translate('billNo') +
+                                        ': ${model.purchases[index]?.referenceNumber}',
+                                    style:
+                                        Theme.of(context).textTheme.subtitle2,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  Text(
+                                    AppLocalizations.of(context)
+                                            .translate('supplier') +
+                                        ': ${model.purchases[index]?.companyName}',
+                                    style:
+                                        Theme.of(context).textTheme.subtitle2,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  Text(
+                                    AppLocalizations.of(context)
+                                            .translate('grandTotal') +
+                                        ': ${model.purchases[index]?.grandTotalAmount}/=',
+                                    style:
+                                        Theme.of(context).textTheme.subtitle2,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ],
+                              ),
+                              trailing: Icon(
+                                Icons.arrow_forward_ios,
+                                color: Theme.of(context).iconTheme.color,
+                              ),
+                              onTap: () {
+                                if (isLargeScreen) {
+                                  selectedValue = model.purchases[index];
+                                  setState(() {
+                                    selectedIndex = index;
+                                  });
+                                } else {
+                                  var arguments = {
+                                    'purchase': model.purchases[index],
+                                    'purchaseModel': model,
+                                  };
+                                  Navigator.pushNamed(
+                                      context, AppRoutes.purchase_detail,
+                                      arguments: arguments);
+                                }
+                              },
                             ),
-                            title: Text(
-                              '$purchaseDate',
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            subtitle: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  AppLocalizations.of(context)
-                                          .translate('billNo') +
-                                      ': ${model.purchases[index]?.referenceNumber}',
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                Text(
-                                  AppLocalizations.of(context)
-                                          .translate('supplier') +
-                                      ': ${model.purchases[index]?.companyName}',
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                Text(
-                                  AppLocalizations.of(context)
-                                          .translate('paid') +
-                                      ': ${model.purchases[index]?.paidAmount}/=',
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ],
-                            ),
-                            trailing: Text(
-                                '${model.purchases[index].grandTotalAmount}/='),
-                            onTap: () {
-                              if (isLargeScreen) {
-                                selectedValue = model.purchases[index];
-                                setState(() {
-                                  selectedIndex = index;
-                                });
-                              } else {
-                                var arguments = {
-                                  'purchase': model.purchases[index],
-                                  'purchaseModel': model,
-                                };
-                                Navigator.pushNamed(
-                                    context, AppRoutes.purchase_detail,
-                                    arguments: arguments);
-                              }
-                            },
                           ),
-                        ),
+                        ],
                       );
                     })
             : Center(

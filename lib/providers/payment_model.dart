@@ -61,6 +61,7 @@ class PaymentModel extends BaseModel {
     if (_payments.length == 0) {
       listenToPayments();
     }
+
     return _payments.where((payment) => payment.referenceNo == id).toList();
   }
 
@@ -78,32 +79,28 @@ class PaymentModel extends BaseModel {
     }
   }
 
-  savePayment({@required Payment data}) async {
+  Future<bool> savePayment({@required Payment data}) async {
     // setBusy(true);
     var result;
     if (!_editting) {
       result = await Api(path: 'payments', companyId: currentUser?.companyId)
           .addDocument(data.toMap());
     } else {
-
       result = await Api(path: 'payments', companyId: currentUser?.companyId)
           .updateDocument(data.toMap(), data.id);
     }
 
-    // setBusy(false);
+    if (result is String) {
+      await _dialogService.showDialog(
+        title: 'Cound not create payments',
+        description: result,
+      );
+    } else {
+      _navigationService.pop();
 
-    // if (result is String) {
-    //   await _dialogService.showDialog(
-    //     title: 'Cound not create Payment',
-    //     description: result,
-    //   );
-    // } else {
-    //   await _dialogService.showDialog(
-    //     title: 'Payment successfully Added',
-    //     description: 'Payment has been created',
-    //   );
-    // }
-
-    // _navigationService.pop();
+      return true;
+    }
+    _navigationService.pop();
+    return false;
   }
 }

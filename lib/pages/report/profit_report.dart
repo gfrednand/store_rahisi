@@ -61,7 +61,8 @@ class _ProfitReportState extends State<ProfitReport> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text(AppLocalizations.of(context).translate('profitReport')),
+        title: Text(AppLocalizations.of(context).translate('profitReport'),
+            style: Theme.of(context).textTheme.headline6),
       ),
       body: Column(
         mainAxisSize: MainAxisSize.min,

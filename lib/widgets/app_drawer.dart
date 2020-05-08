@@ -25,15 +25,21 @@ class _CustomDrawerState extends State<CustomDrawer> {
       children: <Widget>[
         widget.user != null
             ? ListTile(
-                leading: Icon(Icons.person),
-                title: Text('${widget.user.fname} ${widget.user.lname}'),
-                subtitle:
-                    Text(AppLocalizations.of(context).translate('username')),
+                leading: Icon(Icons.person,
+                    color: Theme.of(context).iconTheme.color),
+                title: Text(
+                  '${widget.user.fname} ${widget.user.lname}',
+                  style: Theme.of(context).textTheme.bodyText1,
+                ),
+                subtitle: Text(
+                  AppLocalizations.of(context).translate('username'),
+                  style: Theme.of(context).textTheme.subtitle2,
+                ),
               )
             : Container(),
         // widget.user != null
         //     ? ListTile(
-        //         leading: Icon(Icons.email),
+        //         leading: Icon(color: Theme.of(context).iconTheme.color, Icons.email),
         //         title: Text("${widget.user.email}"),
         //         subtitle: Text(AppLocalizations.of(context).translate('email')),
         //       )
@@ -41,27 +47,39 @@ class _CustomDrawerState extends State<CustomDrawer> {
 
         widget.user != null
             ? ListTile(
-                leading: Icon(Icons.person_pin),
-                title: Text("${widget.user.designation}"),
-                subtitle:
-                    Text(AppLocalizations.of(context).translate('designation')),
+                leading: Icon(Icons.person_pin,
+                    color: Theme.of(context).iconTheme.color),
+                title: Text(
+                  "${widget.user.designation}",
+                  style: Theme.of(context).textTheme.bodyText1,
+                ),
+                subtitle: Text(
+                  AppLocalizations.of(context).translate('designation'),
+                  style: Theme.of(context).textTheme.subtitle2,
+                ),
               )
             : Container(),
         widget.user != null
             ? ListTile(
-                leading: Icon(Icons.phone),
-                title: Text("${widget.user.phoneNumber}"),
-                subtitle:
-                    Text(AppLocalizations.of(context).translate('phoneNumber')),
+                leading:
+                    Icon(Icons.phone, color: Theme.of(context).iconTheme.color),
+                title: Text(
+                  "${widget.user.phoneNumber}",
+                  style: Theme.of(context).textTheme.bodyText1,
+                ),
+                subtitle: Text(
+                  AppLocalizations.of(context).translate('phoneNumber'),
+                  style: Theme.of(context).textTheme.subtitle2,
+                ),
               )
             : Container(),
 
         // widget.user != null
         //     ? ListTile(
-        //         leading: Icon(Icons.label_important),
+        //         leading: Icon(color: Theme.of(context).iconTheme.color, Icons.label_important),
         //         title: Text("${widget.user.id}"),
         //         subtitle: Text(
-        //             AppLocalizations.of(context).translate('referenceNumber')),
+        //             AppLocalizations.of(context).translate('referenceNumber'), style: Theme.of(context).textTheme.subtitle2,),
         //       )
         //     : Container(),
         // Divider(),
@@ -70,10 +88,10 @@ class _CustomDrawerState extends State<CustomDrawer> {
         SizedBox(
           width: double.infinity,
           child: FlatButton(
-              color: Theme.of(context).primaryColor,
+              color: Theme.of(context).colorScheme.onPrimary,
               child: Text(
                 AppLocalizations.of(context).translate('logout'),
-                style: TextStyle(color: Theme.of(context).accentColor),
+                style: Theme.of(context).textTheme.bodyText1,
               ),
               onPressed: () async {
                 bool loggedOut = await Provider.of<AuthModel>(context).logout();
@@ -94,8 +112,14 @@ class _CustomDrawerState extends State<CustomDrawer> {
       children: <Widget>[
         Expanded(
           child: ListTile(
-            leading: Icon(Icons.attach_money),
-            title: Text(AppLocalizations.of(ctx).translate('expenses')),
+            leading: Icon(
+              Icons.attach_money,
+              color: Theme.of(context).iconTheme.color,
+            ),
+            title: Text(
+              AppLocalizations.of(ctx).translate('expenses'),
+              style: Theme.of(context).textTheme.bodyText1,
+            ),
             onTap: () {
               Navigator.pop(ctx);
               Navigator.pushNamed(ctx, AppRoutes.expense);
@@ -104,8 +128,14 @@ class _CustomDrawerState extends State<CustomDrawer> {
         ),
         Expanded(
           child: ListTile(
-            leading: Icon(Icons.select_all),
-            title: Text(AppLocalizations.of(ctx).translate('itemReport')),
+            leading: Icon(
+              Icons.select_all,
+              color: Theme.of(context).iconTheme.color,
+            ),
+            title: Text(
+              AppLocalizations.of(ctx).translate('itemReport'),
+              style: Theme.of(context).textTheme.bodyText1,
+            ),
             onTap: () {
               Navigator.pop(ctx);
               Navigator.pushNamed(ctx, AppRoutes.item_report);
@@ -114,8 +144,14 @@ class _CustomDrawerState extends State<CustomDrawer> {
         ),
         Expanded(
           child: ListTile(
-            leading: Icon(Icons.view_week),
-            title: Text(AppLocalizations.of(ctx).translate('purchaseReport')),
+            leading: Icon(
+              Icons.view_week,
+              color: Theme.of(context).iconTheme.color,
+            ),
+            title: Text(
+              AppLocalizations.of(ctx).translate('purchaseReport'),
+              style: Theme.of(context).textTheme.bodyText1,
+            ),
             onTap: () {
               Navigator.pop(ctx);
               Navigator.pushNamed(ctx, AppRoutes.purchase_report);
@@ -124,8 +160,14 @@ class _CustomDrawerState extends State<CustomDrawer> {
         ),
         Expanded(
           child: ListTile(
-            leading: Icon(Icons.dns),
-            title: Text(AppLocalizations.of(ctx).translate('salesReport')),
+            leading: Icon(
+              Icons.dns,
+              color: Theme.of(context).iconTheme.color,
+            ),
+            title: Text(
+              AppLocalizations.of(ctx).translate('salesReport'),
+              style: Theme.of(context).textTheme.bodyText1,
+            ),
             onTap: () {
               Navigator.pop(ctx);
               Navigator.pushNamed(ctx, AppRoutes.sale_report);
@@ -134,8 +176,14 @@ class _CustomDrawerState extends State<CustomDrawer> {
         ),
         Expanded(
           child: ListTile(
-            leading: Icon(Icons.timeline),
-            title: Text(AppLocalizations.of(ctx).translate('profitReport')),
+            leading: Icon(
+              Icons.timeline,
+              color: Theme.of(context).iconTheme.color,
+            ),
+            title: Text(
+              AppLocalizations.of(ctx).translate('profitReport'),
+              style: Theme.of(context).textTheme.bodyText1,
+            ),
             onTap: () {
               Navigator.pop(ctx);
               Navigator.pushNamed(ctx, AppRoutes.profit_report);
@@ -148,17 +196,28 @@ class _CustomDrawerState extends State<CustomDrawer> {
           children: <Widget>[
             // Divider(),
             ListTile(
-              leading: Icon(LinearIcons.cog),
-              title: Text(AppLocalizations.of(ctx).translate('settings')),
+              leading: Icon(
+                LinearIcons.cog,
+                color: Theme.of(context).iconTheme.color,
+              ),
+              title: Text(
+                AppLocalizations.of(ctx).translate('settings'),
+                style: Theme.of(context).textTheme.bodyText1,
+              ),
               onTap: () {
                 Navigator.pop(ctx);
                 Navigator.pushNamed(ctx, AppRoutes.settings);
               },
             ),
             ListTile(
-              leading: Icon(Icons.help),
-              title:
-                  Text(AppLocalizations.of(ctx).translate('helpAndFeedback')),
+              leading: Icon(
+                Icons.help,
+                color: Theme.of(context).iconTheme.color,
+              ),
+              title: Text(
+                AppLocalizations.of(ctx).translate('helpAndFeedback'),
+                style: Theme.of(context).textTheme.bodyText1,
+              ),
               onTap: () {
                 Navigator.pop(ctx);
                 Navigator.pushNamed(ctx, AppRoutes.help);
@@ -179,7 +238,6 @@ class _CustomDrawerState extends State<CustomDrawer> {
             constraints: BoxConstraints(minHeight: constraint.maxHeight),
             child: IntrinsicHeight(
               child: Column(
-                // Important: Delete any padding from the ListView.
                 children: <Widget>[
                   UserAccountsDrawerHeader(
                     accountName:
@@ -188,7 +246,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     currentAccountPicture: CircleAvatar(
                       backgroundColor:
                           Theme.of(ctx).platform == TargetPlatform.iOS
-                              ? Colors.blue
+                              ? Theme.of(context).colorScheme.onPrimary
                               : Colors.white,
                       child: Text(
                         "S",
@@ -203,12 +261,17 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     },
                   ),
                   Expanded(
-                      child: showUserDetails
-                          ? _buildUserDetail()
-                          : _buildDrawerList(ctx))
+                    child: Container(
+                        color: Theme.of(context).scaffoldBackgroundColor,
+                        child: showUserDetails
+                            ? _buildUserDetail()
+                            : _buildDrawerList(ctx)),
+                  )
                   // ListTile(
-                  //   leading: Icon(Icons.swap_horiz),
-                  //   title: Text(AppLocalizations.of(ctx).translate('transactions')),
+                  //   leading: Icon(color: Theme.of(context).iconTheme.color, Icons.swap_horiz),
+                  //   title: Text( AppLocalizations.of(ctx).translate('transactions'),    style: Theme.of(context)
+                  // .textTheme
+                  // .bodyText1,),
                   //   onTap: () {
                   //     Navigator.pop(ctx);
                   //     Navigator.pushNamed(ctx, AppRoutes.transaction_report);

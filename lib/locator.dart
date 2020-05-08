@@ -1,5 +1,4 @@
 import 'package:get_it/get_it.dart';
-import 'package:storeRahisi/providers/app_language.dart';
 import 'package:storeRahisi/providers/index.dart';
 import 'package:storeRahisi/services/api.dart';
 import 'package:storeRahisi/services/auth_service.dart';
@@ -31,8 +30,7 @@ void setupLocator() {
   // locator.registerLazySingleton<SharedPrefsUtil>(() => SharedPrefsUtil());
 
   locator.registerLazySingleton(() => ClientModel());
-  locator.registerLazySingleton(() => AppLanguage());
-  locator.registerLazySingleton(() => AppThemeModel());
+  locator.registerLazySingleton(() => SettingsModel());
   locator.registerLazySingleton(() => ItemModel());
   locator.registerLazySingleton(() => PurchaseModel());
   locator.registerLazySingleton(() => PaymentModel());

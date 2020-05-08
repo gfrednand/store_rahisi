@@ -63,8 +63,10 @@ class Item {
     this.saleQuantity,
     this.purchaseQuantity,
     this.active,
-  }) : this.createdAt = createdAt ?? DateTime.now();
-            // new DateFormat('MMM dd, yyyy HH:mm').format(new DateTime.now());
+  })  :
+  //  assert(name != null, 'name must not be null'),
+        this.createdAt = createdAt ?? DateTime.now();
+  // new DateFormat('MMM dd, yyyy HH:mm').format(new DateTime.now());
 
   factory Item.fromFirestore(DocumentSnapshot doc) {
     Map json = doc.data;
@@ -101,7 +103,7 @@ class Item {
         paidAmount: json['paidAmount']?.toDouble(),
         alertQty: json['alertQty'],
         barcode: json['barcode'],
-        createdAt:  DateTime.tryParse(json["createdAt"].toString()),
+        createdAt: DateTime.tryParse(json["createdAt"].toString()),
         updatedAt: json["updatedAt"],
         openingStock: json['openingStock'],
         quantity: json['quantity'],
@@ -139,5 +141,15 @@ class Item {
         'quantity': quantity,
       };
 
-      factory Item.initialValue()=>Item(name: 'Nothing Found',active: true,alertQty: 0,barcode: '',categoryId: '',description: '',id: '',inStock: 0,openingStock: 0, unit: '');
+  factory Item.initialValue() => Item(
+      name: 'Nothing Found',
+      active: true,
+      alertQty: 0,
+      barcode: '',
+      categoryId: '',
+      description: '',
+      id: '',
+      inStock: 0,
+      openingStock: 0,
+      unit: '');
 }

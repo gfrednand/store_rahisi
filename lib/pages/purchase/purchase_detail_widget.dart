@@ -19,8 +19,16 @@ class PurchaseDetailWidget extends StatefulWidget {
   _PurchaseDetailWidgetState createState() => _PurchaseDetailWidgetState();
 }
 
-class _PurchaseDetailWidgetState extends State<PurchaseDetailWidget> {
+class _PurchaseDetailWidgetState extends State<PurchaseDetailWidget>
+    with SingleTickerProviderStateMixin {
+  TabController _tabController;
   int currentSelection = 0;
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(vsync: this, length: 4);
+  }
+
   @override
   Widget build(BuildContext context) {
     return widget.purchase == null
@@ -63,11 +71,12 @@ class _PurchaseDetailWidgetState extends State<PurchaseDetailWidget> {
     );
   }
 
-  DefaultTabController buildTabContainer(BuildContext context) {
+  Widget buildTabContainer(BuildContext context) {
     PaymentModel paymentModel = Provider.of<PaymentModel>(context);
     List<Payment> payments = widget.purchase == null
         ? []
-        : paymentModel.getPaymentsByReferenceNo(widget.purchase.id);
+        : paymentModel
+            .getPaymentsByReferenceNo(widget.purchase.referenceNumber);
 
     double dueAmount = widget.purchase == null
         ? 0
@@ -82,88 +91,123 @@ class _PurchaseDetailWidgetState extends State<PurchaseDetailWidget> {
       AppLocalizations.of(context).translate('paymentHistory'),
       AppLocalizations.of(context).translate('makePayment')
     ];
-    return DefaultTabController(
-      length: tabs.length,
-      child: SizedBox(
-        child: Column(children: [
-          TabBar(
-            isScrollable: true,
-            indicator: CircleTabIndicator(
-                color: Theme.of(context).accentColor, radius: 3),
-            tabs: [
-              for (final tab in tabs) Tab(text: tab),
-            ],
-          ),
-          Divider(
-            thickness: 2.0,
-          ),
-          Expanded(
-            child: TabBarView(
-              children: [
-                SingleChildScrollView(
-                  child: Column(
-                    children: <Widget>[
-                      Wrap(
-                        spacing: 0.0, // gap between adjacent chips
-                        runSpacing: 0.0, // gap between lines
-                        children: <Widget>[
-                          chipDesign("Edit", Color(0xFF4db6ac)),
-                          chipDesign("Delete", Color(0xFFf06292)),
-                        ],
+    return SizedBox(
+      child: Column(children: [
+        TabBar(
+          controller: _tabController,
+          isScrollable: true,
+
+          // indicator: CircleTabIndicator(
+          //     color: Theme.of(context).accentColor, radius: 3),
+          tabs: [
+            for (final tab in tabs) Tab(text: tab),
+          ],
+        ),
+        Expanded(
+          child: TabBarView(
+            controller: _tabController,
+            children: [
+              SingleChildScrollView(
+                child: Column(
+                  children: <Widget>[
+                    Wrap(
+                      spacing: 0.0, // gap between adjacent chips
+                      runSpacing: 0.0, // gap between lines
+                      children: <Widget>[
+                        chipDesign("Edit", Color(0xFF4db6ac)),
+                        chipDesign("Delete", Color(0xFFf06292)),
+                      ],
+                    ),
+                    Divider(
+                      thickness: 10.0,
+                    ),
+                    ListTile(
+                      title: Text(
+                        '${widget.purchase.companyName}',
+                        style: Theme.of(context).textTheme.headline6,
                       ),
-                      Divider(
-                        thickness: 10.0,
+                      subtitle: Text(
+                        'Supplier',
+                        style: Theme.of(context).textTheme.subtitle2,
                       ),
-                      ListTile(
-                        title: Text('${widget.purchase.companyName}'),
-                        subtitle: Text('Supplier'),
+                    ),
+                    ListTile(
+                      title: Text(
+                        '${widget.purchase.referenceNumber}',
+                        style: Theme.of(context).textTheme.headline6,
                       ),
-                      ListTile(
-                        title: Text('${widget.purchase.referenceNumber}'),
-                        subtitle: Text('Bill No'),
+                      subtitle: Text(
+                        'Bill No',
+                        style: Theme.of(context).textTheme.subtitle2,
                       ),
-                      Divider(
-                        thickness: 10.0,
+                    ),
+                    Divider(
+                      thickness: 10.0,
+                    ),
+                    ListTile(
+                      title: Text(
+                        '${widget.purchase.grandTotalAmount}',
+                        style: Theme.of(context).textTheme.headline6,
                       ),
-                      ListTile(
-                        title: Text('${widget.purchase.grandTotalAmount}'),
-                        subtitle: Text('Grand Total'),
+                      subtitle: Text(
+                        'Grand Total',
+                        style: Theme.of(context).textTheme.subtitle2,
                       ),
-                      ListTile(
-                        title: Text('${widget.purchase.paidAmount}'),
-                        subtitle: Text('Paid Amount'),
+                    ),
+                    ListTile(
+                      title: Text(
+                        '${widget.purchase.paidAmount}',
+                        style: Theme.of(context).textTheme.headline6,
                       ),
-                      ListTile(
-                        title: Text('$dueAmount'),
-                        subtitle: Text('Due Amount'),
+                      subtitle: Text(
+                        'Paid Amount',
+                        style: Theme.of(context).textTheme.subtitle2,
                       ),
-                      Divider(
-                        thickness: 10.0,
+                    ),
+                    ListTile(
+                      title: Text(
+                        '$dueAmount',
+                        style: Theme.of(context).textTheme.headline6,
                       ),
-                    ],
-                  ),
+                      subtitle: Text(
+                        'Due Amount',
+                        style: Theme.of(context).textTheme.subtitle2,
+                      ),
+                    ),
+                    Divider(
+                      thickness: 10.0,
+                    ),
+                  ],
                 ),
-                ListView.builder(
-                    itemCount: widget.purchase.items.length,
-                    itemBuilder: (buildContext, index) {
-                      ItemModel itemModel = Provider.of<ItemModel>(context);
-                      Item item = itemModel
-                          .getItemById(widget.purchase.items[index].id);
-                      return Card(
-                        child: ListTile(
+              ),
+              ListView.builder(
+                  itemCount: widget.purchase.items.length,
+                  itemBuilder: (buildContext, index) {
+                    ItemModel itemModel = Provider.of<ItemModel>(context);
+                    Item item =
+                        itemModel.getItemById(widget.purchase.items[index].id);
+                    return Column(
+                      children: [
+                        Divider(
+                          height: 5.0,
+                        ),
+                        ListTile(
                           leading: ExcludeSemantics(
                             child: CircleAvatar(
-                              radius: 30.0,
-                              backgroundColor: Theme.of(context).primaryColor,
+                              radius: 25.0,
+                              backgroundColor:
+                                  Theme.of(context).colorScheme.onPrimary,
                               child: Text(
                                 item?.name?.substring(0, 2)?.toUpperCase(),
                                 style: TextStyle(
-                                    color: Theme.of(context).accentColor),
+                                  color: Theme.of(context).colorScheme.primary,
+                                ),
                               ),
                             ),
                           ),
                           title: Text(
                             '${item?.name}',
+                            style: Theme.of(context).textTheme.headline6,
                             overflow: TextOverflow.ellipsis,
                           ),
                           subtitle: Column(
@@ -171,76 +215,86 @@ class _PurchaseDetailWidgetState extends State<PurchaseDetailWidget> {
                             children: [
                               Text(
                                 'Purchase Price: ${widget.purchase.items[index].purchasePrice} @1',
+                                style: Theme.of(context).textTheme.subtitle2,
                                 overflow: TextOverflow.ellipsis,
                               ),
                               Text(
                                 'Sale Price: ${widget.purchase.items[index].salePrice} @1',
+                                style: Theme.of(context).textTheme.subtitle2,
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ],
                           ),
-                          trailing:
-                              Text('${widget.purchase.items[index].quantity}'),
+                          trailing: Text(
+                              '${widget.purchase.items[index].quantity}',
+                              style: TextStyle(fontWeight: FontWeight.bold)),
                           onTap: () {
                             // Navigator.pushNamed(
                             //     context, AppRoutes.purchase_detail,
                             //     arguments: items[index]);
                           },
                         ),
-                      );
-                    }),
-                ListView.builder(
-                    itemCount: payments.length,
-                    itemBuilder: (buildContext, index) {
-                      ClientModel clientModel =
-                          Provider.of<ClientModel>(context);
-                      Client client =
-                          clientModel.getClientById(payments[index].clientId);
-                      return Card(
-                        child: ListTile(
+                      ],
+                    );
+                  }),
+              ListView.builder(
+                  itemCount: payments.length,
+                  itemBuilder: (buildContext, index) {
+                    ClientModel clientModel = Provider.of<ClientModel>(context);
+                    Client client =
+                        clientModel.getClientById(payments[index].clientId);
+                    return Column(
+                      children: [
+                        Divider(
+                          height: 5.0,
+                        ),
+                        ListTile(
                           leading: ExcludeSemantics(
                             child: CircleAvatar(
-                              radius: 30.0,
-                              backgroundColor: Theme.of(context).primaryColor,
+                              radius: 25.0,
+                              backgroundColor:
+                                  Theme.of(context).colorScheme.onPrimary,
                               child: Text(
                                 'P',
                                 style: TextStyle(
-                                    color: Theme.of(context).accentColor),
+                                  color: Theme.of(context).colorScheme.primary,
+                                ),
                               ),
                             ),
                           ),
                           title: Text(
-                            '${client?.companyName}',
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          subtitle: Text(
                             '${payments[index]?.method} | ${payments[index]?.type}',
+                            style: Theme.of(context).textTheme.headline6,
                             overflow: TextOverflow.ellipsis,
                           ),
-                          trailing: Text(' ${payments[index]?.amount} /='),
+                          trailing: Text(
+                            ' ${payments[index]?.amount} /=',
+                            style: Theme.of(context).textTheme.subtitle2,
+                          ),
                           onTap: () {
                             // Navigator.pushNamed(
                             //     context, AppRoutes.purchase_detail,
                             //     arguments: items[index]);
                           },
                         ),
-                      );
-                    }),
-                dueAmount > 0
-                    ? PurchasePaymentForm(
-                        dueAmount: dueAmount,
-                        purchase: widget.purchase,
-                      )
-                    : Container(
-                        child: Center(
-                          child: Text('No Due'),
-                        ),
+                      ],
+                    );
+                  }),
+              dueAmount > 0
+                  ? PurchasePaymentForm(
+                      dueAmount: dueAmount,
+                      purchase: widget.purchase,
+                      tabController: _tabController,
+                    )
+                  : Container(
+                      child: Center(
+                        child: Text('No Due'),
                       ),
-              ],
-            ),
+                    ),
+            ],
           ),
-        ]),
-      ),
+        ),
+      ]),
     );
   }
 }

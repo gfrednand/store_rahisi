@@ -32,13 +32,22 @@ class ClientModel extends BaseModel {
   final StreamController<List<Client>> _clientController =
       StreamController<List<Client>>.broadcast();
 
-  Client getById(String id) => _clients.firstWhere(
-        (client) => client.id == id,
-        orElse: () => null,
-      );
+  Client getById(String id) {
+    if (_clients.length == 0) {
+      listenToClients();
+    }
+    return _clients.firstWhere(
+      (client) => client.id == id,
+      orElse: () => null,
+    );
+  }
 
-  List<Client> getByClientType(String clientType) =>
-      _clients.where((client) => client.clientType == clientType).toList();
+  List<Client> getByClientType(String clientType) {
+    if (_clients.length == 0) {
+      listenToClients();
+    }
+    return _clients.where((client) => client.clientType == clientType).toList();
+  }
 
   fetchClients() async {
     setBusy(true);
@@ -120,7 +129,7 @@ class ClientModel extends BaseModel {
     setBusy(false);
   }
 
-  addClient(Client data) async {
+  Future<bool> addClient(Client data) async {
     setBusy(true);
 
     var result;
@@ -142,17 +151,11 @@ class ClientModel extends BaseModel {
         description: result,
       );
     } else {
-      await _dialogService.showDialog(
-        title: 'client successfully Added',
-        description: 'client has been created',
-      );
+      _navigationService.pop();
+      return true;
     }
 
-    if (_editting) {
-      _navigationService.pop();
-      _navigationService.pop();
-    } else {
-      _navigationService.pop();
-    }
+    _navigationService.pop();
+    return false;
   }
 }

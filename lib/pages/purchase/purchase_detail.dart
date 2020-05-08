@@ -22,12 +22,12 @@ class PurchaseDetail extends StatelessWidget {
         new DateFormat('MMM dd, yyyy').format(purchase.purchaseDate);
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         title: purchase.purchaseDate == null
             ? Text(AppLocalizations.of(context).translate('purchaseDetails'))
-            : Text(
-                '$purchaseDate',
+            : Text('$purchaseDate',
                 overflow: TextOverflow.ellipsis,
-              ),
+                style: Theme.of(context).textTheme.headline6),
       ),
       body: PurchaseDetailWidget(
         purchase: purchase,

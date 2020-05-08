@@ -148,8 +148,7 @@ class SaleModel extends BaseModel {
     }
   }
 
-  saveSale({@required Sale data}) async {
-
+  Future<bool> saveSale({@required Sale data}) async {
     setBusy(true);
     var result;
 
@@ -172,27 +171,19 @@ class SaleModel extends BaseModel {
     } else {
       await _paymentModel.savePayment(
           data: Payment(
-         
               amount: data.paidAmount,
               method: data.paymentMethod,
               referenceNo: data.referenceNumber,
               note: 'Paid for Invoice ${data.referenceNumber}',
               clientId: data.clientId,
               type: 'Credit'));
-      _cartModel.removeAllItems();
-      await _dialogService.showDialog(
-        title: 'Successful',
-        description: 'Item Sold',
-      );
+      _cartModel.clearCart();
+          _navigationService.navigateTo(routeName: AppRoutes.layout);
+      return true;
     }
+    return false;
 
-    if (_editting) {
-      _navigationService.pop();
-      _navigationService.pop();
-    } else {
-      _navigationService.pop();
-      _navigationService.navigateTo(routeName: AppRoutes.layout);
-    }
+
   }
 
   List<Sale> generateReport(DateTime fromDate, DateTime toDate) {

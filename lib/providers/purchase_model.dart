@@ -57,7 +57,6 @@ class PurchaseModel extends BaseModel {
     notifyListeners();
   }
 
-
   void setEdittingPurchase(Purchase edittingPurchase) {
     _selectedItems = [];
     _purchase = edittingPurchase;
@@ -198,7 +197,7 @@ class PurchaseModel extends BaseModel {
     }
   }
 
-  savePurchase({@required Purchase data}) async {
+  Future<bool> savePurchase({@required Purchase data}) async {
     setBusy(true);
     var result;
 
@@ -220,6 +219,7 @@ class PurchaseModel extends BaseModel {
         title: 'Cound not create purchase',
         description: result,
       );
+    
     } else {
       await _paymentModel.savePayment(
           data: Payment(
@@ -230,18 +230,12 @@ class PurchaseModel extends BaseModel {
               clientId: data.clientId,
               type: 'Debit'));
       _selectedItems = [];
-      await _dialogService.showDialog(
-        title: 'Purchase successfully Added',
-        description: 'Purchase has been created',
-      );
-    }
+      _navigationService.pop();
 
-    if (_editting) {
-      _navigationService.pop();
-      _navigationService.pop();
-    } else {
-      _navigationService.pop();
+      return true;
     }
+    _navigationService.pop();
+    return false;
   }
 
   List<Purchase> generateReport(DateTime fromDate, DateTime toDate) {

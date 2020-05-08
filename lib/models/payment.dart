@@ -34,7 +34,7 @@ class Payment {
         userId: json["userId"],
         method: json["method"],
         type: json["type"],
-        referenceNo: json["purchaseId"],
+        referenceNo: json["referenceNo"],
         amount: json["amount"].toDouble(),
         note: json["note"],
       );
@@ -45,7 +45,7 @@ class Payment {
         "userId": userId,
         "method": method,
         "type": type,
-        "purchaseId": referenceNo,
+        "referenceNo": referenceNo,
         "amount": amount,
         "note": note,
       };

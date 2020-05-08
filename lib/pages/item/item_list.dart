@@ -68,12 +68,10 @@ class _ItemListState extends State<ItemList> {
                 .toList()
           ],
         ),
-        Divider(
-          thickness: 10.0,
-        ),
+      verticalSpaceTiny,
         Scrollbar(
             child: !model.busy
-                ? model.items == null
+                ? model.items.length == 0
                     ? Center(
                         child: Text(AppLocalizations.of(context)
                             .translate('nothingFound')),
@@ -103,7 +101,7 @@ class _ItemListState extends State<ItemList> {
                           return Column(
                             children: [
                               Divider(
-                                height: 12.0,
+                                height: 5.0,
                               ),
                               Container(
                                 // padding: const EdgeInsets.only(top: 16.0),
@@ -165,7 +163,8 @@ class _ItemListState extends State<ItemList> {
                                         Theme.of(context).textTheme.subtitle2,
                                   ),
                                   trailing: Icon(
-                                    Icons.arrow_forward_ios,
+                                     Icons.arrow_forward_ios,
+                      color: Theme.of(context).iconTheme.color,
                                   ),
                                   onTap: () {
                                     if (isLargeScreen) {

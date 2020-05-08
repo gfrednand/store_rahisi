@@ -17,23 +17,36 @@ class SaleList extends StatelessWidget {
             itemBuilder: (context, index) {
               var saleDate = new DateFormat('MMM dd, yyyy')
                   .format(model.sales[index].saleDate);
-              return Card(
-                child: ListTile(
-                  title: Text(saleDate),
-                  trailing: Text('${model.sales[index].grandTotal} /='),
-                  subtitle: Text(
+              return Column(
+                children: [
+                  Divider(
+                    height: 5.0,
+                  ),
+                  ListTile(
+                    title: Text(
+                      saleDate,
+                      style: Theme.of(context).textTheme.bodyText1,
+                    ),
+                    trailing: Icon(
+                       Icons.arrow_forward_ios,
+                      color: Theme.of(context).iconTheme.color,
+                    ),
+                    subtitle: Text(
                       AppLocalizations.of(context).translate('totalSales') +
-                          ': ${model.sales[index].items.length}'),
-                  onTap: () {
-                    var arguments = {
-                      'sale': model.sales[index],
-                      'saleModel': model,
-                    };
+                          ': ${model.sales[index].grandTotal} /=',
+                      style: Theme.of(context).textTheme.subtitle2,
+                    ),
+                    onTap: () {
+                      var arguments = {
+                        'sale': model.sales[index],
+                        'saleModel': model,
+                      };
 
-                    Navigator.pushNamed(context, AppRoutes.sale_detail,
-                        arguments: arguments);
-                  },
-                ),
+                      Navigator.pushNamed(context, AppRoutes.sale_detail,
+                          arguments: arguments);
+                    },
+                  ),
+                ],
               );
             });
       },

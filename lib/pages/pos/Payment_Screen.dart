@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:storeRahisi/models/index.dart';
 import 'package:storeRahisi/providers/index.dart';
 import 'package:storeRahisi/widgets/busy_button.dart';
-
+import 'package:storeRahisi/widgets/toast.dart';
 class PaymentPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => PaymentPageState();
@@ -11,6 +11,7 @@ class PaymentPage extends StatefulWidget {
 
 class PaymentPageState extends State<PaymentPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  double paidAmount = 0.0;
   TextEditingController paidAmountController =
       new TextEditingController(text: '0.0');
 
@@ -25,6 +26,15 @@ class PaymentPageState extends State<PaymentPage> {
   String toolbarname = 'Payments';
 
   @override
+  void initState() {
+    paidAmountController.addListener(() {
+      paidAmount = double.tryParse(paidAmountController.text) ?? 0.0;
+      setState(() {});
+    });
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     CartModel cartModel = Provider.of<CartModel>(context);
     SaleModel saleModel = Provider.of<SaleModel>(context);
@@ -34,7 +44,10 @@ class PaymentPageState extends State<PaymentPage> {
 
     return new Scaffold(
       key: _scaffoldKey,
-      appBar: AppBar(title: Text('Payments')),
+      appBar: AppBar(
+          centerTitle: true,
+          title:
+              Text('Payments', style: Theme.of(context).textTheme.headline6)),
       body: new Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
@@ -42,12 +55,12 @@ class PaymentPageState extends State<PaymentPage> {
               margin: EdgeInsets.all(10.0),
               child: Card(
                 child: Container(
-                    padding:
-                        const EdgeInsets.fromLTRB(15.0, 15.0, 15.0, 15.0),
-                    child: Text("${clientModel.checkedClient.companyName}",
+                    padding: const EdgeInsets.fromLTRB(15.0, 15.0, 15.0, 15.0),
+                    child: Text(
+                        "${clientModel.checkedClient.contactPerson.toUpperCase()}",
                         maxLines: 10,
-                        style: TextStyle(
-                            fontSize: 13.0, color: Colors.black87))),
+                        style:
+                            TextStyle(fontSize: 13.0, color: Colors.black87))),
               )),
           Container(
               margin: EdgeInsets.all(10.0),
@@ -89,19 +102,17 @@ class PaymentPageState extends State<PaymentPage> {
           ),
           Divider(),
           _verticalD(),
-          cartModel.totalPrice > double.parse(paidAmountController.text)
+          cartModel.totalPrice > paidAmount
               ? Container(
                   padding: EdgeInsets.only(left: 10.0),
-                  child: Text(
-                      "Amount Due ${cartModel.totalPrice - double.parse(paidAmountController.text)}",
+                  child: Text("Amount Due ${cartModel.totalPrice - paidAmount}",
                       maxLines: 10,
                       style: TextStyle(fontSize: 15.0, color: Colors.black)),
                 )
-              : double.parse(paidAmountController.text) > cartModel.totalPrice
+              : paidAmount > cartModel.totalPrice
                   ? Container(
                       padding: EdgeInsets.only(left: 10.0),
-                      child: Text(
-                          "Change ${cartModel.totalPrice - double.parse(paidAmountController.text)}",
+                      child: Text("Change ${cartModel.totalPrice - paidAmount}",
                           maxLines: 10,
                           style:
                               TextStyle(fontSize: 15.0, color: Colors.black)),
@@ -114,7 +125,7 @@ class PaymentPageState extends State<PaymentPage> {
               alignment: Alignment.center,
               child: BusyButton(
                 title: 'Pay',
-                enabled: paidAmountController.text != null,
+                enabled: paidAmount != null,
                 onPressed: () async {
                   List<Item> items = [];
                   List<Cart> c = List.from(cartModel.carts);
@@ -128,16 +139,21 @@ class PaymentPageState extends State<PaymentPage> {
                   double tax = 0.0;
                   double discount = 0.0;
 
-                  await saleModel.saveSale(
+                  bool success = await saleModel.saveSale(
                       data: Sale(
                           clientId: clientModel.checkedClient.id,
                           discount: discount,
                           grandTotal: (cartModel.totalPrice + tax) - discount,
                           paymentMethod: 'Cash',
-                          paidAmount: double.parse(paidAmountController.text),
+                          paidAmount: paidAmount,
                           subTotal: cartModel.totalPrice - discount,
                           tax: tax,
                           items: items));
+                          if(success){
+                            Toast.show(
+                                  message: 'Purchased Successful',
+                                  context: context);
+                          }
                 },
               ),
             ),

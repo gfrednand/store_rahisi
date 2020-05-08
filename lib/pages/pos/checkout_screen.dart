@@ -28,7 +28,6 @@ class CheckoutPageState extends State<CheckoutPage> {
   Widget build(BuildContext context) {
     CartModel cartModel = Provider.of<CartModel>(context);
 
-
     return new BaseView<ClientModel>(
         onModelReady: (model) => model.listenToClients(),
         builder: (context, model, child) {
@@ -42,13 +41,16 @@ class CheckoutPageState extends State<CheckoutPage> {
           return Scaffold(
             key: _scaffoldKey,
             appBar: AppBar(
-              title: Text('Check Out'),
+              centerTitle: true,
+              title: Text('Check Out',
+                  style: Theme.of(context).textTheme.headline6),
             ),
             bottomNavigationBar:
                 model.checkedClient != null && cartModel.carts.length > 0
                     ? TotalBar(
                         cartModel: cartModel,
                         route: AppRoutes.payment,
+                        subtitle: 'Proceeds To Payments',
                       )
                     : Container(),
             body: cartModel.carts.length > 0
@@ -95,9 +97,9 @@ class CheckoutPageState extends State<CheckoutPage> {
                     //        _buildList(50))),
                   ])
                 : RaisedButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: Text('No Items'),
-                ),
+                    onPressed: () => Navigator.pop(context),
+                    child: Text('No Items'),
+                  ),
           );
         });
   }

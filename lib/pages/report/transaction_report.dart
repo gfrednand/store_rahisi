@@ -60,7 +60,8 @@ class _TransactionReportState extends State<TransactionReport> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text(AppLocalizations.of(context).translate('transactions')),
+        title: Text(AppLocalizations.of(context).translate('transactions'),
+            style: Theme.of(context).textTheme.headline6),
       ),
       body: Column(
         mainAxisSize: MainAxisSize.min,

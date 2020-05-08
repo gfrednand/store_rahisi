@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:storeRahisi/app_localizations.dart';
+import 'package:storeRahisi/constants/routes.dart';
 import 'package:storeRahisi/models/client.dart';
 import 'package:storeRahisi/models/index.dart';
 import 'package:storeRahisi/pages/client/client_form.dart';
@@ -19,16 +20,6 @@ class ClientDetailWidget extends StatefulWidget {
 }
 
 class _ClientDetailWidgetState extends State<ClientDetailWidget> {
-  _showModalSheetAppBar(
-      BuildContext context, String title, Widget body, double heightFactor) {
-    CustomModalSheet.show(
-      title: title,
-      context: context,
-      body: body,
-      heightFactor: heightFactor,
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     PurchaseModel purchaseModel = Provider.of<PurchaseModel>(context);
@@ -62,38 +53,70 @@ class _ClientDetailWidgetState extends State<ClientDetailWidget> {
                 Divider(
                   thickness: 10.0,
                 ),
+                widget.client.companyName == ''
+                    ? Container()
+                    : ListTile(
+                        title: Text(
+                          '${widget.client.companyName}',
+                          style: Theme.of(context).textTheme.headline6,
+                        ),
+                        subtitle: Text(
+                          AppLocalizations.of(context).translate('companyName'),
+                          style: Theme.of(context).textTheme.subtitle2,
+                        ),
+                      ),
                 ListTile(
-                  title: Text('${widget.client.companyName}'),
+                  title: Text(
+                    '${widget.client.contactPerson}',
+                    style: Theme.of(context).textTheme.headline6,
+                  ),
                   subtitle: Text(
-                      AppLocalizations.of(context).translate('companyName')),
-                ),
-                ListTile(
-                  title: Text('${widget.client.contactPerson}'),
-                  subtitle: Text(
-                      AppLocalizations.of(context).translate('contactPerson')),
+                    AppLocalizations.of(context).translate('contactPerson'),
+                    style: Theme.of(context).textTheme.subtitle2,
+                  ),
                 ),
                 Divider(
                   thickness: 10.0,
                 ),
                 ListTile(
-                  title: Text('${widget.client.phoneNumber}'),
+                  title: Text(
+                    '${widget.client.phoneNumber}',
+                    style: Theme.of(context).textTheme.headline6,
+                  ),
                   subtitle: Text(
-                      AppLocalizations.of(context).translate('phoneNumber')),
+                    AppLocalizations.of(context).translate('phoneNumber'),
+                    style: Theme.of(context).textTheme.subtitle2,
+                  ),
                 ),
                 ListTile(
-                  title: Text('${widget.client.email}'),
-                  subtitle:
-                      Text(AppLocalizations.of(context).translate('email')),
+                  title: Text(
+                    '${widget.client.email}',
+                    style: Theme.of(context).textTheme.headline6,
+                  ),
+                  subtitle: Text(
+                    AppLocalizations.of(context).translate('email'),
+                    style: Theme.of(context).textTheme.subtitle2,
+                  ),
                 ),
                 ListTile(
-                  title: Text('${widget.client.address}'),
-                  subtitle:
-                      Text(AppLocalizations.of(context).translate('address')),
+                  title: Text(
+                    '${widget.client.address}',
+                    style: Theme.of(context).textTheme.headline6,
+                  ),
+                  subtitle: Text(
+                    AppLocalizations.of(context).translate('address'),
+                    style: Theme.of(context).textTheme.subtitle2,
+                  ),
                 ),
                 ListTile(
-                  title: Text('${widget.client.description}'),
-                  subtitle:
-                      Text(AppLocalizations.of(context).translate('notes')),
+                  title: Text(
+                    '${widget.client.description}',
+                    style: Theme.of(context).textTheme.headline6,
+                  ),
+                  subtitle: Text(
+                    AppLocalizations.of(context).translate('notes'),
+                    style: Theme.of(context).textTheme.subtitle2,
+                  ),
                 ),
                 Divider(
                   thickness: 10.0,
@@ -109,13 +132,11 @@ class _ClientDetailWidgetState extends State<ClientDetailWidget> {
         label == AppLocalizations.of(context).translate('delete')
             ? widget.clientModel.removeClient(widget.client.id)
             : label == AppLocalizations.of(context).translate('edit')
-                ? _showModalSheetAppBar(
-                    context,
-                    AppLocalizations.of(context).translate('editItem'),
-                    ClientForm(
-                      client: widget.client,
-                    ),
-                    0.81)
+                ? Navigator.pushNamed(context, AppRoutes.client_form,
+                    arguments: {
+                        'title': AppLocalizations.of(context).translate('edit'),
+                        'client': widget.client
+                      })
                 : Container();
       },
       child: Container(

@@ -61,7 +61,8 @@ class _PurchaseReportState extends State<PurchaseReport> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text(AppLocalizations.of(context).translate('purchaseReport')),
+        title: Text(AppLocalizations.of(context).translate('purchaseReport'),
+            style: Theme.of(context).textTheme.headline6),
       ),
       body: Column(
         mainAxisSize: MainAxisSize.min,

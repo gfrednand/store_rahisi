@@ -58,7 +58,8 @@ class _ItemReportState extends State<ItemReport> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text(AppLocalizations.of(context).translate('itemReport')),
+        title: Text(AppLocalizations.of(context).translate('itemReport'),
+            style: Theme.of(context).textTheme.headline6),
       ),
       body: Column(
         mainAxisSize: MainAxisSize.min,
@@ -289,7 +290,7 @@ class _ItemReportState extends State<ItemReport> {
 //Let associate be a model class with attributes name,gender and age and associateList be a list of associate model class.
 
     List<List<dynamic>> rows = List<List<dynamic>>();
-        rows.add([
+    rows.add([
       "From",
       DateFormat('MMM dd, yyyy').format(selectedFromDate.toLocal()),
       "To",

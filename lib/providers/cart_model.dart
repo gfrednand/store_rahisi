@@ -42,8 +42,8 @@ class CartModel extends BaseModel {
     notifyListeners();
   }
 
-  removeAllItems() {
-    _carts = [];
+  clearCart() {
+    _carts.clear();
     notifyListeners();
   }
 

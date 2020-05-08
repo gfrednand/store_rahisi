@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:storeRahisi/app_localizations.dart';
 import 'package:storeRahisi/constants/app_constants.dart';
+import 'package:storeRahisi/constants/routes.dart';
 import 'package:storeRahisi/models/client.dart';
 import 'package:storeRahisi/pages/client/client_form.dart';
 import 'package:storeRahisi/providers/client_model.dart';
@@ -17,65 +18,59 @@ class CustomerAddresses extends StatefulWidget {
 }
 
 class _CustomerAddressesState extends State<CustomerAddresses> {
-  _showModalSheetAppBar(
-      BuildContext context, String title, Widget body, double heightFactor) {
-    CustomModalSheet.show(
-      title: title,
-      context: context,
-      body: body,
-      heightFactor: heightFactor,
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     ClientModel clientModel = Provider.of<ClientModel>(context, listen: true);
-
     return SizedBox(
       height: 165.0,
-      child: ListView.builder(
-        itemCount: widget.clients.length,
-        scrollDirection: Axis.horizontal,
-        itemBuilder: (context, index) => index == 0
-            ? Wrap(
-                direction: Axis.horizontal,
-                children: [
-                  Container(
-                    margin: EdgeInsets.all(7.0),
-                    width: 56.0,
-                    color: Theme.of(context).accentColor,
-                    child: Card(
-                      elevation: 3.0,
-                      child: new Center(
-                          child: IconButton(
-                              icon: Icon(
-                                Icons.add,
-                                color: Theme.of(context).accentColor,
-                              ),
-                              onPressed: () {
-                                _showModalSheetAppBar(
-                                    context,
-                                    AppLocalizations.of(context)
-                                            .translate('add') +
-                                        ' ' +
-                                        AppConstants.clientTypeCustomer,
-                                    ClientForm(
-                                      clientType:
-                                          AppConstants.clientTypeCustomer,
-                                    ),
-                                    0.7);
-                              })),
+      child: widget.clients.length == 0
+          ? Row(children: [
+              buildPlusContainer(context),
+              buildClientContainer(Client.defaultCustomer(), clientModel),
+            ])
+          : ListView.builder(
+              itemCount: widget.clients.length,
+              scrollDirection: Axis.horizontal,
+              itemBuilder: (context, index) => index == 0
+                  ? Row(
+                
+                      children: [
+                        buildPlusContainer(context),
+                        buildClientContainer(
+                            Client.defaultCustomer(), clientModel),
+                        buildClientContainer(widget.clients[index], clientModel)
+                      ],
+                    )
+                  : Row(
+                      children: [
+                        buildClientContainer(
+                            widget.clients[index], clientModel),
+                      ],
                     ),
-                  ),
-                  buildClientContainer(Client.defaultCustomer(), clientModel),
-                  buildClientContainer(widget.clients[index], clientModel)
-                ],
-              )
-            : Wrap(
-                children: [
-                  buildClientContainer(widget.clients[index], clientModel),
-                ],
-              ),
+            ),
+    );
+  }
+
+  Container buildPlusContainer(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.all(7.0),
+      width: 56.0,
+      child: Card(
+        elevation: 3.0,
+        child: new Center(
+            child: IconButton(
+                icon: Icon(
+                  Icons.add,
+                ),
+                onPressed: () {
+                  Navigator.pushNamed(context, AppRoutes.client_form,
+                      arguments: {
+                        'title': AppLocalizations.of(context).translate('add') +
+                            ' ' +
+                            AppConstants.clientTypeCustomer,
+                        'clientType': AppConstants.clientTypeCustomer
+                      });
+                })),
       ),
     );
   }
@@ -95,8 +90,8 @@ class _CustomerAddressesState extends State<CustomerAddresses> {
         margin: EdgeInsets.all(7.0),
         child: Card(
           color: clientModel.checkedClient.id == client.id
-            ? Colors.red[50]
-            : Colors.white,
+              ? Colors.red[50]
+              : Colors.white,
           elevation: 3.0,
           child: new Column(
             children: <Widget>[
@@ -107,7 +102,7 @@ class _CustomerAddressesState extends State<CustomerAddresses> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     new Text(
-                      client.companyName,
+                      client.contactPerson.toUpperCase(),
                       style: TextStyle(
                         color: Colors.black87,
                         fontSize: 15.0,
@@ -117,7 +112,7 @@ class _CustomerAddressesState extends State<CustomerAddresses> {
                     ),
                     _verticalDivider(),
                     new Text(
-                      client.contactPerson,
+                      client.companyName,
                       style: TextStyle(
                           color: Colors.black45,
                           fontSize: 13.0,

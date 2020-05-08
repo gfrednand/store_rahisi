@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:storeRahisi/pages/pos/cart_page.dart';
+import 'package:storeRahisi/pages/settings/help_screen.dart';
 import 'package:storeRahisi/providers/index.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -13,7 +13,6 @@ class SettingsPage extends StatefulWidget {
 }
 
 class Setting extends State<SettingsPage> {
-  List list = ['12', '11'];
 
   bool switchValue = false;
 
@@ -26,37 +25,16 @@ class Setting extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    AppThemeModel appThemeModel = Provider.of<AppThemeModel>(context);
+    SettingsModel appThemeModel = Provider.of<SettingsModel>(context);
     final ThemeData theme = Theme.of(context);
     final TextStyle dialogTextStyle = theme.textTheme.subtitle1
         .copyWith(color: theme.textTheme.caption.color);
-
-    IconData _backIcon() {
-      switch (Theme.of(context).platform) {
-        case TargetPlatform.android:
-        case TargetPlatform.fuchsia:
-          return Icons.arrow_back;
-        case TargetPlatform.iOS:
-          return Icons.arrow_back_ios;
-      }
-      assert(false);
-      return null;
-    }
 
     final Orientation orientation = MediaQuery.of(context).orientation;
     return new Scaffold(
         key: _scaffoldKey,
         appBar: AppBar(
-          leading: IconButton(
-            icon: Icon(_backIcon()),
-            alignment: Alignment.centerLeft,
-            tooltip: 'Back',
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
-          title: Text('Bar Name'),
-          backgroundColor: Colors.white,
+          title: Text('Settings', style: Theme.of(context).textTheme.headline6),
         ),
         body: Container(
           child: Column(
@@ -79,7 +57,7 @@ class Setting extends State<SettingsPage> {
                         'Notification',
                         style: TextStyle(
                             fontSize: 18.0,
-                            color: Colors.black87,
+                            color: theme.textTheme.headline6.color,
                             fontWeight: FontWeight.bold),
                       ),
                     ),
@@ -98,7 +76,10 @@ class Setting extends State<SettingsPage> {
                     children: <Widget>[
                       Row(
                         children: <Widget>[
-                          Icon(Icons.notifications, color: Colors.black54),
+                          Icon(
+                            Icons.notifications,
+                            color: theme.textTheme.headline6.color,
+                          ),
                           Container(
                             margin: EdgeInsets.only(left: 5.0),
                           ),
@@ -106,7 +87,7 @@ class Setting extends State<SettingsPage> {
                             'Notification',
                             style: TextStyle(
                               fontSize: 17.0,
-                              color: Colors.black87,
+                              color: theme.textTheme.headline6.color,
                             ),
                           ),
                         ],
@@ -143,7 +124,7 @@ class Setting extends State<SettingsPage> {
                         'Legal',
                         style: TextStyle(
                             fontSize: 18.0,
-                            color: Colors.black87,
+                            color: theme.textTheme.headline6.color,
                             fontWeight: FontWeight.bold),
                       ),
                     ),
@@ -166,7 +147,10 @@ class Setting extends State<SettingsPage> {
                           child: GestureDetector(
                             child: Row(
                               children: <Widget>[
-                                Icon(Icons.assignment, color: Colors.black54),
+                                Icon(
+                                  Icons.assignment,
+                                  color: theme.textTheme.headline6.color,
+                                ),
                                 Container(
                                   margin: EdgeInsets.only(left: 5.0),
                                 ),
@@ -174,7 +158,7 @@ class Setting extends State<SettingsPage> {
                                   'Terms Off Use',
                                   style: TextStyle(
                                     fontSize: 17.0,
-                                    color: Colors.black87,
+                                    color: theme.textTheme.headline6.color,
                                   ),
                                 ),
                               ],
@@ -212,15 +196,18 @@ class Setting extends State<SettingsPage> {
                           child: GestureDetector(
                               child: Row(
                                 children: <Widget>[
-                                  Icon(Icons.lock_outline,
-                                      color: Colors.black54),
+                                  Icon(
+                                    Icons.lock_outline,
+                                    color: theme.textTheme.headline6.color,
+                                  ),
                                   Container(
                                     margin: EdgeInsets.only(left: 5.0),
                                   ),
                                   Text(
                                     'Privacy Policy',
                                     style: TextStyle(
-                                        fontSize: 17.0, color: Colors.black87),
+                                        fontSize: 17.0,
+                                        color: theme.textTheme.headline6.color),
                                   ),
                                 ],
                               ),
@@ -263,7 +250,7 @@ class Setting extends State<SettingsPage> {
                     Spacer(),
                     Switch(
                         value: appThemeModel.isDarkModeOn,
-                        onChanged: (booleanValue) {
+                        onChanged: (booleanValue) { 
                           setState(() {
                             appThemeModel.updateTheme(booleanValue);
                           });

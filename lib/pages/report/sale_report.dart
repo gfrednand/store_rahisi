@@ -60,7 +60,8 @@ class _SaleReportState extends State<SaleReport> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text(AppLocalizations.of(context).translate('salesReport')),
+        title: Text(AppLocalizations.of(context).translate('salesReport'),
+            style: Theme.of(context).textTheme.headline6),
       ),
       body: Column(
         mainAxisSize: MainAxisSize.min,

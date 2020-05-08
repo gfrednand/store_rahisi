@@ -3,6 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_range_slider/flutter_range_slider.dart';
 import 'package:storeRahisi/pages/pos/cart_page.dart';
 
+
+enum DialogDemoAction {
+  cancel,
+  discard,
+  disagree,
+  agree,
+}
 class Help_Screen extends StatefulWidget {
   final String toolbarname;
 
@@ -28,7 +35,7 @@ class Help extends State<Help_Screen> {
     // TODO: implement build
     final ThemeData theme = Theme.of(context);
     final TextStyle dialogTextStyle =
-    theme.textTheme.subhead.copyWith(color: theme.textTheme.caption.color);
+    theme.textTheme.subtitle1.copyWith(color: theme.textTheme.caption.color);
 
     IconData _backIcon() {
       switch (Theme.of(context).platform) {

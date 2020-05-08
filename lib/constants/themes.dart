@@ -24,6 +24,7 @@ class AppTheme {
         color: _lightBlueColor,
       ),
     ),
+    
     bottomNavigationBarTheme: BottomNavigationBarThemeData(
         backgroundColor: _lightWhiteGreyColor,
         selectedItemColor: _lightBlueColor,
@@ -41,7 +42,7 @@ class AppTheme {
       secondary: _darkBlack7Color,
     ),
     cardTheme: CardTheme(
-      color: Colors.teal,
+      color: _lightWhiteColor,
     ),
     iconTheme: IconThemeData(color: _lightBlueColor),
     tabBarTheme: TabBarTheme(labelColor:_lightDarkGreyColor ),
@@ -81,6 +82,7 @@ class AppTheme {
       onPrimary: Colors.black54,
       primaryVariant: Colors.black,
       secondary: _lightWhiteColor,
+      error: Colors.yellow[50]
     ),
     cardTheme: CardTheme(
       color: Colors.black,
@@ -91,7 +93,7 @@ class AppTheme {
     textTheme: TextTheme(
       headline6: TextStyle(
         color: Colors.white,
-        fontSize: 20.0,
+        // fontSize: 20.0,
       ),
       bodyText1: TextStyle(
         color: Colors.white,

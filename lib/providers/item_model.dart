@@ -124,6 +124,10 @@ class ItemModel extends BaseModel {
     );
   }
 
+  List<Item> getItemByCategory(String category) {
+    return _items.where((p) => p.category == category).toList();
+  }
+
   Category getCategoryById(String id) {
     if (_categories.length == 0) {
       listenToCategories();
@@ -220,12 +224,14 @@ class ItemModel extends BaseModel {
     _item = edittingItem;
   }
 
-  checkItem(String name) async {
+  search(String searchTerms) async {
     _searchItems = [];
     setBusy(true);
     _searchItems = _items
-        .where((i) =>
-            i.name.toLowerCase().trim().contains(name.toLowerCase().trim()))
+        .where((i) => i.name
+            .toLowerCase()
+            .trim()
+            .contains(searchTerms.toLowerCase().trim()))
         .toList();
     setBusy(false);
   }
