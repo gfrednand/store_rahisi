@@ -19,7 +19,15 @@ class ClientDetailWidget extends StatefulWidget {
   _ClientDetailWidgetState createState() => _ClientDetailWidgetState();
 }
 
-class _ClientDetailWidgetState extends State<ClientDetailWidget> {
+class _ClientDetailWidgetState extends State<ClientDetailWidget>
+    with SingleTickerProviderStateMixin {
+  TabController _tabController;
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(vsync: this, length: 3);
+  }
+
   @override
   Widget build(BuildContext context) {
     PurchaseModel purchaseModel = Provider.of<PurchaseModel>(context);
@@ -30,100 +38,179 @@ class _ClientDetailWidgetState extends State<ClientDetailWidget> {
     List<Sale> sales = widget.client == null
         ? []
         : saleModel.getSaleHistoryByClientId(widget.client.id);
+    List<String> tabs = [
+      AppLocalizations.of(context).translate('details'),
+      AppLocalizations.of(context).translate('paymentHistory'),
+      AppLocalizations.of(context).translate('makePayment')
+    ];
+
+    PaymentModel paymentModel = Provider.of<PaymentModel>(context);
+    List<Payment> payments =
+        paymentModel.getPaymentsByClientId(widget.client.id);
     return widget.client == null
         ? Center(
             child: Text('Client Details'),
           )
-        : SingleChildScrollView(
-            child: Column(
-              children: <Widget>[
-                Wrap(
-                  spacing: 0.0, // gap between adjacent chips
-                  runSpacing: 0.0, // gap between lines
-                  children: <Widget>[
-                    chipDesign(AppLocalizations.of(context).translate('edit'),
-                        Color(0xFF4db6ac)),
-                    purchases.length == 0 && sales.length == 0
-                        ? chipDesign(
-                            AppLocalizations.of(context).translate('delete'),
-                            Color(0xFFf06292))
-                        : Container(),
-                  ],
-                ),
-                Divider(
-                  thickness: 10.0,
-                ),
-                widget.client.companyName == ''
-                    ? Container()
-                    : ListTile(
-                        title: Text(
-                          '${widget.client.companyName}',
-                          style: Theme.of(context).textTheme.headline6,
-                        ),
-                        subtitle: Text(
-                          AppLocalizations.of(context).translate('companyName'),
-                          style: Theme.of(context).textTheme.subtitle2,
-                        ),
-                      ),
-                ListTile(
-                  title: Text(
-                    '${widget.client.contactPerson}',
-                    style: Theme.of(context).textTheme.headline6,
-                  ),
-                  subtitle: Text(
-                    AppLocalizations.of(context).translate('contactPerson'),
-                    style: Theme.of(context).textTheme.subtitle2,
-                  ),
-                ),
-                Divider(
-                  thickness: 10.0,
-                ),
-                ListTile(
-                  title: Text(
-                    '${widget.client.phoneNumber}',
-                    style: Theme.of(context).textTheme.headline6,
-                  ),
-                  subtitle: Text(
-                    AppLocalizations.of(context).translate('phoneNumber'),
-                    style: Theme.of(context).textTheme.subtitle2,
-                  ),
-                ),
-                ListTile(
-                  title: Text(
-                    '${widget.client.email}',
-                    style: Theme.of(context).textTheme.headline6,
-                  ),
-                  subtitle: Text(
-                    AppLocalizations.of(context).translate('email'),
-                    style: Theme.of(context).textTheme.subtitle2,
-                  ),
-                ),
-                ListTile(
-                  title: Text(
-                    '${widget.client.address}',
-                    style: Theme.of(context).textTheme.headline6,
-                  ),
-                  subtitle: Text(
-                    AppLocalizations.of(context).translate('address'),
-                    style: Theme.of(context).textTheme.subtitle2,
-                  ),
-                ),
-                ListTile(
-                  title: Text(
-                    '${widget.client.description}',
-                    style: Theme.of(context).textTheme.headline6,
-                  ),
-                  subtitle: Text(
-                    AppLocalizations.of(context).translate('notes'),
-                    style: Theme.of(context).textTheme.subtitle2,
-                  ),
-                ),
-                Divider(
-                  thickness: 10.0,
-                ),
+        : Column(children: [
+            TabBar(
+              controller: _tabController,
+              isScrollable: true,
+
+              // indicator: CircleTabIndicator(
+              //     color: Theme.of(context).accentColor, radius: 3),
+              tabs: [
+                for (final tab in tabs) Tab(text: tab),
               ],
             ),
-          );
+            Expanded(
+              child: TabBarView(
+                controller: _tabController,
+                children: [
+                  SingleChildScrollView(
+                    child: Column(
+                      children: <Widget>[
+                        Wrap(
+                          spacing: 0.0, // gap between adjacent chips
+                          runSpacing: 0.0, // gap between lines
+                          children: <Widget>[
+                            chipDesign(
+                                AppLocalizations.of(context).translate('edit'),
+                                Color(0xFF4db6ac)),
+                            purchases.length == 0 && sales.length == 0
+                                ? chipDesign(
+                                    AppLocalizations.of(context)
+                                        .translate('delete'),
+                                    Color(0xFFf06292))
+                                : Container(),
+                          ],
+                        ),
+                        Divider(
+                          thickness: 10.0,
+                        ),
+                        widget.client.companyName == ''
+                            ? Container()
+                            : ListTile(
+                                title: Text(
+                                  '${widget.client.companyName}',
+                                  style: Theme.of(context).textTheme.headline6,
+                                ),
+                                subtitle: Text(
+                                  AppLocalizations.of(context)
+                                      .translate('companyName'),
+                                  style: Theme.of(context).textTheme.subtitle2,
+                                ),
+                              ),
+                        ListTile(
+                          title: Text(
+                            '${widget.client.contactPerson}',
+                            style: Theme.of(context).textTheme.headline6,
+                          ),
+                          subtitle: Text(
+                            AppLocalizations.of(context)
+                                .translate('contactPerson'),
+                            style: Theme.of(context).textTheme.subtitle2,
+                          ),
+                        ),
+                        Divider(
+                          thickness: 10.0,
+                        ),
+                        ListTile(
+                          title: Text(
+                            '${widget.client.phoneNumber}',
+                            style: Theme.of(context).textTheme.headline6,
+                          ),
+                          subtitle: Text(
+                            AppLocalizations.of(context)
+                                .translate('phoneNumber'),
+                            style: Theme.of(context).textTheme.subtitle2,
+                          ),
+                        ),
+                        ListTile(
+                          title: Text(
+                            '${widget.client.email}',
+                            style: Theme.of(context).textTheme.headline6,
+                          ),
+                          subtitle: Text(
+                            AppLocalizations.of(context).translate('email'),
+                            style: Theme.of(context).textTheme.subtitle2,
+                          ),
+                        ),
+                        ListTile(
+                          title: Text(
+                            '${widget.client.address}',
+                            style: Theme.of(context).textTheme.headline6,
+                          ),
+                          subtitle: Text(
+                            AppLocalizations.of(context).translate('address'),
+                            style: Theme.of(context).textTheme.subtitle2,
+                          ),
+                        ),
+                        ListTile(
+                          title: Text(
+                            '${widget.client.description}',
+                            style: Theme.of(context).textTheme.headline6,
+                          ),
+                          subtitle: Text(
+                            AppLocalizations.of(context).translate('notes'),
+                            style: Theme.of(context).textTheme.subtitle2,
+                          ),
+                        ),
+                        Divider(
+                          thickness: 10.0,
+                        ),
+                      ],
+                    ),
+                  ),
+                  ListView.builder(
+                      itemCount: payments.length,
+                      itemBuilder: (buildContext, index) {
+                        ClientModel clientModel =
+                            Provider.of<ClientModel>(context);
+                        Client client =
+                            clientModel.getClientById(payments[index].clientId);
+                        return Column(
+                          children: [
+                            Divider(
+                              height: 5.0,
+                            ),
+                            ListTile(
+                              leading: ExcludeSemantics(
+                                child: CircleAvatar(
+                                  radius: 25.0,
+                                  backgroundColor:
+                                      Theme.of(context).colorScheme.onPrimary,
+                                  child: Text(
+                                    'P',
+                                    style: TextStyle(
+                                      color:
+                                          Theme.of(context).colorScheme.primary,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              title: Text(
+                                '${payments[index]?.method} | ${payments[index]?.type}',
+                                style: Theme.of(context).textTheme.headline6,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              trailing: Text(
+                                ' ${payments[index]?.amount} /=',
+                                style: Theme.of(context).textTheme.subtitle2,
+                              ),
+                              onTap: () {
+                                // Navigator.pushNamed(
+                                //     context, AppRoutes.purchase_detail,
+                                //     arguments: items[index]);
+                              },
+                            ),
+                          ],
+                        );
+                      }),
+                  Container(),
+                ],
+              ),
+            )
+          ]);
   }
 
   Widget chipDesign(String label, Color color) {

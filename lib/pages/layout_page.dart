@@ -6,22 +6,18 @@ import 'package:storeRahisi/constants/app_constants.dart';
 import 'package:storeRahisi/constants/linear_icons.dart';
 import 'package:storeRahisi/constants/routes.dart';
 import 'package:storeRahisi/models/item.dart';
-import 'package:storeRahisi/models/user.dart';
 import 'package:storeRahisi/pages/base_view.dart';
-import 'package:storeRahisi/pages/home_page.dart';
-import 'package:storeRahisi/pages/item/item_form.dart';
 import 'package:storeRahisi/pages/item/item_list.dart';
 import 'package:storeRahisi/pages/item/item_search_delegate.dart';
 import 'package:storeRahisi/pages/pos/pos_item_list.dart';
-import 'package:storeRahisi/pages/purchase/purchase_form.dart';
 import 'package:storeRahisi/pages/purchase/purchase_list.dart';
-import 'package:storeRahisi/pages/client/client_form.dart';
 import 'package:storeRahisi/pages/client/client_list.dart';
 import 'package:storeRahisi/providers/auth_model.dart';
 import 'package:storeRahisi/providers/cart_model.dart';
 import 'package:storeRahisi/providers/index.dart';
 import 'package:storeRahisi/providers/item_model.dart';
 import 'package:storeRahisi/widgets/app_drawer.dart';
+import 'package:storeRahisi/widgets/bottom_navigation_badge.dart';
 import 'package:storeRahisi/widgets/cart_button.dart';
 import 'package:storeRahisi/widgets/custom_modal_sheet.dart';
 
@@ -33,7 +29,6 @@ class LayoutPage extends StatefulWidget {
 
 class _LayoutPageState extends State<LayoutPage> with TickerProviderStateMixin {
   int _currentIndex = 0;
-  List<_NavigationIconView> _navigationViews;
   List<Item> items;
   String _title(BuildContext context) {
     return _currentIndex == 0
@@ -47,44 +42,7 @@ class _LayoutPageState extends State<LayoutPage> with TickerProviderStateMixin {
                     : "";
   }
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    if (_navigationViews == null) {
-      _navigationViews = <_NavigationIconView>[
-        _NavigationIconView(
-          icon: const Icon(Icons.select_all),
-          title: AppLocalizations.of(context).translate('items'),
-          vsync: this,
-        ),
-        _NavigationIconView(
-          icon: const Icon(LinearIcons.users),
-          title: AppLocalizations.of(context).translate('clients'),
-          vsync: this,
-        ),
-        _NavigationIconView(
-          icon: const Icon(Icons.view_week),
-          title: AppLocalizations.of(context).translate('purchases'),
-          vsync: this,
-        ),
-        _NavigationIconView(
-          icon: const Icon(Icons.style),
-          title: AppLocalizations.of(context).translate('pos'),
-          vsync: this,
-        ),
-      ];
 
-      _navigationViews[_currentIndex].controller.value = 1;
-    }
-  }
-
-  @override
-  void dispose() {
-    for (_NavigationIconView view in _navigationViews) {
-      view.controller.dispose();
-    }
-    super.dispose();
-  }
 
   _getProfileBody(AuthModel model) {
     return ListView(
@@ -172,16 +130,13 @@ class _LayoutPageState extends State<LayoutPage> with TickerProviderStateMixin {
     );
   }
 
-  _buildActions(BuildContext context, AuthModel model) {
-    CartModel cartModel = Provider.of<CartModel>(context);
-    ClientModel clientModel = Provider.of<ClientModel>(context);
+  _buildActions(BuildContext context, AuthModel model, CartModel cartModel,
+      ClientModel clientModel, ItemModel itemModel) {
     return <Widget>[
       _currentIndex == 0
           ? IconButton(
               icon: const Icon(Icons.search),
               onPressed: () async {
-                ItemModel itemModel =
-                    Provider.of<ItemModel>(context, listen: false);
                 await itemModel.fetchItems();
                 items = itemModel.items;
                 final List<Item> history = await showSearch(
@@ -274,15 +229,50 @@ class _LayoutPageState extends State<LayoutPage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    CartModel cartModel = Provider.of<CartModel>(context);
+    ClientModel clientModel = Provider.of<ClientModel>(context);
+    ItemModel itemModel = Provider.of<ItemModel>(context, listen: false);
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
+
     List<String> tabs = [
       AppLocalizations.of(context).translate('customers'),
       AppLocalizations.of(context).translate('suppliers'),
     ];
-    var bottomNavigationBarItems = _navigationViews
-        .map<BottomNavigationBarItem>((navigationView) => navigationView.item)
-        .toList();
+
+    BottomNavigationBadge badger = new BottomNavigationBadge(
+        backgroundColor: Colors.red,
+        badgeShape: BottomNavigationBadgeShape.circle,
+        textColor: Colors.white,
+        position: BottomNavigationBadgePosition.topRight,
+        textSize: 8);
+
+    List<BottomNavigationBarItem> bottomNavigationBarItems = [
+      BottomNavigationBarItem(
+        icon: const Icon(Icons.select_all),
+        title: Text(AppLocalizations.of(context).translate('items')),
+      ),
+      BottomNavigationBarItem(
+        icon: const Icon(LinearIcons.users),
+        title: Text(AppLocalizations.of(context).translate('clients')),
+      ),
+      BottomNavigationBarItem(
+        icon: const Icon(Icons.view_week),
+        title: Text(AppLocalizations.of(context).translate('purchases')),
+      ),
+      BottomNavigationBarItem(
+        icon: const Icon(Icons.style),
+        title: Text(AppLocalizations.of(context).translate('pos')),
+      ),
+    ];
+
+    int countClient =  clientModel.getNumberOfClientsWithDue();
+    String cl = countClient > 0 ? countClient.toString() : null;
+    setState(() {
+      bottomNavigationBarItems =
+          badger.setBadge(bottomNavigationBarItems, cl, 1);
+    });
+
     return BaseView<AuthModel>(
         builder: (context, model, child) => _currentIndex == 1
             ? DefaultTabController(
@@ -299,7 +289,8 @@ class _LayoutPageState extends State<LayoutPage> with TickerProviderStateMixin {
                         _title(context),
                         style: Theme.of(context).textTheme.headline6,
                       ),
-                      actions: _buildActions(context, model),
+                      actions: _buildActions(
+                          context, model, cartModel, clientModel, itemModel),
                       bottom: TabBar(
                         isScrollable: MediaQuery.of(context).orientation ==
                                 Orientation.landscape
@@ -327,7 +318,8 @@ class _LayoutPageState extends State<LayoutPage> with TickerProviderStateMixin {
                     _title(context),
                     style: Theme.of(context).textTheme.headline6,
                   ),
-                  actions: _buildActions(context, model),
+                  actions: _buildActions(
+                      context, model, cartModel, clientModel, itemModel),
                 ),
                 // resizeToAvoidBottomPadding: true,
                 // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -401,74 +393,9 @@ class _LayoutPageState extends State<LayoutPage> with TickerProviderStateMixin {
       unselectedFontSize: textTheme.caption.fontSize,
       onTap: (index) {
         setState(() {
-          _navigationViews[_currentIndex].controller.reverse();
           _currentIndex = index;
-          _navigationViews[_currentIndex].controller.forward();
         });
       },
-      // selectedItemColor: colorScheme.secondary,
-      // unselectedItemColor: colorScheme.onPrimary.withOpacity(0.4),
-      // backgroundColor: colorScheme.primary,
-    );
-  }
-}
-
-class _NavigationIconView {
-  _NavigationIconView({
-    this.title,
-    this.icon,
-    TickerProvider vsync,
-  })  : item = BottomNavigationBarItem(
-          icon: icon,
-          title: Text(title),
-        ),
-        controller = AnimationController(
-          duration: kThemeAnimationDuration,
-          vsync: vsync,
-        ) {
-    _animation = controller.drive(CurveTween(
-      curve: const Interval(0.5, 1.0, curve: Curves.fastOutSlowIn),
-    ));
-  }
-
-  final String title;
-  final Widget icon;
-  final BottomNavigationBarItem item;
-  final AnimationController controller;
-  Animation<double> _animation;
-
-  FadeTransition transition(BuildContext context) {
-    return FadeTransition(
-      opacity: _animation,
-      child: Stack(
-        children: [
-          // ExcludeSemantics(
-          //   child: Center(
-          //     child: Padding(
-          //       padding: const EdgeInsets.all(16),
-          //       child: ClipRRect(
-          //         borderRadius: BorderRadius.circular(8),
-          //         child: Image.asset(
-          //           'assets/demos/bottom_navigation_background.png',
-          //         ),
-          //       ),
-          //     ),
-          //   ),
-          // ),
-          Center(
-            child: IconTheme(
-              data: IconThemeData(
-                color: Colors.white,
-                size: 80,
-              ),
-              child: Semantics(
-                label: 'Noma',
-                child: icon,
-              ),
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

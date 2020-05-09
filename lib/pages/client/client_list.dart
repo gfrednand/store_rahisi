@@ -78,18 +78,8 @@ class _ClientListState extends State<ClientList> {
                 clients[index].clientType == AppConstants.clientTypeSupplier
                     ? clients[index].companyName
                     : clients[index].contactPerson;
-            SaleModel saleModel = Provider.of<SaleModel>(context);
-            List<Sale> sales =
-                saleModel.getSaleHistoryByClientId(clients[index].id);
-            double totalDueAmount = 0.0;
-            sales.forEach((sale) {
-              double totalPaidAmount = 0.0;
-              sale.items.forEach((item) {
-                totalPaidAmount = totalPaidAmount + item.paidAmount;
-              });
-              totalDueAmount =
-                  totalDueAmount + (sale.grandTotal - totalPaidAmount);
-            });
+            double totalDueAmount =
+                model.getDueAmountByClientId(clients[index].id);
 
             return Column(
               children: [
@@ -101,9 +91,7 @@ class _ClientListState extends State<ClientList> {
                           selectedIndex == index &&
                           isLargeScreen
                       ? Colors.red[50]
-                      : totalDueAmount > 0.0
-                          ?  Colors.amber
-                          : Theme.of(context).colorScheme.primaryVariant,
+                      : Theme.of(context).colorScheme.primaryVariant,
                   child: ListTile(
                     leading: ExcludeSemantics(
                       child: CircleAvatar(
@@ -124,7 +112,7 @@ class _ClientListState extends State<ClientList> {
                     ),
                     title: Hero(
                       tag: '${clients[index].id}__heroTag',
-                      child: Text(displayName,
+                      child: Text(displayName.toUpperCase(),
                           overflow: TextOverflow.ellipsis,
                           style: Theme.of(context).textTheme.bodyText1),
                     ),
@@ -134,9 +122,14 @@ class _ClientListState extends State<ClientList> {
                         totalDueAmount == 0.0
                             ? Container()
                             : Text(
-                                'Due $totalDueAmount',
+                                'Due: $totalDueAmount',
                                 overflow: TextOverflow.ellipsis,
-                                style: Theme.of(context).textTheme.subtitle2,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .subtitle2
+                                    .copyWith(
+                                        color: Colors.red,
+                                        fontWeight: FontWeight.bold),
                               ),
                         Text(
                           '${clients[index].phoneNumber}',

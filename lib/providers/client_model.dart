@@ -4,6 +4,7 @@ import 'dart:async';
 import 'package:storeRahisi/locator.dart';
 import 'package:storeRahisi/providers/base_model.dart';
 import 'package:storeRahisi/providers/cart_model.dart';
+import 'package:storeRahisi/providers/index.dart';
 import 'package:storeRahisi/services/api.dart';
 import 'package:storeRahisi/models/client.dart';
 import 'package:storeRahisi/services/dialog_service.dart';
@@ -28,6 +29,7 @@ class ClientModel extends BaseModel {
   bool get _editting => _client != null;
   final DialogService _dialogService = locator<DialogService>();
   NavigationService _navigationService = locator<NavigationService>();
+  SaleModel _saleModel = locator<SaleModel>();
 
   final StreamController<List<Client>> _clientController =
       StreamController<List<Client>>.broadcast();
@@ -157,5 +159,31 @@ class ClientModel extends BaseModel {
 
     _navigationService.pop();
     return false;
+  }
+
+  double getDueAmountByClientId(String clientID) {
+    double amount = 0.0;
+    _saleModel.getSaleHistoryByClientId(clientID).forEach((sale) {
+      double totalPaidAmount = 0.0;
+      sale.items.forEach((item) {
+        totalPaidAmount = totalPaidAmount + item.paidAmount;
+      });
+      amount = amount + (sale.grandTotal - totalPaidAmount);
+    });
+    return amount;
+  }
+
+  int getNumberOfClientsWithDue() {
+    int count = 0;
+    if (_clients.length == 0) {
+      listenToClients();
+    }
+    _clients.forEach((client) {
+      double totalDueAmount = getDueAmountByClientId(client.id);
+      if (totalDueAmount > 0) {
+        count++;
+      }
+    });
+    return count;
   }
 }

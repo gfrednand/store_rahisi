@@ -71,11 +71,10 @@ class Router {
         ));
         break;
       case AppRoutes.item_detail:
-        var args = settings.arguments as Map<String, dynamic>;
+        var args = settings.arguments as Item;
         return MaterialPageRoute(
             builder: (_) => ItemDetail(
-                  itemModel: args['itemModel'],
-                  item: args['item'],
+                  item: args,
                 ));
         break;
       case AppRoutes.item_form:

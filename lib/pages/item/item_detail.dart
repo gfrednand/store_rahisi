@@ -7,8 +7,7 @@ import 'package:storeRahisi/providers/index.dart';
 
 class ItemDetail extends StatelessWidget {
   final Item item;
-  final ItemModel itemModel;
-  const ItemDetail({Key key, this.item, this.itemModel}) : super(key: key);
+  const ItemDetail({Key key, this.item}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +22,6 @@ class ItemDetail extends StatelessWidget {
         ),
         body: ItemDetailWidget(
           item: item,
-          itemModel: itemModel,
         ));
   }
 }

@@ -45,7 +45,6 @@ class _ItemListState extends State<ItemList> {
                     flex: 3,
                     child: ItemDetailWidget(
                       item: selectedValue,
-                      itemModel: model,
                     ))
                 : Container(),
           ]);
@@ -173,14 +172,11 @@ class _ItemListState extends State<ItemList> {
                                         selectedIndex = index;
                                       });
                                     } else {
-                                      var arguments = {
-                                        'item': model.items[index],
-                                        'itemModel': model,
-                                      };
+                             
 
                                       Navigator.pushNamed(
                                           context, AppRoutes.item_detail,
-                                          arguments: arguments);
+                                          arguments:  model.items[index]);
                                     }
                                   },
                                 ),

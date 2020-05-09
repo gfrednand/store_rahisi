@@ -65,6 +65,14 @@ class PaymentModel extends BaseModel {
     return _payments.where((payment) => payment.referenceNo == id).toList();
   }
 
+  List<Payment> getPaymentsByClientId(String clientId) {
+    if (_payments.length == 0) {
+      listenToPayments();
+    }
+
+    return _payments.where((payment) => payment.clientId == clientId).toList();
+  }
+
   removePayment(String id) async {
     var dialogResponse = await _dialogService.showConfirmationDialog(
       title: 'Are you sure?',

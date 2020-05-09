@@ -14,8 +14,7 @@ import 'package:storeRahisi/widgets/toast.dart';
 
 class ItemDetailWidget extends StatefulWidget {
   final Item item;
-  final ItemModel itemModel;
-  const ItemDetailWidget({Key key, this.item, this.itemModel})
+  const ItemDetailWidget({Key key, this.item})
       : super(key: key);
   @override
   _ItemDetailWidgetState createState() => _ItemDetailWidgetState();
@@ -414,10 +413,11 @@ class _ItemDetailWidgetState extends State<ItemDetailWidget> {
   }
 
   Widget chipDesign(String label, Color color) {
+    ItemModel itemModel = Provider.of<ItemModel>(context);
     return GestureDetector(
       onTap: () {
         label == AppLocalizations.of(context).translate('delete')
-            ? widget.itemModel.removeItem(widget.item.id)
+            ? itemModel.removeItem(widget.item.id)
             : label == AppLocalizations.of(context).translate('edit')
                 ? Navigator.pushNamed(context, AppRoutes.item_form, arguments: {
                     'title': AppLocalizations.of(context).translate('editItem'),
