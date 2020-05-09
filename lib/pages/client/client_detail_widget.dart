@@ -5,6 +5,7 @@ import 'package:storeRahisi/constants/routes.dart';
 import 'package:storeRahisi/models/client.dart';
 import 'package:storeRahisi/models/index.dart';
 import 'package:storeRahisi/pages/client/client_form.dart';
+import 'package:storeRahisi/pages/purchase/payment_form.dart';
 import 'package:storeRahisi/providers/client_model.dart';
 import 'package:storeRahisi/providers/index.dart';
 import 'package:storeRahisi/widgets/custom_modal_sheet.dart';
@@ -164,10 +165,6 @@ class _ClientDetailWidgetState extends State<ClientDetailWidget>
                   ListView.builder(
                       itemCount: payments.length,
                       itemBuilder: (buildContext, index) {
-                        ClientModel clientModel =
-                            Provider.of<ClientModel>(context);
-                        Client client =
-                            clientModel.getClientById(payments[index].clientId);
                         return Column(
                           children: [
                             Divider(
@@ -206,7 +203,20 @@ class _ClientDetailWidgetState extends State<ClientDetailWidget>
                           ],
                         );
                       }),
-                  Container(),
+
+                      // TODO: Add ref number for sale
+                  widget.client.proviousDue > 0
+                      ? PaymentForm(
+                          dueAmount: widget.client.proviousDue,
+                          referenceNo: 'SaleRef',
+                          clientId: widget.client.id,
+                          tabController: _tabController,
+                        )
+                      : Container(
+                          child: Center(
+                            child: Text('No Due'),
+                          ),
+                        ),
                 ],
               ),
             )

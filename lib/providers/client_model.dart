@@ -30,6 +30,7 @@ class ClientModel extends BaseModel {
   final DialogService _dialogService = locator<DialogService>();
   NavigationService _navigationService = locator<NavigationService>();
   SaleModel _saleModel = locator<SaleModel>();
+  PaymentModel _paymentModel = locator<PaymentModel>();
 
   final StreamController<List<Client>> _clientController =
       StreamController<List<Client>>.broadcast();
@@ -162,15 +163,16 @@ class ClientModel extends BaseModel {
   }
 
   double getDueAmountByClientId(String clientID) {
-    double amount = 0.0;
+    double grandTotal = 0.0;
     _saleModel.getSaleHistoryByClientId(clientID).forEach((sale) {
-      double totalPaidAmount = 0.0;
-      sale.items.forEach((item) {
-        totalPaidAmount = totalPaidAmount + item.paidAmount;
-      });
-      amount = amount + (sale.grandTotal - totalPaidAmount);
+      grandTotal = grandTotal + sale.grandTotal;
     });
-    return amount;
+
+    double paymentAmount = 0.0;
+    _paymentModel.getPaymentsByClientId(clientID).forEach((payment) {
+      paymentAmount = paymentAmount + payment.amount;
+    });
+    return( grandTotal - paymentAmount);
   }
 
   int getNumberOfClientsWithDue() {

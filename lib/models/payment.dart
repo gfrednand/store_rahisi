@@ -17,6 +17,7 @@ class Payment {
   double amount;
   String note;
   String userId;
+  DateTime paymentDate;
   Payment({
     this.id,
     this.userId,
@@ -26,7 +27,8 @@ class Payment {
     this.referenceNo,
     this.amount,
     this.note,
-  });
+    DateTime paymentDate,
+  }) : this.paymentDate = paymentDate ?? DateTime.now();
 
   factory Payment.fromMap(Map<String, dynamic> json, String id) => Payment(
         id: id ?? '',
@@ -37,6 +39,7 @@ class Payment {
         referenceNo: json["referenceNo"],
         amount: json["amount"].toDouble(),
         note: json["note"],
+        paymentDate: DateTime.tryParse(json["paymentDate"].toDate().toString()),
       );
 
   Map<String, dynamic> toMap() => {
@@ -48,5 +51,6 @@ class Payment {
         "referenceNo": referenceNo,
         "amount": amount,
         "note": note,
+        "paymentDate": paymentDate,
       };
 }

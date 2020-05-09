@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:storeRahisi/app_localizations.dart';
 import 'package:storeRahisi/constants/routes.dart';
 import 'package:storeRahisi/models/index.dart';
-import 'package:storeRahisi/pages/purchase/purchase_payment_form.dart';
+import 'package:storeRahisi/pages/purchase/payment_form.dart';
 import 'package:storeRahisi/providers/index.dart';
 import 'package:storeRahisi/widgets/circle_tab_indicator.dart';
 
@@ -281,9 +281,10 @@ class _PurchaseDetailWidgetState extends State<PurchaseDetailWidget>
                     );
                   }),
               dueAmount > 0
-                  ? PurchasePaymentForm(
+                  ? PaymentForm(
                       dueAmount: dueAmount,
-                      purchase: widget.purchase,
+                      referenceNo: widget.purchase.referenceNumber,
+                      clientId: widget.purchase.clientId,
                       tabController: _tabController,
                     )
                   : Container(

@@ -78,8 +78,8 @@ class _ClientListState extends State<ClientList> {
                 clients[index].clientType == AppConstants.clientTypeSupplier
                     ? clients[index].companyName
                     : clients[index].contactPerson;
-            double totalDueAmount =
-                model.getDueAmountByClientId(clients[index].id);
+
+                clients[index].proviousDue = model.getDueAmountByClientId(clients[index].id);
 
             return Column(
               children: [
@@ -119,10 +119,10 @@ class _ClientListState extends State<ClientList> {
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        totalDueAmount == 0.0
+                        clients[index].proviousDue == 0.0
                             ? Container()
                             : Text(
-                                'Due: $totalDueAmount',
+                                'Previous Due: ${clients[index].proviousDue}',
                                 overflow: TextOverflow.ellipsis,
                                 style: Theme.of(context)
                                     .textTheme

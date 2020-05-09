@@ -8,19 +8,20 @@ import 'package:storeRahisi/providers/payment_model.dart';
 import 'package:storeRahisi/widgets/busy_button.dart';
 import 'package:storeRahisi/widgets/toast.dart';
 
-class PurchasePaymentForm extends StatefulWidget {
+class PaymentForm extends StatefulWidget {
   final double dueAmount;
-  final Purchase purchase;
+  final String referenceNo;
+  final String clientId;
   final TabController tabController;
 
-  const PurchasePaymentForm(
-      {Key key, this.dueAmount, this.purchase, this.tabController})
+  const PaymentForm(
+      {Key key, this.dueAmount, this.referenceNo, this.tabController, this.clientId})
       : super(key: key);
   @override
-  _PurchasePaymentFormState createState() => _PurchasePaymentFormState();
+  _PaymentFormState createState() => _PaymentFormState();
 }
 
-class _PurchasePaymentFormState extends State<PurchasePaymentForm> {
+class _PaymentFormState extends State<PaymentForm> {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   TextEditingController paidAmountController;
@@ -110,8 +111,8 @@ class _PurchasePaymentFormState extends State<PurchasePaymentForm> {
                         method: _paymentMethod,
                         type: 'Debit',
                         note: descriptionController.text,
-                        referenceNo: widget.purchase.referenceNumber,
-                        clientId: widget.purchase.id,
+                        referenceNo: widget.referenceNo,
+                        clientId: widget.clientId,
                         userId: null,
                       ))
                           .then((success) {
