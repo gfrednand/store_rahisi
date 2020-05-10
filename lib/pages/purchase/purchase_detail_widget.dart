@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:storeRahisi/app_localizations.dart';
 import 'package:storeRahisi/constants/routes.dart';
+import 'package:storeRahisi/constants/ui_helpers.dart';
 import 'package:storeRahisi/models/index.dart';
 import 'package:storeRahisi/pages/purchase/payment_form.dart';
 import 'package:storeRahisi/providers/index.dart';
-import 'package:storeRahisi/widgets/circle_tab_indicator.dart';
 
 class PurchaseDetailWidget extends StatefulWidget {
   final Purchase purchase;
@@ -124,7 +123,7 @@ class _PurchaseDetailWidgetState extends State<PurchaseDetailWidget>
                     ListTile(
                       title: Text(
                         '${widget.purchase.companyName}',
-                        style: Theme.of(context).textTheme.headline6,
+                        style: Theme.of(context).textTheme.bodyText1,
                       ),
                       subtitle: Text(
                         'Supplier',
@@ -134,7 +133,7 @@ class _PurchaseDetailWidgetState extends State<PurchaseDetailWidget>
                     ListTile(
                       title: Text(
                         '${widget.purchase.referenceNumber}',
-                        style: Theme.of(context).textTheme.headline6,
+                        style: Theme.of(context).textTheme.bodyText1,
                       ),
                       subtitle: Text(
                         'Bill No',
@@ -146,8 +145,8 @@ class _PurchaseDetailWidgetState extends State<PurchaseDetailWidget>
                     ),
                     ListTile(
                       title: Text(
-                        '${widget.purchase.grandTotalAmount}',
-                        style: Theme.of(context).textTheme.headline6,
+                        '${widget.purchase.grandTotalAmount?.toString()?.replaceAllMapped(reg, mathFunc)}',
+                        style: Theme.of(context).textTheme.bodyText1,
                       ),
                       subtitle: Text(
                         'Grand Total',
@@ -156,8 +155,8 @@ class _PurchaseDetailWidgetState extends State<PurchaseDetailWidget>
                     ),
                     ListTile(
                       title: Text(
-                        '${widget.purchase.paidAmount}',
-                        style: Theme.of(context).textTheme.headline6,
+                        '${widget.purchase.paidAmount?.toString()?.replaceAllMapped(reg, mathFunc)}',
+                        style: Theme.of(context).textTheme.bodyText1,
                       ),
                       subtitle: Text(
                         'Paid Amount',
@@ -166,8 +165,8 @@ class _PurchaseDetailWidgetState extends State<PurchaseDetailWidget>
                     ),
                     ListTile(
                       title: Text(
-                        '$dueAmount',
-                        style: Theme.of(context).textTheme.headline6,
+                        '${dueAmount?.toString()?.replaceAllMapped(reg, mathFunc)}',
+                        style: Theme.of(context).textTheme.bodyText1,
                       ),
                       subtitle: Text(
                         'Due Amount',
@@ -207,19 +206,19 @@ class _PurchaseDetailWidgetState extends State<PurchaseDetailWidget>
                           ),
                           title: Text(
                             '${item?.name}',
-                            style: Theme.of(context).textTheme.headline6,
+                            style: Theme.of(context).textTheme.bodyText1,
                             overflow: TextOverflow.ellipsis,
                           ),
                           subtitle: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'Purchase Price: ${widget.purchase.items[index].purchasePrice} @1',
+                                'Purchase Price: ${widget.purchase.items[index].purchasePrice?.toString()?.replaceAllMapped(reg, mathFunc)} @1',
                                 style: Theme.of(context).textTheme.subtitle2,
                                 overflow: TextOverflow.ellipsis,
                               ),
                               Text(
-                                'Sale Price: ${widget.purchase.items[index].salePrice} @1',
+                                'Sale Price: ${widget.purchase.items[index].salePrice?.toString()?.replaceAllMapped(reg, mathFunc)} @1',
                                 style: Theme.of(context).textTheme.subtitle2,
                                 overflow: TextOverflow.ellipsis,
                               ),
@@ -240,9 +239,7 @@ class _PurchaseDetailWidgetState extends State<PurchaseDetailWidget>
               ListView.builder(
                   itemCount: payments.length,
                   itemBuilder: (buildContext, index) {
-                    ClientModel clientModel = Provider.of<ClientModel>(context);
-                    Client client =
-                        clientModel.getClientById(payments[index].clientId);
+     
                     return Column(
                       children: [
                         Divider(
@@ -264,11 +261,11 @@ class _PurchaseDetailWidgetState extends State<PurchaseDetailWidget>
                           ),
                           title: Text(
                             '${payments[index]?.method} | ${payments[index]?.type}',
-                            style: Theme.of(context).textTheme.headline6,
+                            style: Theme.of(context).textTheme.bodyText1,
                             overflow: TextOverflow.ellipsis,
                           ),
                           trailing: Text(
-                            ' ${payments[index]?.amount} /=',
+                            ' ${payments[index]?.amount?.toString()?.replaceAllMapped(reg, mathFunc)} /=',
                             style: Theme.of(context).textTheme.subtitle2,
                           ),
                           onTap: () {

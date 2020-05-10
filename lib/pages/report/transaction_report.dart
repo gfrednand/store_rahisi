@@ -81,14 +81,14 @@ class _TransactionReportState extends State<TransactionReport> {
                       icon: Icon(
                         Icons.date_range,
                         size: 18.0,
-                        color: Theme.of(context).accentColor,
+                         color: Theme.of(context).iconTheme.color,
                       ),
                       onPressed: () => _selectFromDate(context),
                       label: Text(
                           'From : ' +
                               '${DateFormat('MMM dd, yyyy').format(selectedFromDate.toLocal())}',
                           style:
-                              TextStyle(color: Theme.of(context).accentColor)),
+                              TextStyle( color: Theme.of(context).iconTheme.color)),
                     ),
                     Container(
                       color: Theme.of(context).primaryColor,
@@ -99,14 +99,14 @@ class _TransactionReportState extends State<TransactionReport> {
                       icon: Icon(
                         Icons.date_range,
                         size: 18.0,
-                        color: Theme.of(context).accentColor,
+                         color: Theme.of(context).iconTheme.color,
                       ),
                       onPressed: () => _selectToDate(context),
                       label: Text(
                           'To : ' +
                               '${DateFormat('MMM dd, yyyy').format(selectedToDate.toLocal())}',
                           style:
-                              TextStyle(color: Theme.of(context).accentColor)),
+                              TextStyle( color: Theme.of(context).iconTheme.color)),
                     ),
                   ],
                 ),

@@ -111,7 +111,7 @@ class _ItemPurchaseFormState extends State<ItemPurchaseForm> {
                         decoration: const InputDecoration(
                           icon: const Icon(Icons.attach_money),
                           hintText: '0',
-                          labelText: 'Price',
+                          labelText: 'Price @1',
                         ),
                       ),
                 verticalSpaceSmall,
@@ -125,7 +125,7 @@ class _ItemPurchaseFormState extends State<ItemPurchaseForm> {
                         decoration: const InputDecoration(
                           icon: const Icon(Icons.attach_money),
                           hintText: '0',
-                          labelText: 'Paid Price',
+                          labelText: 'Paid Price @1',
                         ),
                       ),
                 verticalSpaceSmall,

@@ -13,7 +13,6 @@ class PurchaseModel extends BaseModel {
   final StreamController<List<Purchase>> _purchasesController =
       StreamController<List<Purchase>>.broadcast();
 
-  int _count = 0;
   List<Purchase> _purchases = [];
   List<Purchase> _searchPurchases;
   // List<Client> _clients;
@@ -219,7 +218,7 @@ class PurchaseModel extends BaseModel {
         title: 'Cound not create purchase',
         description: result,
       );
-    
+      return false;
     } else {
       await _paymentModel.savePayment(
           data: Payment(
@@ -234,8 +233,6 @@ class PurchaseModel extends BaseModel {
 
       return true;
     }
-    _navigationService.pop();
-    return false;
   }
 
   List<Purchase> generateReport(DateTime fromDate, DateTime toDate) {

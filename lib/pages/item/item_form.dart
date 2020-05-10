@@ -7,10 +7,8 @@ import 'package:storeRahisi/constants/ui_helpers.dart';
 import 'package:storeRahisi/models/index.dart';
 import 'package:storeRahisi/providers/item_model.dart';
 import 'package:storeRahisi/widgets/busy_button.dart';
-import 'package:storeRahisi/widgets/custom_modal_sheet.dart';
 import 'package:storeRahisi/widgets/dropdown_formfield.dart';
-import 'package:storeRahisi/widgets/expansion_list.dart';
-import 'package:storeRahisi/widgets/input_field.dart';
+
 import 'package:barcode_flutter/barcode_flutter.dart';
 import 'package:storeRahisi/widgets/toast.dart';
 import '../base_view.dart';

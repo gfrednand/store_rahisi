@@ -16,7 +16,6 @@ class Setting extends State<SettingsPage> {
 
   bool switchValue = false;
 
-  // String toolbarname = 'Fruiys & Vegetables';
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   String toolbarname;
 
@@ -24,13 +23,11 @@ class Setting extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     SettingsModel appThemeModel = Provider.of<SettingsModel>(context);
     final ThemeData theme = Theme.of(context);
     final TextStyle dialogTextStyle = theme.textTheme.subtitle1
         .copyWith(color: theme.textTheme.caption.color);
 
-    final Orientation orientation = MediaQuery.of(context).orientation;
     return new Scaffold(
         key: _scaffoldKey,
         appBar: AppBar(
@@ -281,41 +278,7 @@ class Setting extends State<SettingsPage> {
         margin: EdgeInsets.only(left: 10.0, right: 0.0, top: 0.0, bottom: 0.0),
       );
 
-  _verticalDivider() => Container(
-        padding: EdgeInsets.all(2.0),
-      );
 
-  Widget _status(status) {
-    if (status == 'Cabcel Order') {
-      return FlatButton.icon(
-          label: Text(
-            status,
-            style: TextStyle(color: Colors.red),
-          ),
-          icon: const Icon(
-            Icons.highlight_off,
-            size: 18.0,
-            color: Colors.red,
-          ),
-          onPressed: () {
-            // Perform some action
-          });
-    } else {
-      return FlatButton.icon(
-          label: Text(
-            status,
-            style: TextStyle(color: Colors.green),
-          ),
-          icon: const Icon(
-            Icons.check_circle,
-            size: 18.0,
-            color: Colors.green,
-          ),
-          onPressed: () {
-            // Perform some action
-          });
-    }
-  }
 
   erticalD() => Container(
         margin: EdgeInsets.only(left: 10.0, right: 0.0, top: 0.0, bottom: 0.0),
@@ -323,18 +286,5 @@ class Setting extends State<SettingsPage> {
 
   bool a = true;
   String mText = "Press to hide";
-  double _lowerValue = 1.0;
-  double _upperValue = 100.0;
 
-  void _visibilitymethod() {
-    setState(() {
-      if (a) {
-        a = false;
-        mText = "Press to show";
-      } else {
-        a = true;
-        mText = "Press to hide";
-      }
-    });
-  }
 }

@@ -1,22 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:storeRahisi/constants/routes.dart';
 import 'package:storeRahisi/pages/base_view.dart';
-import 'package:storeRahisi/pages/expense/expense_form.dart';
 import 'package:storeRahisi/providers/index.dart';
-import 'package:storeRahisi/widgets/custom_modal_sheet.dart';
 import '../../app_localizations.dart';
 
 class ExpenseList extends StatelessWidget {
-  _showModalSheetAppBar(
-      BuildContext context, String title, Widget body, double heightFactor) {
-    CustomModalSheet.show(
-      title: title,
-      context: context,
-      body: body,
-      heightFactor: heightFactor,
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return BaseView<ExpenseModel>(
@@ -24,7 +12,9 @@ class ExpenseList extends StatelessWidget {
       builder: (context, model, child) {
         return Scaffold(
           appBar: AppBar(
-            title: Text(AppLocalizations.of(context).translate('expenses')),
+            centerTitle: true,
+            title: Text(AppLocalizations.of(context).translate('expenses'),
+                style: Theme.of(context).textTheme.headline6),
           ),
           body: Scrollbar(
               child: !model.busy
@@ -36,48 +26,59 @@ class ExpenseList extends StatelessWidget {
                       : ListView.builder(
                           itemCount: model.expenses.length,
                           itemBuilder: (buildContext, index) {
-                            return Card(
-                              child: ListTile(
-                                leading: ExcludeSemantics(
-                                  child: CircleAvatar(
-                                    radius: 25.0,
-                                    backgroundColor:
-                                        Theme.of(context).primaryColor,
-                                    child: Text(
-                                      model.expenses[index].responsiblePerson
-                                          .substring(0, 2)
-                                          .toUpperCase(),
-                                      style: TextStyle(
-                                          color: Theme.of(context).accentColor),
+                            return Column(
+                              children: [
+                                Divider(height:5.0),
+                                ListTile(
+                                  leading: ExcludeSemantics(
+                                    child: CircleAvatar(
+                                      radius: 25.0,
+                                      backgroundColor:
+                                          Theme.of(context).colorScheme.onPrimary,
+                                      child: Text(
+                                        model.expenses[index].responsiblePerson
+                                            .substring(0, 2)
+                                            .toUpperCase(),
+                                        style: TextStyle(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .primary,
+                                        ),
+                                      ),
                                     ),
                                   ),
-                                ),
-                                title: Text(
-                                  '${model.expenses[index].responsiblePerson.toUpperCase()}',
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                                subtitle: Text(
-                                  '${model.expenses[index].description ?? ''}',
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                trailing: Text(
-                                  '${model.expenses[index].amount}',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
+                                  title: Text(
+                                    '${model.expenses[index].responsiblePerson.toUpperCase()}',
+                                    overflow: TextOverflow.ellipsis,
+                                    style: Theme.of(context).textTheme.bodyText1,
                                   ),
-                                ),
-                                onTap: () {
-                                  var arguments = {
-                                    'expense': model.expenses[index],
-                                    'expenseModel': model,
-                                  };
+                                  subtitle: Text(
+                                    '${model.expenses[index].description ?? ''}',
+                                    overflow: TextOverflow.ellipsis,
+                                    style: Theme.of(context).textTheme.subtitle2,
+                                  ),
+                                  // trailing: Text(
+                                  //   '${model.expenses[index].amount}',
+                                  //   style: TextStyle(
+                                  //     fontWeight: FontWeight.bold,
+                                  //   ),
+                                  // ),
+                                  trailing: Icon(
+                                    Icons.arrow_forward_ios,
+                                    color: Theme.of(context).iconTheme.color,
+                                  ),
+                                  onTap: () {
+                                    var arguments = {
+                                      'expense': model.expenses[index],
+                                      'expenseModel': model,
+                                    };
 
-                                  Navigator.pushNamed(
-                                      context, AppRoutes.expense_detail,
-                                      arguments: arguments);
-                                },
-                              ),
+                                    Navigator.pushNamed(
+                                        context, AppRoutes.expense_detail,
+                                        arguments: arguments);
+                                  },
+                                ),
+                              ],
                             );
                           },
                         )
@@ -89,15 +90,12 @@ class ExpenseList extends StatelessWidget {
                     )),
           floatingActionButton: FloatingActionButton(
             onPressed: () {
-              _showModalSheetAppBar(
-                  context,
-                  AppLocalizations.of(context).translate('addExpense'),
-                  ExpenseForm(),
-                  0.45);
+              Navigator.pushNamed(context, AppRoutes.expense_form, arguments: {
+                'title': AppLocalizations.of(context).translate('addExpense')
+              });
             },
             child: Icon(
               Icons.add,
-              color: Theme.of(context).primaryColor,
             ),
             tooltip: AppLocalizations.of(context).translate('add'),
           ),

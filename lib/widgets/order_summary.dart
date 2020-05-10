@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:storeRahisi/app_localizations.dart';
 import 'package:storeRahisi/models/item.dart';
 import 'package:storeRahisi/providers/cart_model.dart';
 import 'package:storeRahisi/providers/index.dart';
@@ -34,7 +33,7 @@ class _OrderSummaryState extends State<OrderSummary> {
               background: slideLeftBackground(),
               child: Column(
                 children: [
-                  Divider(height:5.0),
+                  Divider(height: 5.0),
                   ListTile(
                     onTap: () => {},
                     title: Text(
@@ -52,8 +51,9 @@ class _OrderSummaryState extends State<OrderSummary> {
                 ],
               ),
               confirmDismiss: (direction) async {
+                bool res = false;
                 if (direction == DismissDirection.endToStart) {
-                  final bool res = await showDialog(
+                  res = await showDialog(
                       context: context,
                       builder: (BuildContext context) {
                         return AlertDialog(
@@ -85,9 +85,8 @@ class _OrderSummaryState extends State<OrderSummary> {
                         );
                       });
                   return res;
-                } else {
-                  // TODO: Navigate to edit page;
                 }
+                return res;
               },
             );
           } else {

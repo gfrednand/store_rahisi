@@ -4,7 +4,6 @@ import 'package:storeRahisi/constants/routes.dart';
 import 'package:storeRahisi/constants/ui_helpers.dart';
 import 'package:storeRahisi/models/index.dart';
 import 'package:storeRahisi/pages/base_view.dart';
-import 'package:storeRahisi/pages/item/item_detail.dart';
 import 'package:storeRahisi/pages/item/item_detail_widget.dart';
 import 'package:storeRahisi/providers/item_model.dart';
 import 'package:storeRahisi/providers/purchase_model.dart';

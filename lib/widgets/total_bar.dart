@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:storeRahisi/constants/routes.dart';
+import 'package:storeRahisi/constants/ui_helpers.dart';
 import 'package:storeRahisi/providers/index.dart';
 
 class TotalBar extends StatelessWidget {
@@ -26,7 +26,7 @@ class TotalBar extends StatelessWidget {
           leading: IconButton(icon: Icon(Icons.info), onPressed: null),
           trailing: Icon(Icons.chevron_right),
           title: Text(
-            'Total ${cartModel.totalPrice}',
+            'Total ${cartModel.totalPrice.toString().replaceAllMapped(reg, mathFunc)}',
             style: Theme.of(context).textTheme.bodyText1,
           ),
           subtitle: Text(

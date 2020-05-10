@@ -11,7 +11,6 @@ class FirestoreService {
     try {
       await _usersCollectionReference.document(user.id).setData(user.toMap());
     } catch (e) {
-      // TODO: Find or create a way to repeat error handling without so much repeated code
       if (e is PlatformException) {
         return e.message;
       }
@@ -25,7 +24,6 @@ class FirestoreService {
       var userData = await _usersCollectionReference.document(uid).get();
       return User.fromMap(userData.data);
     } catch (e) {
-      // TODO: Find or create a way to repeat error handling without so much repeated code
       if (e is PlatformException) {
         return e.message;
       }

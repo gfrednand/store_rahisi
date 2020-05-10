@@ -168,6 +168,7 @@ class SaleModel extends BaseModel {
         title: 'Cound not sale',
         description: result,
       );
+      return false;
     } else {
       await _paymentModel.savePayment(
           data: Payment(
@@ -178,12 +179,9 @@ class SaleModel extends BaseModel {
               clientId: data.clientId,
               type: 'Credit'));
       _cartModel.clearCart();
-          _navigationService.navigateTo(routeName: AppRoutes.layout);
+      _navigationService.navigateTo(routeName: AppRoutes.layout);
       return true;
     }
-    return false;
-
-
   }
 
   List<Sale> generateReport(DateTime fromDate, DateTime toDate) {

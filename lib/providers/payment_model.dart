@@ -103,12 +103,11 @@ class PaymentModel extends BaseModel {
         title: 'Cound not create payments',
         description: result,
       );
+      return false;
     } else {
       _navigationService.pop();
 
       return true;
     }
-    _navigationService.pop();
-    return false;
   }
 }

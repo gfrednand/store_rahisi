@@ -6,11 +6,8 @@ import 'package:storeRahisi/constants/routes.dart';
 import 'package:storeRahisi/constants/themes.dart';
 import 'package:storeRahisi/locator.dart';
 import 'package:storeRahisi/managers/dialog_manager.dart';
-import 'package:storeRahisi/providers/app_language.dart';
 import 'package:storeRahisi/providers/index.dart';
 import 'package:storeRahisi/router.dart';
-import 'package:storeRahisi/services/dialog_service.dart';
-import 'package:storeRahisi/services/navigation_service.dart';
 
 Future<void> main() async {
   setupLocator();

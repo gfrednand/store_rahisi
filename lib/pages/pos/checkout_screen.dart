@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:storeRahisi/app_localizations.dart';
 import 'package:storeRahisi/constants/app_constants.dart';
 import 'package:storeRahisi/constants/routes.dart';
 import 'package:storeRahisi/models/index.dart';
 import 'package:storeRahisi/pages/base_view.dart';
-import 'package:storeRahisi/pages/client/client_form.dart';
 // import 'package:storeRahisi/pages/pos/Payment_Screen.dart';
 import 'package:storeRahisi/providers/index.dart';
-import 'package:storeRahisi/widgets/custom_modal_sheet.dart';
 import 'package:storeRahisi/widgets/customer_addresses.dart';
 import 'package:storeRahisi/widgets/order_summary.dart';
 import 'package:storeRahisi/widgets/total_bar.dart';

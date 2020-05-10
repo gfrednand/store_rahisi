@@ -6,6 +6,7 @@ import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:storeRahisi/app_localizations.dart';
+import 'package:storeRahisi/constants/ui_helpers.dart';
 import 'package:storeRahisi/models/index.dart';
 import 'package:storeRahisi/providers/index.dart';
 import 'package:storeRahisi/widgets/busy_button.dart';
@@ -79,14 +80,14 @@ class _ItemReportState extends State<ItemReport> {
                       icon: Icon(
                         Icons.date_range,
                         size: 18.0,
-                        color: Theme.of(context).accentColor,
+                         color: Theme.of(context).iconTheme.color,
                       ),
                       onPressed: () => _selectFromDate(context),
                       label: Text(
                           'From : ' +
                               '${DateFormat('MMM dd, yyyy').format(selectedFromDate.toLocal())}',
                           style:
-                              TextStyle(color: Theme.of(context).accentColor)),
+                              TextStyle( color: Theme.of(context).iconTheme.color)),
                     ),
                     Container(
                       color: Theme.of(context).primaryColor,
@@ -97,14 +98,14 @@ class _ItemReportState extends State<ItemReport> {
                       icon: Icon(
                         Icons.date_range,
                         size: 18.0,
-                        color: Theme.of(context).accentColor,
+                         color: Theme.of(context).iconTheme.color,
                       ),
                       onPressed: () => _selectToDate(context),
                       label: Text(
                           'To : ' +
                               '${DateFormat('MMM dd, yyyy').format(selectedToDate.toLocal())}',
                           style:
-                              TextStyle(color: Theme.of(context).accentColor)),
+                              TextStyle( color: Theme.of(context).iconTheme.color)),
                     ),
                   ],
                 ),
@@ -128,7 +129,7 @@ class _ItemReportState extends State<ItemReport> {
               : Container(),
           items.length > 0
               ? Text(
-                  'Total Profit: ${itemModel.totalProfit}',
+                  'Total Profit: ${itemModel.totalProfit?.toString()?.replaceAllMapped(reg, mathFunc)}',
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: itemModel.totalProfit > 0
@@ -147,7 +148,7 @@ class _ItemReportState extends State<ItemReport> {
                             scrollDirection: Axis.horizontal,
                             children: <Widget>[
                               DataTable(
-                                columnSpacing: 160.0,
+                                // columnSpacing: 160.0,
                                 sortColumnIndex: 4,
                                 sortAscending: isSort,
                                 columns: [
@@ -221,7 +222,7 @@ class _ItemReportState extends State<ItemReport> {
                                             Text('${item.inStock}'),
                                           ),
                                           DataCell(
-                                            Text('${item.profit}'),
+                                            Text('${item.profit?.toString()?.replaceAllMapped(reg, mathFunc)}'),
                                           ),
                                         ]);
                                   },
@@ -311,7 +312,7 @@ class _ItemReportState extends State<ItemReport> {
       row.add(items[index].purchaseQuantity);
       row.add(items[index].saleQuantity);
       row.add(items[index].inStock);
-      row.add(items[index].profit);
+      row.add(items[index].profit?.toString()?.replaceAllMapped(reg, mathFunc));
 
       rows.add(row);
     }

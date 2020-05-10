@@ -6,6 +6,7 @@ import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:storeRahisi/app_localizations.dart';
+import 'package:storeRahisi/constants/ui_helpers.dart';
 import 'package:storeRahisi/models/index.dart';
 import 'package:storeRahisi/providers/index.dart';
 import 'package:storeRahisi/widgets/busy_button.dart';
@@ -82,14 +83,14 @@ class _ProfitReportState extends State<ProfitReport> {
                       icon: Icon(
                         Icons.date_range,
                         size: 18.0,
-                        color: Theme.of(context).accentColor,
+                         color: Theme.of(context).iconTheme.color,
                       ),
                       onPressed: () => _selectFromDate(context),
                       label: Text(
                           'From : ' +
                               '${DateFormat('MMM dd, yyyy').format(selectedFromDate.toLocal())}',
                           style:
-                              TextStyle(color: Theme.of(context).accentColor)),
+                              TextStyle( color: Theme.of(context).iconTheme.color)),
                     ),
                     Container(
                       color: Theme.of(context).primaryColor,
@@ -100,14 +101,14 @@ class _ProfitReportState extends State<ProfitReport> {
                       icon: Icon(
                         Icons.date_range,
                         size: 18.0,
-                        color: Theme.of(context).accentColor,
+                         color: Theme.of(context).iconTheme.color,
                       ),
                       onPressed: () => _selectToDate(context),
                       label: Text(
                           'To : ' +
                               '${DateFormat('MMM dd, yyyy').format(selectedToDate.toLocal())}',
                           style:
-                              TextStyle(color: Theme.of(context).accentColor)),
+                              TextStyle( color: Theme.of(context).iconTheme.color)),
                     ),
                   ],
                 ),
@@ -146,7 +147,7 @@ class _ProfitReportState extends State<ProfitReport> {
                                     textAlign: TextAlign.center)),
                             TableCell(
                               child: Center(
-                                  child: Text(data['totalSales'].toString())),
+                                  child: Text(data['totalSales']?.toString()?.replaceAllMapped(reg, mathFunc))),
                             ),
                           ]),
                           TableRow(children: [
@@ -155,7 +156,7 @@ class _ProfitReportState extends State<ProfitReport> {
                                     textAlign: TextAlign.center)),
                             TableCell(
                               child: Center(
-                                  child: Text(data['costOfSales'].toString())),
+                                  child: Text(data['costOfSales']?.toString()?.replaceAllMapped(reg, mathFunc))),
                             ),
                           ]),
                           TableRow(children: [
@@ -164,7 +165,7 @@ class _ProfitReportState extends State<ProfitReport> {
                                     textAlign: TextAlign.center)),
                             TableCell(
                               child: Center(
-                                  child: Text(data['grossProfit'].toString())),
+                                  child: Text(data['grossProfit']?.toString()?.replaceAllMapped(reg, mathFunc))),
                             ),
                           ]),
                           TableRow(children: [
@@ -174,7 +175,7 @@ class _ProfitReportState extends State<ProfitReport> {
                             TableCell(
                               child: Center(
                                   child: Text(
-                                      '(-)${data['totalExpenses'].toString()}')),
+                                      '(-)${data['totalExpenses']?.toString()?.replaceAllMapped(reg, mathFunc)}')),
                             ),
                           ]),
                           TableRow(children: [

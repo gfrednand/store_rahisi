@@ -40,7 +40,6 @@ class PaymentPageState extends State<PaymentPage> {
     SaleModel saleModel = Provider.of<SaleModel>(context);
     ClientModel clientModel = Provider.of<ClientModel>(context);
 
-    final double height = MediaQuery.of(context).size.height;
 
     return new Scaffold(
       key: _scaffoldKey,

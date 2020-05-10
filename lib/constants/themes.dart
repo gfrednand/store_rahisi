@@ -12,9 +12,7 @@ class AppTheme {
 
   static const Color _darkBlack7Color = Color(0xFF14171A);
   static const Color _darkBlackColor = Colors.black87;
-  static const Color _darkDarkGreyColor = Color(0xFF657786);
   // static const Color _darkVariantColor = Color(0XFFE1E1E1);
-  static const Color _darkBlueColor = Color(0xFF1DA1F2);
 
   static final ThemeData lightTheme = ThemeData(
     scaffoldBackgroundColor: _lightWhiteColor,
@@ -45,6 +43,8 @@ class AppTheme {
       color: _lightWhiteColor,
     ),
     iconTheme: IconThemeData(color: _lightBlueColor),
+    // buttonBarTheme: ButtonBarThemeData(buttonTextTheme: ButtonTextTheme.accent),
+  
     tabBarTheme: TabBarTheme(labelColor:_lightDarkGreyColor ),
     textTheme: TextTheme(
       headline6: TextStyle(

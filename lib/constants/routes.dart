@@ -18,6 +18,7 @@ static const item_form = "item_form";
 static const item_purchase_form = "item_purchase_form";
 static const category_form = "category_form";
 static const expense_detail = "expense_detail";
+static const expense_form = "expense_form";
 static const purchase_detail = "purchase_detail";
 static const purchase_add = "purchase_add";
 static const cart_items = "cart_items";

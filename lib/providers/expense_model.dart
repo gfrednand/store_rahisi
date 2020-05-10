@@ -118,7 +118,7 @@ class ExpenseModel extends BaseModel {
     }
   }
 
-  saveExpense({@required Expense data}) async {
+  Future<bool> saveExpense({@required Expense data}) async {
     setBusy(true);
     var result;
 
@@ -138,6 +138,7 @@ class ExpenseModel extends BaseModel {
         title: 'Cound not create item',
         description: result,
       );
+      return false;
     } else {
       await _paymentModel.savePayment(
           data: Payment(
@@ -147,17 +148,9 @@ class ExpenseModel extends BaseModel {
               note: 'Paid for Expense of ${data.responsiblePerson}',
               clientId: null,
               type: 'Debit'));
-      await _dialogService.showDialog(
-        title: 'Expense successfully Added',
-        description: 'Item has been created',
-      );
-    }
+      _navigationService.pop();
 
-    if (_editting) {
-      _navigationService.pop();
-      _navigationService.pop();
-    } else {
-      _navigationService.pop();
+      return true;
     }
   }
 

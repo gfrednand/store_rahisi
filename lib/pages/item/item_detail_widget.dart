@@ -6,10 +6,7 @@ import 'package:storeRahisi/constants/routes.dart';
 import 'package:storeRahisi/constants/ui_helpers.dart';
 import 'package:storeRahisi/models/index.dart';
 import 'package:storeRahisi/models/item.dart';
-import 'package:storeRahisi/pages/item/item_form.dart';
 import 'package:storeRahisi/providers/index.dart';
-import 'package:storeRahisi/widgets/circle_tab_indicator.dart';
-import 'package:storeRahisi/widgets/custom_modal_sheet.dart';
 import 'package:storeRahisi/widgets/toast.dart';
 
 class ItemDetailWidget extends StatefulWidget {
@@ -33,15 +30,7 @@ class _ItemDetailWidgetState extends State<ItemDetailWidget> {
     );
   }
 
-  _showModalSheetAppBar(
-      BuildContext context, String title, Widget body, double heightFactor) {
-    CustomModalSheet.show(
-      title: title,
-      context: context,
-      body: body,
-      heightFactor: heightFactor,
-    );
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -310,7 +299,7 @@ class _ItemDetailWidgetState extends State<ItemDetailWidget> {
                                         Text(
                                           AppLocalizations.of(context)
                                                   .translate('paid') +
-                                              ': ${purchases[index]?.paidAmount}/=',
+                                              ': ${purchases[index]?.paidAmount?.toString()?.replaceAllMapped(reg, mathFunc)}/=',
                                           style: Theme.of(context)
                                               .textTheme
                                               .subtitle2,
@@ -319,7 +308,7 @@ class _ItemDetailWidgetState extends State<ItemDetailWidget> {
                                       ],
                                     ),
                                     trailing: Text(
-                                        '${purchases[index]?.grandTotalAmount}/='),
+                                        '${purchases[index]?.grandTotalAmount?.toString()?.replaceAllMapped(reg, mathFunc)}/='),
                                     onTap: () {
                                       // var arguments = {
                                       //   'purchase': purchases[index],
@@ -384,7 +373,7 @@ class _ItemDetailWidgetState extends State<ItemDetailWidget> {
                                         Text(
                                           AppLocalizations.of(context)
                                                   .translate('paid') +
-                                              ' ${sales[index]?.grandTotal}/=',
+                                              ' ${sales[index]?.grandTotal?.toString()?.replaceAllMapped(reg, mathFunc)}/=',
                                           overflow: TextOverflow.ellipsis,
                                           style: Theme.of(context)
                                               .textTheme

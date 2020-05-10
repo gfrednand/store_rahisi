@@ -52,32 +52,32 @@ class TransactionModel extends BaseModel {
     });
   }
 
-  saveTransaction({@required Transaction data}) async {
+  Future<bool> saveTransaction({@required Transaction data}) async {
     // setBusy(true);
     var result;
     if (!_editting) {
-      result = await Api(path: 'transactions', companyId: currentUser?.companyId)
-          .addDocument(data.toMap());
+      result =
+          await Api(path: 'transactions', companyId: currentUser?.companyId)
+              .addDocument(data.toMap());
     } else {
       print('*********************${data.toMap()}');
 
-      result = await Api(path: 'transactions', companyId: currentUser?.companyId)
-          .updateDocument(data.toMap(), data.id);
+      result =
+          await Api(path: 'transactions', companyId: currentUser?.companyId)
+              .updateDocument(data.toMap(), data.id);
     }
 
     // setBusy(false);
 
-    // if (result is String) {
-    //   await _dialogService.showDialog(
-    //     title: 'Cound not create Payment',
-    //     description: result,
-    //   );
-    // } else {
-    //   await _dialogService.showDialog(
-    //     title: 'Payment successfully Added',
-    //     description: 'Payment has been created',
-    //   );
-    // }
+    if (result is String) {
+      // await _dialogService.showDialog(
+      //   title: 'Cound not create Payment',
+      //   description: result,
+      // );
+      return false;
+    } else {
+      return true;
+    }
 
     // _navigationService.pop();
   }

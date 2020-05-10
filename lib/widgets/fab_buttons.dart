@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:storeRahisi/constants/routes.dart';
 
 class AppBottonNavBar extends StatefulWidget {
@@ -95,7 +94,7 @@ class _AppBottonNavBarState extends State<AppBottonNavBar>
         // _currentIndex = index;
         index == 0
             ? Navigator.pushNamed(context, AppRoutes.home)
-            : index == 1 ? Navigator.pushNamed(context, AppRoutes.client) : null;
+            : index == 1 ? Navigator.pushNamed(context, AppRoutes.client) : Container();
         // model.setCurrentIndex(index);
         _navigationViews[_currentIndex].controller.forward();
         // });

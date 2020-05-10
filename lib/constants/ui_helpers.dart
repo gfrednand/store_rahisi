@@ -36,3 +36,6 @@ double halfScreenWidth(BuildContext context) =>
 
 double thirdScreenWidth(BuildContext context) =>
     screenWidthFraction(context, dividedBy: 3);
+
+RegExp reg = new RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))');
+Function mathFunc = (Match match) => '${match[1]},';

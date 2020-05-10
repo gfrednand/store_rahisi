@@ -6,6 +6,7 @@ import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:storeRahisi/app_localizations.dart';
+import 'package:storeRahisi/constants/ui_helpers.dart';
 import 'package:storeRahisi/models/index.dart';
 import 'package:storeRahisi/providers/index.dart';
 import 'package:storeRahisi/widgets/busy_button.dart';
@@ -81,14 +82,14 @@ class _SaleReportState extends State<SaleReport> {
                       icon: Icon(
                         Icons.date_range,
                         size: 18.0,
-                        color: Theme.of(context).accentColor,
+                         color: Theme.of(context).iconTheme.color,
                       ),
                       onPressed: () => _selectFromDate(context),
                       label: Text(
                           'From : ' +
                               '${DateFormat('MMM dd, yyyy').format(selectedFromDate.toLocal())}',
                           style:
-                              TextStyle(color: Theme.of(context).accentColor)),
+                              TextStyle( color: Theme.of(context).iconTheme.color)),
                     ),
                     Container(
                       color: Theme.of(context).primaryColor,
@@ -99,14 +100,14 @@ class _SaleReportState extends State<SaleReport> {
                       icon: Icon(
                         Icons.date_range,
                         size: 18.0,
-                        color: Theme.of(context).accentColor,
+                         color: Theme.of(context).iconTheme.color,
                       ),
                       onPressed: () => _selectToDate(context),
                       label: Text(
                           'To : ' +
                               '${DateFormat('MMM dd, yyyy').format(selectedToDate.toLocal())}',
                           style:
-                              TextStyle(color: Theme.of(context).accentColor)),
+                              TextStyle( color: Theme.of(context).iconTheme.color)),
                     ),
                   ],
                 ),
@@ -133,15 +134,15 @@ class _SaleReportState extends State<SaleReport> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Total Amount: ${saleModel.totalSaleAmount}',
+                      'Total Amount: ${saleModel.totalSaleAmount?.toString()?.replaceAllMapped(reg, mathFunc)}',
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      'Total Cost Price: ${saleModel.totalPurchaseAmount}',
+                      'Total Cost Price: ${saleModel.totalPurchaseAmount?.toString()?.replaceAllMapped(reg, mathFunc)}',
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      'Profit: ${saleModel.totalSaleAmount - saleModel.totalPurchaseAmount}',
+                      'Profit: ${(saleModel.totalSaleAmount - saleModel.totalPurchaseAmount)?.toString()?.replaceAllMapped(reg, mathFunc)}',
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: (saleModel.totalSaleAmount -
@@ -264,7 +265,7 @@ class _SaleReportState extends State<SaleReport> {
                                             children: itemNames,
                                           )),
                                           DataCell(
-                                            Text('${sale.paidAmount}'),
+                                            Text('${sale.paidAmount?.toString()?.replaceAllMapped(reg, mathFunc)}'),
                                           ),
                                           DataCell(
                                             Text('$saleDate'),
@@ -366,7 +367,7 @@ class _SaleReportState extends State<SaleReport> {
       row.add(sales[index].referenceNumber);
       row.add(sales[index].companyName);
       row.add(iNames.join(','));
-      row.add(sales[index].paidAmount);
+      row.add(sales[index].paidAmount?.toString()?.replaceAllMapped(reg, mathFunc));
       row.add(sales[index].saleDate);
 
       rows.add(row);

@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:storeRahisi/app_localizations.dart';
+import 'package:storeRahisi/constants/ui_helpers.dart';
 import 'package:storeRahisi/models/index.dart';
 import 'package:storeRahisi/providers/index.dart';
 import 'package:storeRahisi/widgets/busy_button.dart';
@@ -82,14 +83,14 @@ class _PurchaseReportState extends State<PurchaseReport> {
                       icon: Icon(
                         Icons.date_range,
                         size: 18.0,
-                        color: Theme.of(context).accentColor,
+                         color: Theme.of(context).iconTheme.color,
                       ),
                       onPressed: () => _selectFromDate(context),
                       label: Text(
                           'From : ' +
                               '${DateFormat('MMM dd, yyyy').format(selectedFromDate.toLocal())}',
                           style:
-                              TextStyle(color: Theme.of(context).accentColor)),
+                              TextStyle( color: Theme.of(context).iconTheme.color)),
                     ),
                     Container(
                       color: Theme.of(context).primaryColor,
@@ -100,14 +101,14 @@ class _PurchaseReportState extends State<PurchaseReport> {
                       icon: Icon(
                         Icons.date_range,
                         size: 18.0,
-                        color: Theme.of(context).accentColor,
+                         color: Theme.of(context).iconTheme.color,
                       ),
                       onPressed: () => _selectToDate(context),
                       label: Text(
                           'To : ' +
                               '${DateFormat('MMM dd, yyyy').format(selectedToDate.toLocal())}',
                           style:
-                              TextStyle(color: Theme.of(context).accentColor)),
+                              TextStyle( color: Theme.of(context).iconTheme.color)),
                     ),
                   ],
                 ),
@@ -134,7 +135,7 @@ class _PurchaseReportState extends State<PurchaseReport> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Total Amount: ${purchaseModel.totalPurchaseAmount}',
+                      'Total Amount: ${purchaseModel.totalPurchaseAmount?.toString()?.replaceAllMapped(reg, mathFunc)}',
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                     Text(
@@ -255,7 +256,7 @@ class _PurchaseReportState extends State<PurchaseReport> {
                                             children: itemNames,
                                           )),
                                           DataCell(
-                                            Text('${purchase.paidAmount}'),
+                                            Text('${purchase.paidAmount?.toString()?.replaceAllMapped(reg, mathFunc)}'),
                                           ),
                                           DataCell(
                                             Text('$purchaseDate'),
@@ -358,7 +359,7 @@ class _PurchaseReportState extends State<PurchaseReport> {
       row.add(purchases[index].referenceNumber);
       row.add(purchases[index].companyName);
       row.add(iNames.join(','));
-      row.add(purchases[index].paidAmount);
+      row.add(purchases[index].paidAmount?.toString()?.replaceAllMapped(reg, mathFunc));
       row.add(purchases[index].purchaseDate);
 
       rows.add(row);

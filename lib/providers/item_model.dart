@@ -212,12 +212,11 @@ class ItemModel extends BaseModel {
         title: 'Cound not create Category',
         description: result,
       );
+      return false;
     } else {
       _navigationService.pop();
       return true;
     }
-
-    return false;
   }
 
   void setEdittingItem(Item edittingItem) {

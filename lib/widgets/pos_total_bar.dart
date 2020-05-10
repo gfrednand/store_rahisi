@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:storeRahisi/constants/ui_helpers.dart';
 
 import 'package:storeRahisi/models/index.dart';
 import 'package:storeRahisi/pages/pos/checkout_screen.dart';
-import 'package:storeRahisi/pages/pos/pos_item_list.dart';
 import 'package:storeRahisi/providers/sale_model.dart';
-import 'package:storeRahisi/widgets/busy_button.dart';
 
 typedef onSellCallback = Function(
     String productId, double profit, int quantity, double amount);

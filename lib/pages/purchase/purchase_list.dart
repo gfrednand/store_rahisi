@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:storeRahisi/app_localizations.dart';
 import 'package:storeRahisi/constants/routes.dart';
+import 'package:storeRahisi/constants/ui_helpers.dart';
 import 'package:storeRahisi/models/index.dart';
 import 'package:storeRahisi/pages/base_view.dart';
 import 'package:storeRahisi/pages/purchase/purchase_detail_widget.dart';
@@ -106,7 +107,7 @@ class _PurchaseListState extends State<PurchaseList> {
                               ),
                               title: Text(
                                 '$purchaseDate',
-                                style: Theme.of(context).textTheme.headline6,
+                                style: Theme.of(context).textTheme.bodyText1,
                                 overflow: TextOverflow.ellipsis,
                               ),
                               subtitle: Column(
@@ -131,7 +132,7 @@ class _PurchaseListState extends State<PurchaseList> {
                                   Text(
                                     AppLocalizations.of(context)
                                             .translate('grandTotal') +
-                                        ': ${model.purchases[index]?.grandTotalAmount}/=',
+                                        ': ${model.purchases[index]?.grandTotalAmount?.toString()?.replaceAllMapped(reg, mathFunc)}/=',
                                     style:
                                         Theme.of(context).textTheme.subtitle2,
                                     overflow: TextOverflow.ellipsis,

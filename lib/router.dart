@@ -3,6 +3,7 @@ import 'package:storeRahisi/constants/routes.dart';
 import 'package:storeRahisi/models/index.dart';
 import 'package:storeRahisi/pages/client/client_form.dart';
 import 'package:storeRahisi/pages/expense/expense_detail.dart';
+import 'package:storeRahisi/pages/expense/expense_form.dart';
 import 'package:storeRahisi/pages/expense/expense_list.dart';
 
 import 'package:storeRahisi/pages/home_page.dart';
@@ -12,17 +13,14 @@ import 'package:storeRahisi/pages/item/item_form.dart';
 import 'package:storeRahisi/pages/layout_page.dart';
 import 'package:storeRahisi/pages/login_page.dart';
 import 'package:storeRahisi/pages/pos/Payment_Screen.dart';
-import 'package:storeRahisi/pages/pos/cart_page.dart';
 import 'package:storeRahisi/pages/pos/cart_items.dart';
 import 'package:storeRahisi/pages/pos/checkout_screen.dart';
-import 'package:storeRahisi/pages/pos/item_screen.dart';
 import 'package:storeRahisi/pages/purchase/add_item_form.dart';
 import 'package:storeRahisi/pages/purchase/purchase_detail.dart';
 import 'package:storeRahisi/pages/purchase/purchase_add.dart';
 import 'package:storeRahisi/pages/register_page.dart';
 import 'package:storeRahisi/pages/report/index.dart';
 import 'package:storeRahisi/pages/sale/sale_detail.dart';
-import 'package:storeRahisi/pages/settings/help_screen.dart';
 import 'package:storeRahisi/pages/settings/settings_page.dart';
 import 'package:storeRahisi/pages/splash_page.dart';
 import 'package:storeRahisi/pages/client/client_detail.dart';
@@ -122,6 +120,14 @@ class Router {
         return MaterialPageRoute(
             builder: (_) => ExpenseDetail(
                   expenseModel: args['expenseModel'],
+                  expense: args['expense'],
+                ));
+        break;
+      case AppRoutes.expense_form:
+        var args = settings.arguments as Map<String, dynamic>;
+        return MaterialPageRoute(
+            builder: (_) => ExpenseForm(
+                  title: args['title'],
                   expense: args['expense'],
                 ));
         break;

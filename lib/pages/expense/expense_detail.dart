@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:storeRahisi/app_localizations.dart';
+import 'package:storeRahisi/constants/routes.dart';
+import 'package:storeRahisi/constants/ui_helpers.dart';
 import 'package:storeRahisi/models/index.dart';
-import 'package:storeRahisi/pages/expense/expense_form.dart';
 import 'package:storeRahisi/providers/index.dart';
-import 'package:storeRahisi/widgets/custom_modal_sheet.dart';
 import 'package:storeRahisi/widgets/toast.dart';
 
 class ExpenseDetail extends StatefulWidget {
@@ -28,26 +28,17 @@ class _ExpenseDetailState extends State<ExpenseDetail> {
     );
   }
 
-  _showModalSheetAppBar(
-      BuildContext context, String title, Widget body, double heightFactor) {
-    CustomModalSheet.show(
-      title: title,
-      context: context,
-      body: body,
-      heightFactor: heightFactor,
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          centerTitle: true,
           title: widget.expense.responsiblePerson == null
-              ? Text(AppLocalizations.of(context).translate('expenseDetails'))
-              : Text(
-                  '${widget.expense.responsiblePerson?.toUpperCase()}',
+              ? Text(AppLocalizations.of(context).translate('expenseDetails'),
+                  style: Theme.of(context).textTheme.headline6)
+              : Text('${widget.expense.responsiblePerson?.toUpperCase()}',
                   overflow: TextOverflow.ellipsis,
-                ),
+                  style: Theme.of(context).textTheme.headline6),
         ),
         body: SingleChildScrollView(
           child: Column(
@@ -65,24 +56,39 @@ class _ExpenseDetailState extends State<ExpenseDetail> {
                 thickness: 10.0,
               ),
               ListTile(
-                title: Text('${widget.expense.amount}'),
-                subtitle:
-                    Text(AppLocalizations.of(context).translate('amount')),
+                title: Text(
+                  '${widget.expense.amount?.toString()?.replaceAllMapped(reg, mathFunc)}',
+                  style: Theme.of(context).textTheme.bodyText1,
+                ),
+                subtitle: Text(
+                  AppLocalizations.of(context).translate('amount'),
+                  style: Theme.of(context).textTheme.subtitle2,
+                ),
               ),
               Divider(
                 thickness: 10.0,
               ),
               ListTile(
                 leading: Icon(Icons.art_track),
-                title: Text('${widget.expense.description} '),
-                subtitle:
-                    Text(AppLocalizations.of(context).translate('description')),
+                title: Text(
+                  '${widget.expense.description}',
+                  style: Theme.of(context).textTheme.bodyText1,
+                ),
+                subtitle: Text(
+                  AppLocalizations.of(context).translate('description'),
+                  style: Theme.of(context).textTheme.subtitle2,
+                ),
               ),
               ListTile(
                 leading: Icon(Icons.date_range),
                 title: Text(
-                    '${DateFormat('MMM dd, yyyy').format(widget.expense.date)}'),
-                subtitle: Text(AppLocalizations.of(context).translate('date')),
+                  '${DateFormat('MMM dd, yyyy').format(widget.expense.date)}',
+                  style: Theme.of(context).textTheme.bodyText1,
+                ),
+                subtitle: Text(
+                  AppLocalizations.of(context).translate('date'),
+                  style: Theme.of(context).textTheme.subtitle2,
+                ),
               ),
               Divider(
                 thickness: 10.0,
@@ -98,13 +104,12 @@ class _ExpenseDetailState extends State<ExpenseDetail> {
         label == AppLocalizations.of(context).translate('delete')
             ? widget.expenseModel.removeExpense(widget.expense.id)
             : label == AppLocalizations.of(context).translate('edit')
-                ? _showModalSheetAppBar(
-                    context,
-                    AppLocalizations.of(context).translate('editExpense'),
-                    ExpenseForm(
-                      expense: widget.expense,
-                    ),
-                    0.45)
+                ? Navigator.pushNamed(
+                    context, AppRoutes.expense_form, arguments: {
+                    'title':
+                        AppLocalizations.of(context).translate('addExpense'),
+                    'expense': widget.expense,
+                  })
                 : _showToast(
                     label + AppLocalizations.of(context).translate('selected'),
                     color,

@@ -3,11 +3,10 @@ import 'package:provider/provider.dart';
 import 'package:storeRahisi/app_localizations.dart';
 import 'package:storeRahisi/constants/app_constants.dart';
 import 'package:storeRahisi/constants/routes.dart';
+import 'package:storeRahisi/constants/ui_helpers.dart';
 import 'package:storeRahisi/pages/base_view.dart';
-import 'package:storeRahisi/pages/purchase/add_item_form.dart';
 import 'package:storeRahisi/models/index.dart';
 import 'package:storeRahisi/providers/index.dart';
-import 'package:storeRahisi/widgets/custom_modal_sheet.dart';
 import 'package:storeRahisi/widgets/toast.dart';
 
 class PurchaseAdd extends StatefulWidget {
@@ -128,13 +127,13 @@ class _PurchaseAddState extends State<PurchaseAdd> {
                                 Text(
                                   AppLocalizations.of(context)
                                           .translate('purchasePrice') +
-                                      ': ${items[index].purchasePrice} @1',
+                                      ': ${items[index].purchasePrice?.toString()?.replaceAllMapped(reg, mathFunc)} @1',
                                   overflow: TextOverflow.ellipsis,
                                 ),
                                 Text(
                                   AppLocalizations.of(context)
                                           .translate('salePrice') +
-                                      ': ${items[index].salePrice} @1',
+                                      ': ${items[index].salePrice?.toString()?.replaceAllMapped(reg, mathFunc)} @1',
                                   overflow: TextOverflow.ellipsis,
                                 ),
                                 Text(
@@ -192,7 +191,7 @@ class _PurchaseAddState extends State<PurchaseAdd> {
                     icon: Icon(Icons.save),
                     color: Theme.of(context).accentColor,
                     textColor: Colors.white,
-                    onPressed: () {
+                    onPressed: () async {
                       var grandTotalAmount = 0.0;
                       var paidAmount = 0.0;
                       model.selectedItems.forEach((element) {
@@ -200,22 +199,19 @@ class _PurchaseAddState extends State<PurchaseAdd> {
                             grandTotalAmount + element.purchasePrice;
                         paidAmount = paidAmount + element.paidAmount;
                       });
-                      model
-                          .savePurchase(
-                              data: Purchase(
-                                  id: widget.purchase?.id ?? '',
-                                  clientId: _client.id,
-                                  companyName: _client.companyName,
-                                  items: model.selectedItems,
-                                  grandTotalAmount: grandTotalAmount,
-                                  paidAmount: paidAmount,
-                                  dueAmount: grandTotalAmount - paidAmount,
-                                  userId: ''))
-                          .then((success) => success
-                              ? Toast.show(
-                                  message: 'Purchased Successful',
-                                  context: context)
-                              : null);
+                      bool success = await model.savePurchase(
+                          data: Purchase(
+                              id: widget.purchase?.id ?? '',
+                              clientId: _client.id,
+                              companyName: _client.companyName,
+                              items: model.selectedItems,
+                              grandTotalAmount: grandTotalAmount,
+                              paidAmount: paidAmount,
+                              dueAmount: grandTotalAmount - paidAmount,
+                              userId: ''));
+                      if (success)
+                        Toast.show(
+                            message: 'Purchased Successful', context: context);
                     },
                     label: Text(AppLocalizations.of(context).translate('save')),
 

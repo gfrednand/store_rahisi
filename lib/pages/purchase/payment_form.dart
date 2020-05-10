@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:storeRahisi/app_localizations.dart';
 import 'package:storeRahisi/constants/ui_helpers.dart';
 import 'package:storeRahisi/models/index.dart';
-import 'package:storeRahisi/providers/item_model.dart';
 import 'package:storeRahisi/providers/payment_model.dart';
 import 'package:storeRahisi/widgets/busy_button.dart';
 import 'package:storeRahisi/widgets/toast.dart';
@@ -15,7 +14,11 @@ class PaymentForm extends StatefulWidget {
   final TabController tabController;
 
   const PaymentForm(
-      {Key key, this.dueAmount, this.referenceNo, this.tabController, this.clientId})
+      {Key key,
+      this.dueAmount,
+      this.referenceNo,
+      this.tabController,
+      this.clientId})
       : super(key: key);
   @override
   _PaymentFormState createState() => _PaymentFormState();
@@ -101,12 +104,11 @@ class _PaymentFormState extends State<PaymentForm> {
                 child: BusyButton(
                   title: AppLocalizations.of(context).translate('submit'),
                   busy: paymentModel.busy,
-                  onPressed: () {
+                  onPressed: () async {
                     if (_formKey.currentState.validate()) {
                       // If the form is valid, display a Snackbar.
-                      paymentModel
-                          .savePayment(
-                              data: Payment(
+                      bool success = await paymentModel.savePayment(
+                          data: Payment(
                         amount: double.parse(paidAmountController.text),
                         method: _paymentMethod,
                         type: 'Debit',
@@ -114,16 +116,14 @@ class _PaymentFormState extends State<PaymentForm> {
                         referenceNo: widget.referenceNo,
                         clientId: widget.clientId,
                         userId: null,
-                      ))
-                          .then((success) {
-                        if (success) {
-                          Toast.show(
-                              message:
-                                  '${paidAmountController.text} Paid Successful',
-                              context: context);
-                          widget.tabController.animateTo(1);
-                        }
-                      });
+                      ));
+                      if (success) {
+                        Toast.show(
+                            message:
+                                '${paidAmountController.text} Paid Successful',
+                            context: context);
+                        widget.tabController.animateTo(1);
+                      }
                       _formKey.currentState.reset();
                     }
                   },

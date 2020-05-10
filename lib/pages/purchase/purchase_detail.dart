@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 import 'package:storeRahisi/app_localizations.dart';
-import 'package:storeRahisi/constants/routes.dart';
 import 'package:storeRahisi/models/index.dart';
-
 import 'package:storeRahisi/models/purchase.dart';
 import 'package:storeRahisi/pages/purchase/purchase_detail_widget.dart';
-
 import 'package:storeRahisi/providers/index.dart';
 
 class PurchaseDetail extends StatelessWidget {

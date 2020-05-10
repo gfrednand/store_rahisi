@@ -3,7 +3,6 @@ import 'package:storeRahisi/app_localizations.dart';
 import 'package:storeRahisi/models/index.dart';
 import 'package:storeRahisi/models/item.dart';
 import 'package:storeRahisi/pages/item/item_detail_widget.dart';
-import 'package:storeRahisi/providers/index.dart';
 
 class ItemDetail extends StatelessWidget {
   final Item item;

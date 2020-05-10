@@ -153,13 +153,11 @@ class ClientModel extends BaseModel {
         title: 'Cound not create client',
         description: result,
       );
+      return false;
     } else {
       _navigationService.pop();
       return true;
     }
-
-    _navigationService.pop();
-    return false;
   }
 
   double getDueAmountByClientId(String clientID) {
@@ -172,7 +170,7 @@ class ClientModel extends BaseModel {
     _paymentModel.getPaymentsByClientId(clientID).forEach((payment) {
       paymentAmount = paymentAmount + payment.amount;
     });
-    return( grandTotal - paymentAmount);
+    return (grandTotal - paymentAmount);
   }
 
   int getNumberOfClientsWithDue() {

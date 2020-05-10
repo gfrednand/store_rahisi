@@ -2,13 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:storeRahisi/app_localizations.dart';
 import 'package:storeRahisi/constants/routes.dart';
+import 'package:storeRahisi/constants/ui_helpers.dart';
 import 'package:storeRahisi/models/client.dart';
 import 'package:storeRahisi/models/index.dart';
-import 'package:storeRahisi/pages/client/client_form.dart';
 import 'package:storeRahisi/pages/purchase/payment_form.dart';
 import 'package:storeRahisi/providers/client_model.dart';
 import 'package:storeRahisi/providers/index.dart';
-import 'package:storeRahisi/widgets/custom_modal_sheet.dart';
 
 class ClientDetailWidget extends StatefulWidget {
   final Client client;
@@ -93,7 +92,7 @@ class _ClientDetailWidgetState extends State<ClientDetailWidget>
                             : ListTile(
                                 title: Text(
                                   '${widget.client.companyName}',
-                                  style: Theme.of(context).textTheme.headline6,
+                                 style: Theme.of(context).textTheme.bodyText1,
                                 ),
                                 subtitle: Text(
                                   AppLocalizations.of(context)
@@ -104,7 +103,7 @@ class _ClientDetailWidgetState extends State<ClientDetailWidget>
                         ListTile(
                           title: Text(
                             '${widget.client.contactPerson}',
-                            style: Theme.of(context).textTheme.headline6,
+                           style: Theme.of(context).textTheme.bodyText1,
                           ),
                           subtitle: Text(
                             AppLocalizations.of(context)
@@ -118,7 +117,7 @@ class _ClientDetailWidgetState extends State<ClientDetailWidget>
                         ListTile(
                           title: Text(
                             '${widget.client.phoneNumber}',
-                            style: Theme.of(context).textTheme.headline6,
+                           style: Theme.of(context).textTheme.bodyText1,
                           ),
                           subtitle: Text(
                             AppLocalizations.of(context)
@@ -129,7 +128,7 @@ class _ClientDetailWidgetState extends State<ClientDetailWidget>
                         ListTile(
                           title: Text(
                             '${widget.client.email}',
-                            style: Theme.of(context).textTheme.headline6,
+                           style: Theme.of(context).textTheme.bodyText1,
                           ),
                           subtitle: Text(
                             AppLocalizations.of(context).translate('email'),
@@ -139,7 +138,7 @@ class _ClientDetailWidgetState extends State<ClientDetailWidget>
                         ListTile(
                           title: Text(
                             '${widget.client.address}',
-                            style: Theme.of(context).textTheme.headline6,
+                           style: Theme.of(context).textTheme.bodyText1,
                           ),
                           subtitle: Text(
                             AppLocalizations.of(context).translate('address'),
@@ -149,7 +148,7 @@ class _ClientDetailWidgetState extends State<ClientDetailWidget>
                         ListTile(
                           title: Text(
                             '${widget.client.description}',
-                            style: Theme.of(context).textTheme.headline6,
+                           style: Theme.of(context).textTheme.bodyText1,
                           ),
                           subtitle: Text(
                             AppLocalizations.of(context).translate('notes'),
@@ -187,11 +186,11 @@ class _ClientDetailWidgetState extends State<ClientDetailWidget>
                               ),
                               title: Text(
                                 '${payments[index]?.method} | ${payments[index]?.type}',
-                                style: Theme.of(context).textTheme.headline6,
+                               style: Theme.of(context).textTheme.bodyText1,
                                 overflow: TextOverflow.ellipsis,
                               ),
                               trailing: Text(
-                                ' ${payments[index]?.amount} /=',
+                                ' ${payments[index]?.amount?.toString()?.replaceAllMapped(reg, mathFunc)} /=',
                                 style: Theme.of(context).textTheme.subtitle2,
                               ),
                               onTap: () {
@@ -208,7 +207,7 @@ class _ClientDetailWidgetState extends State<ClientDetailWidget>
                   widget.client.proviousDue > 0
                       ? PaymentForm(
                           dueAmount: widget.client.proviousDue,
-                          referenceNo: 'SaleRef',
+                          referenceNo: 'defaultSakeRef',
                           clientId: widget.client.id,
                           tabController: _tabController,
                         )
