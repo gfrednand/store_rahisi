@@ -51,7 +51,7 @@ class _ItemDetailWidgetState extends State<ItemDetailWidget> {
         ? Colors.white
         : widget.item.inStock == 0
             ? Colors.red
-            : widget.item.inStock > widget.item.alertQty
+            : widget.item.inStock!=null && widget.item.inStock > widget.item.alertQty
                 ? Colors.green
                 : Colors.orange;
     return widget.item == null
@@ -299,7 +299,7 @@ class _ItemDetailWidgetState extends State<ItemDetailWidget> {
                                         Text(
                                           AppLocalizations.of(context)
                                                   .translate('paid') +
-                                              ': ${purchases[index]?.paidAmount?.toString()?.replaceAllMapped(reg, mathFunc)}/=',
+                                              ': ${currencyFormat.format(purchases[index]?.paidAmount)}/=',
                                           style: Theme.of(context)
                                               .textTheme
                                               .subtitle2,
@@ -308,7 +308,7 @@ class _ItemDetailWidgetState extends State<ItemDetailWidget> {
                                       ],
                                     ),
                                     trailing: Text(
-                                        '${purchases[index]?.grandTotalAmount?.toString()?.replaceAllMapped(reg, mathFunc)}/='),
+                                        '${currencyFormat.format(purchases[index]?.grandTotalAmount)}/='),
                                     onTap: () {
                                       // var arguments = {
                                       //   'purchase': purchases[index],
@@ -373,7 +373,7 @@ class _ItemDetailWidgetState extends State<ItemDetailWidget> {
                                         Text(
                                           AppLocalizations.of(context)
                                                   .translate('paid') +
-                                              ' ${sales[index]?.grandTotal?.toString()?.replaceAllMapped(reg, mathFunc)}/=',
+                                              ' ${currencyFormat.format(sales[index]?.grandTotal)}/=',
                                           overflow: TextOverflow.ellipsis,
                                           style: Theme.of(context)
                                               .textTheme

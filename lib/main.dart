@@ -12,11 +12,6 @@ import 'package:storeRahisi/router.dart';
 Future<void> main() async {
   setupLocator();
   WidgetsFlutterBinding.ensureInitialized();
-  // final Firestore firestore = Firestore();
-  //  await firestore.settings(
-  //   cacheSizeBytes: 10000000,
-  //   persistenceEnabled: true,
-  // );
   runApp(MyApp());
 }
 
@@ -27,17 +22,21 @@ class MyApp extends StatelessWidget {
       providers: [
         // StreamProvider<FirebaseUser>.value(value:  FirebaseAuth.instance.onAuthStateChanged),
         ChangeNotifierProvider(create: (_) => locator<AuthModel>()),
+        ChangeNotifierProvider(create: (_) =>locator<SaleModel>()..listenToSales()),
         ChangeNotifierProvider(create: (_) => locator<SettingsModel>()),
-        ChangeNotifierProvider(create: (_) => locator<PurchaseModel>()),
-        ChangeNotifierProvider.value(value: locator<ItemModel>()),
-        ChangeNotifierProvider.value(value: locator<ClientModel>()),
-        ChangeNotifierProvider.value(value: locator<SaleModel>()),
-        ChangeNotifierProvider(create: (_) => locator<PaymentModel>()),
+        ChangeNotifierProvider(create: (_) => locator<ItemModel>()..listenToItems()..listenToCategories()),
+        ChangeNotifierProvider(create: (_) => locator<ClientModel>()..listenToClients()),
+        ChangeNotifierProvider(create: (_) => locator<PaymentModel>()..listenToPayments()),
         ChangeNotifierProvider(create: (_) => locator<CartModel>()),
         ChangeNotifierProvider(create: (_) => locator<ExpenseModel>()),
+        ChangeNotifierProxyProvider<ItemModel, PurchaseModel>(
+          create: (_) => locator<PurchaseModel>(),
+          update: (_, itemModel, purchaseModel) => purchaseModel..listenToPurchases()..updateItemModel(itemModel),
+     
+        ),
       ],
       child: Consumer<SettingsModel>(
-        builder: (context, settings, _)  {
+        builder: (context, settings, _) {
           return MaterialApp(
             debugShowCheckedModeBanner: false,
             locale: settings.appLocal,

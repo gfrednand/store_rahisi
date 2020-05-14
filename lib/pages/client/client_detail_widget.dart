@@ -92,7 +92,7 @@ class _ClientDetailWidgetState extends State<ClientDetailWidget>
                             : ListTile(
                                 title: Text(
                                   '${widget.client.companyName}',
-                                 style: Theme.of(context).textTheme.bodyText1,
+                                  style: Theme.of(context).textTheme.bodyText1,
                                 ),
                                 subtitle: Text(
                                   AppLocalizations.of(context)
@@ -103,7 +103,7 @@ class _ClientDetailWidgetState extends State<ClientDetailWidget>
                         ListTile(
                           title: Text(
                             '${widget.client.contactPerson}',
-                           style: Theme.of(context).textTheme.bodyText1,
+                            style: Theme.of(context).textTheme.bodyText1,
                           ),
                           subtitle: Text(
                             AppLocalizations.of(context)
@@ -117,7 +117,7 @@ class _ClientDetailWidgetState extends State<ClientDetailWidget>
                         ListTile(
                           title: Text(
                             '${widget.client.phoneNumber}',
-                           style: Theme.of(context).textTheme.bodyText1,
+                            style: Theme.of(context).textTheme.bodyText1,
                           ),
                           subtitle: Text(
                             AppLocalizations.of(context)
@@ -128,7 +128,7 @@ class _ClientDetailWidgetState extends State<ClientDetailWidget>
                         ListTile(
                           title: Text(
                             '${widget.client.email}',
-                           style: Theme.of(context).textTheme.bodyText1,
+                            style: Theme.of(context).textTheme.bodyText1,
                           ),
                           subtitle: Text(
                             AppLocalizations.of(context).translate('email'),
@@ -138,7 +138,7 @@ class _ClientDetailWidgetState extends State<ClientDetailWidget>
                         ListTile(
                           title: Text(
                             '${widget.client.address}',
-                           style: Theme.of(context).textTheme.bodyText1,
+                            style: Theme.of(context).textTheme.bodyText1,
                           ),
                           subtitle: Text(
                             AppLocalizations.of(context).translate('address'),
@@ -148,7 +148,7 @@ class _ClientDetailWidgetState extends State<ClientDetailWidget>
                         ListTile(
                           title: Text(
                             '${widget.client.description}',
-                           style: Theme.of(context).textTheme.bodyText1,
+                            style: Theme.of(context).textTheme.bodyText1,
                           ),
                           subtitle: Text(
                             AppLocalizations.of(context).translate('notes'),
@@ -186,11 +186,11 @@ class _ClientDetailWidgetState extends State<ClientDetailWidget>
                               ),
                               title: Text(
                                 '${payments[index]?.method} | ${payments[index]?.type}',
-                               style: Theme.of(context).textTheme.bodyText1,
+                                style: Theme.of(context).textTheme.bodyText1,
                                 overflow: TextOverflow.ellipsis,
                               ),
                               trailing: Text(
-                                ' ${payments[index]?.amount?.toString()?.replaceAllMapped(reg, mathFunc)} /=',
+                                ' ${currencyFormat.format(payments[index]?.amount)} /=',
                                 style: Theme.of(context).textTheme.subtitle2,
                               ),
                               onTap: () {
@@ -203,7 +203,7 @@ class _ClientDetailWidgetState extends State<ClientDetailWidget>
                         );
                       }),
 
-                      // TODO: Add ref number for sale
+                  // TODO: Add ref number for sale
                   widget.client.proviousDue > 0
                       ? PaymentForm(
                           dueAmount: widget.client.proviousDue,

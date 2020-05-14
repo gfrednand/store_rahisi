@@ -57,7 +57,7 @@ class _ExpenseDetailState extends State<ExpenseDetail> {
               ),
               ListTile(
                 title: Text(
-                  '${widget.expense.amount?.toString()?.replaceAllMapped(reg, mathFunc)}',
+                  '${currencyFormat.format(widget.expense.amount)}',
                   style: Theme.of(context).textTheme.bodyText1,
                 ),
                 subtitle: Text(

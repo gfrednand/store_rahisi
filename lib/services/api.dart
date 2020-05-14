@@ -3,7 +3,6 @@ import 'dart:async';
 
 import 'package:flutter/services.dart';
 
-
 class Api {
   final Firestore _db = Firestore.instance;
   String path;
@@ -11,10 +10,8 @@ class Api {
 
   CollectionReference ref;
 
-  Api({this.path,this.companyId}) {
-
+  Api({this.path, this.companyId}) {
     ref = _db.collection("companies").document(companyId).collection(path);
-    
   }
 
   Future<QuerySnapshot> getDataCollection() {
@@ -66,5 +63,15 @@ class Api {
 
       return e.toString();
     }
+  }
+
+  updateMultipleDocument(List<Map> datas) {
+    var batch = _db.batch();
+    datas.forEach((data) {
+      // batch.setData(ref.document(id), data);
+      batch.updateData(ref.document(data['id']), data);
+    });
+
+    batch.commit();
   }
 }

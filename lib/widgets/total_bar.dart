@@ -26,7 +26,7 @@ class TotalBar extends StatelessWidget {
           leading: IconButton(icon: Icon(Icons.info), onPressed: null),
           trailing: Icon(Icons.chevron_right),
           title: Text(
-            'Total ${cartModel.totalPrice.toString().replaceAllMapped(reg, mathFunc)}',
+            'Total ${currencyFormat.format(cartModel.totalPrice)}',
             style: Theme.of(context).textTheme.bodyText1,
           ),
           subtitle: Text(

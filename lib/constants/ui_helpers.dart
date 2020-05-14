@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 const Widget horizontalSpaceTiny = SizedBox(width: 5.0);
 const Widget horizontalSpaceSmall = SizedBox(width: 10.0);
@@ -37,5 +38,4 @@ double halfScreenWidth(BuildContext context) =>
 double thirdScreenWidth(BuildContext context) =>
     screenWidthFraction(context, dividedBy: 3);
 
-RegExp reg = new RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))');
-Function mathFunc = (Match match) => '${match[1]},';
+final currencyFormat = new NumberFormat("#,##0.00", "en_US");

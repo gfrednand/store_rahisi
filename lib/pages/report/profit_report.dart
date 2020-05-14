@@ -147,7 +147,7 @@ class _ProfitReportState extends State<ProfitReport> {
                                     textAlign: TextAlign.center)),
                             TableCell(
                               child: Center(
-                                  child: Text(data['totalSales']?.toString()?.replaceAllMapped(reg, mathFunc))),
+                                  child: Text(currencyFormat.format(data['totalSales']))),
                             ),
                           ]),
                           TableRow(children: [
@@ -156,7 +156,7 @@ class _ProfitReportState extends State<ProfitReport> {
                                     textAlign: TextAlign.center)),
                             TableCell(
                               child: Center(
-                                  child: Text(data['costOfSales']?.toString()?.replaceAllMapped(reg, mathFunc))),
+                                  child: Text(currencyFormat.format(data['costOfSales']))),
                             ),
                           ]),
                           TableRow(children: [
@@ -165,7 +165,7 @@ class _ProfitReportState extends State<ProfitReport> {
                                     textAlign: TextAlign.center)),
                             TableCell(
                               child: Center(
-                                  child: Text(data['grossProfit']?.toString()?.replaceAllMapped(reg, mathFunc))),
+                                  child: Text(currencyFormat.format(data['grossProfit']))),
                             ),
                           ]),
                           TableRow(children: [
@@ -175,7 +175,7 @@ class _ProfitReportState extends State<ProfitReport> {
                             TableCell(
                               child: Center(
                                   child: Text(
-                                      '(-)${data['totalExpenses']?.toString()?.replaceAllMapped(reg, mathFunc)}')),
+                                      '(-)${currencyFormat.format(data['totalExpenses'])}')),
                             ),
                           ]),
                           TableRow(children: [

@@ -23,6 +23,7 @@ class AppTheme {
       ),
     ),
     
+    bottomSheetTheme: BottomSheetThemeData(backgroundColor: Colors.transparent),
     bottomNavigationBarTheme: BottomNavigationBarThemeData(
         backgroundColor: _lightWhiteGreyColor,
         selectedItemColor: _lightBlueColor,
@@ -44,8 +45,8 @@ class AppTheme {
     ),
     iconTheme: IconThemeData(color: _lightBlueColor),
     // buttonBarTheme: ButtonBarThemeData(buttonTextTheme: ButtonTextTheme.accent),
-  
-    tabBarTheme: TabBarTheme(labelColor:_lightDarkGreyColor ),
+
+    tabBarTheme: TabBarTheme(labelColor: _lightDarkGreyColor),
     textTheme: TextTheme(
       headline6: TextStyle(
         color: Colors.black,
@@ -60,13 +61,14 @@ class AppTheme {
 
   static final ThemeData darkTheme = ThemeData(
     dividerTheme: DividerThemeData(color: _lightWhiteColor),
-    scaffoldBackgroundColor:_darkBlackColor,
+    scaffoldBackgroundColor: _darkBlackColor,
     appBarTheme: AppBarTheme(
       color: _darkBlack7Color,
       iconTheme: IconThemeData(
         color: Colors.white,
       ),
     ),
+    bottomSheetTheme: BottomSheetThemeData(backgroundColor: Colors.transparent),
     bottomNavigationBarTheme: BottomNavigationBarThemeData(
         backgroundColor: _darkBlack7Color,
         selectedItemColor: _lightBlueColor,
@@ -78,12 +80,11 @@ class AppTheme {
       backgroundColor: _lightBlueColor,
     ),
     colorScheme: ColorScheme.light(
-      primary: Colors.white,
-      onPrimary: Colors.black54,
-      primaryVariant: Colors.black,
-      secondary: _lightWhiteColor,
-      error: Colors.yellow[50]
-    ),
+        primary: Colors.white,
+        onPrimary: Colors.black54,
+        primaryVariant: Colors.black,
+        secondary: _lightWhiteColor,
+        error: Colors.yellow[50]),
     cardTheme: CardTheme(
       color: Colors.black,
     ),

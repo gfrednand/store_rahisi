@@ -66,9 +66,6 @@ class PaymentModel extends BaseModel {
   }
 
   List<Payment> getPaymentsByClientId(String clientId) {
-    if (_payments.length == 0) {
-      listenToPayments();
-    }
 
     return _payments.where((payment) => payment.clientId == clientId).toList();
   }
@@ -105,8 +102,6 @@ class PaymentModel extends BaseModel {
       );
       return false;
     } else {
-      _navigationService.pop();
-
       return true;
     }
   }

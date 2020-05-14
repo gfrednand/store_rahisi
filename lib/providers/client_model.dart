@@ -80,6 +80,10 @@ class ClientModel extends BaseModel {
       List<Client> updatedclients = purchaseData;
       if (updatedclients != null && updatedclients.length > 0) {
         _clients = updatedclients;
+        //  updatedclients.map((client) {
+        //   client.proviousDue = getDueAmountByClientId(client.id);
+        //   return client;
+        // }).toList();
         notifyListeners();
       }
     });
@@ -170,10 +174,11 @@ class ClientModel extends BaseModel {
     _paymentModel.getPaymentsByClientId(clientID).forEach((payment) {
       paymentAmount = paymentAmount + payment.amount;
     });
-    return (grandTotal - paymentAmount);
+    double dueAmount = grandTotal - paymentAmount;
+    return dueAmount > 0 ? dueAmount : 0;
   }
 
-  int getNumberOfClientsWithDue() {
+  int get numberOfClientsWithDue {
     int count = 0;
     if (_clients.length == 0) {
       listenToClients();

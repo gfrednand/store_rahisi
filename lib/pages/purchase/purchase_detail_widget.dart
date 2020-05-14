@@ -145,7 +145,7 @@ class _PurchaseDetailWidgetState extends State<PurchaseDetailWidget>
                     ),
                     ListTile(
                       title: Text(
-                        '${widget.purchase.grandTotalAmount?.toString()?.replaceAllMapped(reg, mathFunc)}',
+                        '${currencyFormat.format(widget.purchase.grandTotalAmount)}',
                         style: Theme.of(context).textTheme.bodyText1,
                       ),
                       subtitle: Text(
@@ -155,7 +155,7 @@ class _PurchaseDetailWidgetState extends State<PurchaseDetailWidget>
                     ),
                     ListTile(
                       title: Text(
-                        '${widget.purchase.paidAmount?.toString()?.replaceAllMapped(reg, mathFunc)}',
+                        '${currencyFormat.format(widget.purchase.paidAmount)}',
                         style: Theme.of(context).textTheme.bodyText1,
                       ),
                       subtitle: Text(
@@ -165,7 +165,7 @@ class _PurchaseDetailWidgetState extends State<PurchaseDetailWidget>
                     ),
                     ListTile(
                       title: Text(
-                        '${dueAmount?.toString()?.replaceAllMapped(reg, mathFunc)}',
+                        '${currencyFormat.format(dueAmount)}',
                         style: Theme.of(context).textTheme.bodyText1,
                       ),
                       subtitle: Text(
@@ -213,12 +213,12 @@ class _PurchaseDetailWidgetState extends State<PurchaseDetailWidget>
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'Purchase Price: ${widget.purchase.items[index].purchasePrice?.toString()?.replaceAllMapped(reg, mathFunc)} @1',
+                                'Purchase Price: ${currencyFormat.format(widget.purchase.items[index].purchasePrice)} @1',
                                 style: Theme.of(context).textTheme.subtitle2,
                                 overflow: TextOverflow.ellipsis,
                               ),
                               Text(
-                                'Sale Price: ${widget.purchase.items[index].salePrice?.toString()?.replaceAllMapped(reg, mathFunc)} @1',
+                                'Sale Price: ${currencyFormat.format(widget.purchase.items[index].salePrice)} @1',
                                 style: Theme.of(context).textTheme.subtitle2,
                                 overflow: TextOverflow.ellipsis,
                               ),
@@ -265,7 +265,7 @@ class _PurchaseDetailWidgetState extends State<PurchaseDetailWidget>
                             overflow: TextOverflow.ellipsis,
                           ),
                           trailing: Text(
-                            ' ${payments[index]?.amount?.toString()?.replaceAllMapped(reg, mathFunc)} /=',
+                            ' ${currencyFormat.format(payments[index]?.amount)} /=',
                             style: Theme.of(context).textTheme.subtitle2,
                           ),
                           onTap: () {

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:storeRahisi/app_localizations.dart';
+import 'package:storeRahisi/constants/currency_input_formatter.dart';
 import 'package:storeRahisi/constants/ui_helpers.dart';
 import 'package:storeRahisi/models/index.dart';
 import 'package:storeRahisi/providers/payment_model.dart';
@@ -85,6 +87,11 @@ class _PaymentFormState extends State<PaymentForm> {
               verticalSpaceSmall,
               new TextFormField(
                 keyboardType: TextInputType.numberWithOptions(),
+                inputFormatters: [
+                  WhitelistingTextInputFormatter.digitsOnly,
+                  // Fit the validating format.
+                  CurrencyInputFormatter()
+                ],
                 controller: paidAmountController,
                 decoration: const InputDecoration(
                   icon: const Icon(Icons.attach_money),
@@ -109,7 +116,7 @@ class _PaymentFormState extends State<PaymentForm> {
                       // If the form is valid, display a Snackbar.
                       bool success = await paymentModel.savePayment(
                           data: Payment(
-                        amount: double.parse(paidAmountController.text),
+                        amount: double.tryParse(paidAmountController.text.replaceAll(new RegExp(r','), '')),
                         method: _paymentMethod,
                         type: 'Debit',
                         note: descriptionController.text,

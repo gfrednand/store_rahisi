@@ -42,69 +42,101 @@ class _LayoutPageState extends State<LayoutPage> with TickerProviderStateMixin {
                     : "";
   }
 
-
-
   _getProfileBody(AuthModel model) {
     return ListView(
+      scrollDirection: Axis.vertical,
+      shrinkWrap: true,
       children: <Widget>[
         Container(
             decoration: new BoxDecoration(
-                color: Colors.white,
+                color: Theme.of(context).appBarTheme.color,
                 borderRadius:
                     new BorderRadius.all(const Radius.circular(10.0))),
             child: Column(
               children: <Widget>[
                 model.currentUser != null
                     ? ListTile(
-                        leading: Icon(Icons.person),
+                        leading: Icon(Icons.person,
+                            color: Theme.of(context).iconTheme.color),
                         title: Text(
-                            '${model.currentUser.fname} ${model.currentUser.lname}'),
+                          '${model.currentUser.fname} ${model.currentUser.lname}',
+                          style: Theme.of(context).textTheme.bodyText1,
+                        ),
                         subtitle: Text(
-                            AppLocalizations.of(context).translate('username')),
+                          AppLocalizations.of(context).translate('username'),
+                          style: Theme.of(context).textTheme.subtitle2,
+                        ),
                       )
                     : Container(),
                 model.currentUser != null
                     ? ListTile(
-                        leading: Icon(Icons.email),
-                        title: Text("${model.currentUser.email}"),
+                        leading: Icon(Icons.email,
+                            color: Theme.of(context).iconTheme.color),
+                        title: Text(
+                          "${model.currentUser.email}",
+                          style: Theme.of(context).textTheme.bodyText1,
+                        ),
                         subtitle: Text(
-                            AppLocalizations.of(context).translate('email')),
-                      )
-                    : Container(),
-
-                model.currentUser != null
-                    ? ListTile(
-                        leading: Icon(Icons.person_pin),
-                        title: Text("${model.currentUser.designation}"),
-                        subtitle: Text(AppLocalizations.of(context)
-                            .translate('designation')),
+                          AppLocalizations.of(context).translate('email'),
+                          style: Theme.of(context).textTheme.subtitle2,
+                        ),
                       )
                     : Container(),
                 model.currentUser != null
                     ? ListTile(
-                        leading: Icon(LinearIcons.phone),
-                        title: Text("${model.currentUser.phoneNumber}"),
-                        subtitle: Text(AppLocalizations.of(context)
-                            .translate('phoneNumber')),
+                        leading: Icon(Icons.person_pin,
+                            color: Theme.of(context).iconTheme.color),
+                        title: Text(
+                          "${model.currentUser.designation}",
+                          style: Theme.of(context).textTheme.bodyText1,
+                        ),
+                        subtitle: Text(
+                          AppLocalizations.of(context).translate('designation'),
+                          style: Theme.of(context).textTheme.subtitle2,
+                        ),
                       )
                     : Container(),
-
                 model.currentUser != null
                     ? ListTile(
-                        leading: Icon(Icons.label_important),
-                        title: Text("${model.currentUser.id}"),
-                        subtitle: Text(AppLocalizations.of(context)
-                            .translate('referenceNumber')),
+                        leading: Icon(LinearIcons.phone,
+                            color: Theme.of(context).iconTheme.color),
+                        title: Text(
+                          "${model.currentUser.phoneNumber}",
+                          style: Theme.of(context).textTheme.bodyText1,
+                        ),
+                        subtitle: Text(
+                          AppLocalizations.of(context).translate('phoneNumber'),
+                          style: Theme.of(context).textTheme.subtitle2,
+                        ),
                       )
                     : Container(),
-                // Divider(),
+                model.currentUser != null && model.currentUser.id != null
+                    ? ListTile(
+                        leading: Icon(Icons.label_important,
+                            color: Theme.of(context).iconTheme.color),
+                        title: Text(
+                          "${model.currentUser.id}",
+                          style: Theme.of(context).textTheme.bodyText1,
+                        ),
+                        subtitle: Text(
+                          AppLocalizations.of(context)
+                              .translate('referenceNumber'),
+                          style: Theme.of(context).textTheme.subtitle2,
+                        ),
+                      )
+                    : Container(),
+                Divider(
+                  height: 5.0,
+                ),
                 SizedBox(
                   width: double.infinity,
                   child: FlatButton(
                       // color: Theme.of(context).primaryColor,
                       child: Text(
-                        AppLocalizations.of(context).translate('logout'),
-                        // style: TextStyle(color: Theme.of(context).colorScheme.),
+                        AppLocalizations.of(context).translate(
+                          'logout',
+                        ),
+                        style: Theme.of(context).textTheme.bodyText1,
                       ),
                       onPressed: () async {
                         bool loggedOut = await model.logout();
@@ -112,15 +144,6 @@ class _LayoutPageState extends State<LayoutPage> with TickerProviderStateMixin {
                           Navigator.pushReplacementNamed(
                               context, AppRoutes.login);
                         }
-                      }),
-                ),
-                SizedBox(
-                  width: double.infinity,
-                  child: FlatButton(
-                      child: Text(
-                          AppLocalizations.of(context).translate('cancel')),
-                      onPressed: () {
-                        Navigator.pop(context);
                       }),
                 ),
               ],
@@ -163,7 +186,7 @@ class _LayoutPageState extends State<LayoutPage> with TickerProviderStateMixin {
           if (value == AppLocalizations.of(context).translate('profile')) {
             var body = _getProfileBody(model);
             _showModalSheetAppBar(context,
-                AppLocalizations.of(context).translate('profile'), body, 0.62);
+                AppLocalizations.of(context).translate('profile'), body);
           }
         },
         itemBuilder: (context) => <PopupMenuEntry<String>>[
@@ -200,13 +223,11 @@ class _LayoutPageState extends State<LayoutPage> with TickerProviderStateMixin {
     ];
   }
 
-  _showModalSheetAppBar(
-      BuildContext context, String title, Widget body, double heightFactor) {
+  _showModalSheetAppBar(BuildContext context, String title, Widget child) {
     CustomModalSheet.show(
-      title: title,
+      isExpanded: false,
       context: context,
-      body: body,
-      heightFactor: heightFactor,
+      child: child,
     );
   }
 
@@ -225,111 +246,6 @@ class _LayoutPageState extends State<LayoutPage> with TickerProviderStateMixin {
             : _currentIndex == 2
                 ? PurchaseList()
                 : _currentIndex == 3 ? PosItemList() : Container();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    CartModel cartModel = Provider.of<CartModel>(context);
-    ClientModel clientModel = Provider.of<ClientModel>(context);
-    ItemModel itemModel = Provider.of<ItemModel>(context, listen: false);
-    final colorScheme = Theme.of(context).colorScheme;
-    final textTheme = Theme.of(context).textTheme;
-
-    List<String> tabs = [
-      AppLocalizations.of(context).translate('customers'),
-      AppLocalizations.of(context).translate('suppliers'),
-    ];
-
-    BottomNavigationBadge badger = new BottomNavigationBadge(
-        backgroundColor: Colors.red,
-        badgeShape: BottomNavigationBadgeShape.circle,
-        textColor: Colors.white,
-        position: BottomNavigationBadgePosition.topRight,
-        textSize: 8);
-
-    List<BottomNavigationBarItem> bottomNavigationBarItems = [
-      BottomNavigationBarItem(
-        icon: const Icon(Icons.select_all),
-        title: Text(AppLocalizations.of(context).translate('items')),
-      ),
-      BottomNavigationBarItem(
-        icon: const Icon(LinearIcons.users),
-        title: Text(AppLocalizations.of(context).translate('clients')),
-      ),
-      BottomNavigationBarItem(
-        icon: const Icon(Icons.view_week),
-        title: Text(AppLocalizations.of(context).translate('purchases')),
-      ),
-      BottomNavigationBarItem(
-        icon: const Icon(Icons.style),
-        title: Text(AppLocalizations.of(context).translate('pos')),
-      ),
-    ];
-
-    int countClient =  clientModel.getNumberOfClientsWithDue();
-    String cl = countClient > 0 ? countClient.toString() : null;
-    setState(() {
-      bottomNavigationBarItems =
-          badger.setBadge(bottomNavigationBarItems, cl, 1);
-    });
-
-    return BaseView<AuthModel>(
-        builder: (context, model, child) => _currentIndex == 1
-            ? DefaultTabController(
-                length: tabs.length,
-                child: Builder(builder: (BuildContext context) {
-                  return Scaffold(
-                    drawer: CustomDrawer(context, model.currentUser),
-                    appBar: AppBar(
-                      centerTitle: true,
-                      // backgroundColor: Colors.white,
-                      // automaticallyImplyLeading: false,
-
-                      title: Text(
-                        _title(context),
-                        style: Theme.of(context).textTheme.headline6,
-                      ),
-                      actions: _buildActions(
-                          context, model, cartModel, clientModel, itemModel),
-                      bottom: TabBar(
-                        isScrollable: MediaQuery.of(context).orientation ==
-                                Orientation.landscape
-                            ? true
-                            : false,
-                        tabs: [
-                          for (final tab in tabs) Tab(text: tab),
-                        ],
-                      ),
-                    ),
-                    body: _buildTransitionsStack(),
-                    floatingActionButton: floatingActionButton(context),
-                    bottomNavigationBar: buildBottomNavigationBar(
-                        bottomNavigationBarItems, textTheme, colorScheme),
-                  );
-                }),
-              )
-            : Scaffold(
-                drawer: CustomDrawer(context, model.currentUser),
-                appBar: AppBar(
-                  centerTitle: true,
-                  // backgroundColor: Colors.white,
-                  // automaticallyImplyLeading: false,
-                  title: Text(
-                    _title(context),
-                    style: Theme.of(context).textTheme.headline6,
-                  ),
-                  actions: _buildActions(
-                      context, model, cartModel, clientModel, itemModel),
-                ),
-                // resizeToAvoidBottomPadding: true,
-                // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-                floatingActionButton: floatingActionButton(context),
-                body: Center(
-                  child: _buildTransitionsStack(),
-                ),
-                bottomNavigationBar: buildBottomNavigationBar(
-                    bottomNavigationBarItems, textTheme, colorScheme),
-              ));
   }
 
   StatelessWidget floatingActionButton(BuildContext context) {
@@ -397,5 +313,110 @@ class _LayoutPageState extends State<LayoutPage> with TickerProviderStateMixin {
         });
       },
     );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    CartModel cartModel = Provider.of<CartModel>(context);
+    ClientModel clientModel = Provider.of<ClientModel>(context, listen: true);
+    ItemModel itemModel = Provider.of<ItemModel>(context, listen: false);
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+
+    List<String> tabs = [
+      AppLocalizations.of(context).translate('customers'),
+      AppLocalizations.of(context).translate('suppliers'),
+    ];
+
+    BottomNavigationBadge badger = new BottomNavigationBadge(
+        backgroundColor: Colors.red,
+        badgeShape: BottomNavigationBadgeShape.circle,
+        textColor: Colors.white,
+        position: BottomNavigationBadgePosition.topRight,
+        textSize: 8);
+
+    List<BottomNavigationBarItem> bottomNavigationBarItems = [
+      BottomNavigationBarItem(
+        icon: const Icon(Icons.select_all),
+        title: Text(AppLocalizations.of(context).translate('items')),
+      ),
+      BottomNavigationBarItem(
+        icon: const Icon(LinearIcons.users),
+        title: Text(AppLocalizations.of(context).translate('clients')),
+      ),
+      BottomNavigationBarItem(
+        icon: const Icon(Icons.view_week),
+        title: Text(AppLocalizations.of(context).translate('purchases')),
+      ),
+      BottomNavigationBarItem(
+        icon: const Icon(Icons.style),
+        title: Text(AppLocalizations.of(context).translate('pos')),
+      ),
+    ];
+
+    int countClient = clientModel.numberOfClientsWithDue;
+    String cl = countClient > 0 ? countClient.toString() : null;
+    setState(() {
+      bottomNavigationBarItems =
+          badger.setBadge(bottomNavigationBarItems, cl, 1);
+    });
+
+    return BaseView<AuthModel>(
+        builder: (context, model, child) => _currentIndex == 1
+            ? DefaultTabController(
+                length: tabs.length,
+                child: Builder(builder: (BuildContext context) {
+                  return Scaffold(
+                    drawer: CustomDrawer(context, model.currentUser),
+                    appBar: AppBar(
+                      centerTitle: true,
+                      // backgroundColor: Colors.white,
+                      // automaticallyImplyLeading: false,
+
+                      title: Text(
+                        _title(context),
+                        style: Theme.of(context).textTheme.headline6,
+                      ),
+                      actions: _buildActions(
+                          context, model, cartModel, clientModel, itemModel),
+                      bottom: TabBar(
+                        isScrollable: MediaQuery.of(context).orientation ==
+                                Orientation.landscape
+                            ? true
+                            : false,
+                        tabs: [
+                          for (final tab in tabs) Tab(text: tab),
+                        ],
+                      ),
+                    ),
+                    body: _buildTransitionsStack(),
+                    floatingActionButton: floatingActionButton(context),
+                    bottomNavigationBar: buildBottomNavigationBar(
+                        bottomNavigationBarItems, textTheme, colorScheme),
+                  );
+                }),
+              )
+            : Scaffold(
+                drawer: CustomDrawer(context, model.currentUser),
+                appBar: AppBar(
+                  centerTitle: true,
+                  // backgroundColor: Colors.white,
+                  // automaticallyImplyLeading: false,
+                  title: Text(
+                    _title(context),
+                    style: Theme.of(context).textTheme.headline6,
+                  ),
+                  actions: _buildActions(
+                      context, model, cartModel, clientModel, itemModel),
+                ),
+                // resizeToAvoidBottomPadding: true,
+                // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+                floatingActionButton: floatingActionButton(context),
+                body: Center(
+                  child: _buildTransitionsStack(),
+                ),
+                bottomNavigationBar: buildBottomNavigationBar(
+                    bottomNavigationBarItems, textTheme, colorScheme),
+              ));
   }
 }

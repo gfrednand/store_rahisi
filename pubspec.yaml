@@ -1,5 +1,5 @@
 name: storeRahisi
-description: A new Flutter project.
+description: Store Rahisi App, from App Rahisi Software Series.
 
 version: 1.0.0+1
 
@@ -29,11 +29,18 @@ dependencies:
   flutter_range_slider: "^1.0.1"
   logging: ^0.11.3+1
   # sticky_headers: ^0.1.8+1
-
 dev_dependencies:
   flutter_test:
     sdk: flutter
   # intl_translation: 0.17.10
+  flutter_launcher_icons: "^0.7.3"
+
+
+
+flutter_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/images/logos.png"
 
 
 flutter:
@@ -44,26 +51,9 @@ flutter:
   assets:
     - assets/i18n/en.json
     - assets/i18n/sw.json
-    - images/back.jpg
-    - images/groceries.jpg
-    - images/grtwo.jpg
-    - images/grthre.jpg
-    - images/veg.jpg
-    - images/frozen.jpg
-    - images/bev.jpg
-    - images/brand_f.jpg
-    - images/be.jpg
-    - images/eggs.jpg
-    - images/home.jpg
-    - images/nonveg.jpg
-    - images/apple.jpg
-    - images/grapes.jpg
-    - images/guava.jpg
-    - images/kiwi.jpg
-    - images/lemons.jpg
-    - images/pineapple.jpg
-    - images/tomato.jpg
-    - images/gro.jpg
+    - assets/images/logox.png
+    - assets/images/logos.png
+
 
 
 

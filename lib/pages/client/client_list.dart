@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:storeRahisi/app_localizations.dart';
 import 'package:storeRahisi/constants/app_constants.dart';
 import 'package:storeRahisi/constants/routes.dart';
 import 'package:storeRahisi/models/index.dart';
-import 'package:storeRahisi/pages/base_view.dart';
 import 'package:storeRahisi/pages/client/client_detail_widget.dart';
 import 'package:storeRahisi/providers/index.dart';
 
@@ -22,14 +22,20 @@ class _ClientListState extends State<ClientList> {
   bool isLargeScreen = false;
   @override
   Widget build(BuildContext context) {
-    return BaseView<ClientModel>(
-        onModelReady: (model) => model.listenToClients(),
-        builder: (context, model, child) {
-          List<Client> clients = model.clients != null
-              ? model.clients
+     ClientModel clientModel = Provider.of<ClientModel>(context, listen: false);
+    return Selector<ClientModel, bool>(
+        selector: (context, model) => model.busy,
+        builder: (context, busy, _) {
+          List<Client> clients = clientModel.clients != null
+              ? clientModel.clients
                   .where((client) => client.clientType == widget.clientType)
                   .toList()
               : [];
+          if (busy) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
           return OrientationBuilder(builder: (context, orientation) {
             if (MediaQuery.of(context).size.width > 600) {
               isLargeScreen = true;
@@ -39,27 +45,22 @@ class _ClientListState extends State<ClientList> {
 
             return Row(children: <Widget>[
               Expanded(
-                flex: 2,
-                child: !model.busy
-                    ? model.clients.length == 0
-                        ? Center(
-                            child: Text(AppLocalizations.of(context)
-                                .translate('nothingFound')),
-                          )
-                        : buildScrollbar(clients, context, model)
-                    : Center(
-                        child: CircularProgressIndicator(
-                          valueColor: AlwaysStoppedAnimation(
-                              Theme.of(context).accentColor),
-                        ),
-                      ),
-              ),
+                  flex: 2,
+                  child: clientModel
+                              .clients
+                              .length ==
+                          0
+                      ? Center(
+                          child: Text(AppLocalizations.of(context)
+                              .translate('nothingFound')),
+                        )
+                      : buildScrollbar(clients, context, clientModel)),
               isLargeScreen
                   ? Expanded(
                       flex: 3,
                       child: ClientDetailWidget(
                         client: selectedValue,
-                        clientModel: model,
+                        clientModel: clientModel,
                       ))
                   : Container(),
             ]);
@@ -78,7 +79,8 @@ class _ClientListState extends State<ClientList> {
                     ? clients[index].companyName
                     : clients[index].contactPerson;
 
-                clients[index].proviousDue = model.getDueAmountByClientId(clients[index].id);
+            clients[index].proviousDue =
+                model.getDueAmountByClientId(clients[index].id);
 
             return Column(
               children: [

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:storeRahisi/constants/ui_helpers.dart';
 import 'package:storeRahisi/models/item.dart';
 import 'package:storeRahisi/providers/cart_model.dart';
 import 'package:storeRahisi/providers/index.dart';
@@ -40,7 +41,7 @@ class _OrderSummaryState extends State<OrderSummary> {
                       '${item?.name?.toUpperCase() ?? ''}',
                     ),
                     subtitle: Text(
-                      'Tshs ${(widget.cartModel.carts[index].quantity * widget.cartModel.carts[index].paidAmount).toString()}/=',
+                      'Tshs ${currencyFormat.format((widget.cartModel.carts[index].quantity * widget.cartModel.carts[index].paidAmount))}/=',
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),

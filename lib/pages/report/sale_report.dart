@@ -134,15 +134,15 @@ class _SaleReportState extends State<SaleReport> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Total Amount: ${saleModel.totalSaleAmount?.toString()?.replaceAllMapped(reg, mathFunc)}',
+                      'Total Amount: ${currencyFormat.format(saleModel.totalSaleAmount)}',
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      'Total Cost Price: ${saleModel.totalPurchaseAmount?.toString()?.replaceAllMapped(reg, mathFunc)}',
+                      'Total Cost Price: ${currencyFormat.format(saleModel.totalPurchaseAmount)}',
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      'Profit: ${(saleModel.totalSaleAmount - saleModel.totalPurchaseAmount)?.toString()?.replaceAllMapped(reg, mathFunc)}',
+                      'Profit: ${currencyFormat.format((saleModel.totalSaleAmount - saleModel.totalPurchaseAmount))}',
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: (saleModel.totalSaleAmount -
@@ -265,7 +265,7 @@ class _SaleReportState extends State<SaleReport> {
                                             children: itemNames,
                                           )),
                                           DataCell(
-                                            Text('${sale.paidAmount?.toString()?.replaceAllMapped(reg, mathFunc)}'),
+                                            Text('${currencyFormat.format(sale.paidAmount)}'),
                                           ),
                                           DataCell(
                                             Text('$saleDate'),
@@ -367,7 +367,7 @@ class _SaleReportState extends State<SaleReport> {
       row.add(sales[index].referenceNumber);
       row.add(sales[index].companyName);
       row.add(iNames.join(','));
-      row.add(sales[index].paidAmount?.toString()?.replaceAllMapped(reg, mathFunc));
+      row.add(currencyFormat.format(sales[index].paidAmount));
       row.add(sales[index].saleDate);
 
       rows.add(row);

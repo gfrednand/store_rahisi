@@ -83,12 +83,12 @@ class _CustomDrawerState extends State<CustomDrawer> {
         //       )
         //     : Container(),
         // Divider(),
-        const Expanded(child: SizedBox()),
+        Spacer(),
         const Divider(height: 1.0, color: Colors.grey),
         SizedBox(
           width: double.infinity,
           child: FlatButton(
-              color: Theme.of(context).colorScheme.onPrimary,
+              // color: Theme.of(context).colorScheme.onPrimary,
               child: Text(
                 AppLocalizations.of(context).translate('logout'),
                 style: Theme.of(context).textTheme.bodyText1,

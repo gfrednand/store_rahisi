@@ -6,7 +6,6 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import 'package:flutter/material.dart';
 
 // Item itemFromJson(String str) => Item.fromMap(json.decode(str));
 
@@ -41,7 +40,7 @@ class Item {
   Item({
     this.id,
     this.userId,
-    @required this.name,
+     this.name,
     this.categoryId,
     this.category,
     DateTime createdAt,
@@ -103,7 +102,7 @@ class Item {
         alertQty: json['alertQty'],
         barcode: json['barcode'],
         createdAt: DateTime.tryParse(json["createdAt"].toString()),
-        updatedAt: json["updatedAt"],
+        updatedAt: DateTime.tryParse(json["updatedAt"].toString()),
         openingStock: json['openingStock'],
         quantity: json['quantity'],
         active: json['active'],

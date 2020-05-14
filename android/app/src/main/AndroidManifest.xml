@@ -11,8 +11,8 @@
          <uses-permission android:name="android.permission.CAMERA" />
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:label="store_rahisi"
-        android:icon="@mipmap/ic_launcher">
+        android:label="Store Rahisi"
+        android:icon="@mipmap/launcher_icon">
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"

@@ -12,8 +12,6 @@ import 'package:storeRahisi/services/navigation_service.dart';
 
 class ItemModel extends BaseModel {
   // Api Api(path: 'items', companyId: currentUser?.companyId) = locator<Api>();
-  static String _unitConst = 'Select a Product Unit';
-  static String _categoryConst = 'Select a Product Category';
 
   final StreamController<List<Item>> _itemsController =
       StreamController<List<Item>>.broadcast();
@@ -36,20 +34,18 @@ class ItemModel extends BaseModel {
   Item get item => _selectedItem;
   bool get _editting => _item != null;
 
-  String _selectedCategory = _categoryConst;
-  String get selectedCategory => _selectedCategory;
+  // String _selectedCategory = _categoryConst;
+  // String get selectedCategory => _selectedCategory;
 
   double _totalProfit = 0.0;
   double get totalProfit => _totalProfit;
-  void setSelectedCategory(dynamic category) {
-    _selectedCategory = category;
-    notifyListeners();
-  }
 
-  String _selectedUnit = _unitConst;
-  String get selectedUnit => _selectedUnit;
-  void setSelectedUnit(dynamic unit) {
-    _selectedUnit = unit;
+  Category _filter;
+
+  Category get filter => _filter;
+
+  set filter(Category filter) {
+    _filter = filter;
     notifyListeners();
   }
 
@@ -80,9 +76,36 @@ class ItemModel extends BaseModel {
       List<Item> updatedItem = itemData;
       if (updatedItem != null && updatedItem.length > 0) {
         _items = updatedItem;
+        // updatedItem.map((item) {
+        //   item.totalPurchase = _purchaseModel.getTotalPurchaseByItemId(item.id);
+        //   item.totalSales = _saleModel.getTotalSaleByItemId(item.id);
+        //   item.inStock =
+        //       (item.totalPurchase + item.openingStock) - item.totalSales;
+        //   item.category = getCategoryById(item.categoryId)?.name;
+        //   return item;
+        // }).toList();
         notifyListeners();
       }
     });
+  }
+
+  List<Item> get filteredItems {
+    if (filter == null || filter.name == Category.all().name) {
+      return _items;
+    }
+    return _items.where((item) => item.categoryId == filter.id).toList();
+  }
+
+  List<Category> get filters {
+    List<Category> cats = [];
+
+    cats = _categories;
+    Category all = cats.firstWhere(
+      (cat) => cat.name == Category.all().name,
+      orElse: () => null,
+    );
+    if (all == null) cats.insert(0, Category.all());
+    return cats;
   }
 
   listenToCategories() async {
@@ -163,13 +186,7 @@ class ItemModel extends BaseModel {
   Future<bool> saveItem({@required Item data}) async {
     setBusy(true);
     var result;
-    if (_selectedUnit != _unitConst) {
-      data.unit = _selectedUnit;
-    }
 
-    if (_selectedCategory != _categoryConst) {
-      data.categoryId = _selectedCategory;
-    }
     data.userId = currentUser?.id;
     if (!_editting) {
       result = await Api(path: 'items', companyId: currentUser?.companyId)
@@ -188,7 +205,6 @@ class ItemModel extends BaseModel {
       );
       return false;
     } else {
-      _navigationService.pop();
       return true;
     }
   }
@@ -215,6 +231,26 @@ class ItemModel extends BaseModel {
       return false;
     } else {
       _navigationService.pop();
+      return true;
+    }
+  }
+
+  Future<bool> updateItemsFromPurchase({@required List<Item> items}) async {
+    // setBusy(true);
+    var result;
+
+    result = await Api(path: 'items', companyId: currentUser?.companyId)
+        .updateMultipleDocument(items.map((item) => item.toMap()).toList());
+
+    setBusy(false);
+
+    if (result is String) {
+      await _dialogService.showDialog(
+        title: 'Cound not update Prices',
+        description: result,
+      );
+      return false;
+    } else {
       return true;
     }
   }

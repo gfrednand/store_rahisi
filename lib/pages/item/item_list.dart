@@ -22,11 +22,13 @@ class _ItemListState extends State<ItemList> {
 
   @override
   Widget build(BuildContext context) {
-    PurchaseModel purchaseModel = Provider.of<PurchaseModel>(context);
-    SaleModel saleModel = Provider.of<SaleModel>(context);
-    return BaseView<ItemModel>(
-      onModelReady: (model) => model.listenToItems(),
-      builder: (context, model, child) {
+    PurchaseModel purchaseModel =
+        Provider.of<PurchaseModel>(context, listen: true);
+    SaleModel saleModel = Provider.of<SaleModel>(context, listen: true);
+    // ItemModel itemModel = Provider.of<ItemModel>(context);
+    return Selector<ItemModel, List<Item>>(
+      selector: (_, model) => model.filteredItems,
+      builder: (context, items, _) {
         return OrientationBuilder(builder: (context, orientation) {
           if (MediaQuery.of(context).size.width > 600) {
             isLargeScreen = true;
@@ -37,7 +39,7 @@ class _ItemListState extends State<ItemList> {
           return Row(children: <Widget>[
             Expanded(
               flex: 2,
-              child: buildScrollbar(model, context, purchaseModel, saleModel),
+              child: buildScrollbar(items, context, purchaseModel, saleModel),
             ),
             isLargeScreen
                 ? Expanded(
@@ -52,166 +54,185 @@ class _ItemListState extends State<ItemList> {
     );
   }
 
-  Column buildScrollbar(ItemModel model, BuildContext context,
+  Widget _buildFilter(ItemModel model) {
+    return Selector<ItemModel, List<Category>>(
+        selector: (_, model) => model.filters,
+        builder: (context, filters, _) {
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 8.0, right: 8.0, top: 8.0),
+            child: Align(
+              alignment: Alignment.bottomRight,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: <Widget>[
+                  Text('Filter by:'),
+                  const SizedBox(width: 8.0),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 12.0, vertical: 4.0),
+                    decoration: ShapeDecoration(
+                      shape: RoundedRectangleBorder(
+                        side: BorderSide(width: 1.0, style: BorderStyle.solid),
+                        borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                      ),
+                    ),
+                    child: DropdownButtonHideUnderline(
+                      child: DropdownButton<Category>(
+                        isDense: true,
+                        value: model.filter == null ? null : model.filter,
+                        items: filters
+                            .map((category) => DropdownMenuItem<Category>(
+                                  child: Text(category.name),
+                                  value: category,
+                                ))
+                            .toList(),
+                        onChanged: (filter) {
+                          model.filter = filter;
+                        },
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
+  }
+
+  Column buildScrollbar(List<Item> items, BuildContext context,
       PurchaseModel purchaseModel, SaleModel saleModel) {
+    ItemModel itemModel = Provider.of<ItemModel>(context, listen: false);
     return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        Wrap(
-          spacing: 0.0, // gap between adjacent chips
-          runSpacing: 0.0, // gap between lines
-          children: <Widget>[
-            chipDesign('All', Color(0xFF4db6ac)),
-            ...model.categories
-                .map((element) => chipDesign(element.name, Colors.grey))
-                .toList()
-          ],
-        ),
-      verticalSpaceTiny,
-        Scrollbar(
-            child: !model.busy
-                ? model.items.length == 0
-                    ? Center(
-                        child: Text(AppLocalizations.of(context)
-                            .translate('nothingFound')),
-                      )
-                    : ListView.builder(
-                        scrollDirection: Axis.vertical,
-                        shrinkWrap: true,
-                        itemCount: model.items.length,
-                        itemBuilder: (buildContext, index) {
-                          model.items[index].totalPurchase = purchaseModel
-                              .getTotalPurchaseByItemId(model.items[index].id);
-                          model.items[index].totalSales = saleModel
-                              .getTotalSaleByItemId(model.items[index].id);
-                          model.items[index].inStock =
-                              (model.items[index].totalPurchase +
-                                      model.items[index].openingStock) -
-                                  model.items[index].totalSales;
-                          Color color = model.items[index].inStock == 0
-                              ? Colors.red
-                              : model.items[index].inStock >
-                                      model.items[index].alertQty
-                                  ? Colors.green
-                                  : Colors.orange;
-                          model.items[index].category = model
-                              .getCategoryById(model.items[index].categoryId)
-                              ?.name;
-                          return Column(
-                            children: [
-                              Divider(
-                                height: 5.0,
-                              ),
-                              Container(
-                                // padding: const EdgeInsets.only(top: 16.0),
-                                color: selectedIndex != null &&
-                                        selectedIndex == index &&
-                                        isLargeScreen
-                                    ? Theme.of(context).colorScheme.primary
-                                    : Theme.of(context)
+        _buildFilter(itemModel),
+        verticalSpaceTiny,
+        !itemModel.busy
+            ? items.length == 0
+                ? Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(AppLocalizations.of(context)
+                          .translate('nothingFound')),
+                    ],
+                  )
+                : Expanded(
+                                  child: ListView.builder(
+                      scrollDirection: Axis.vertical,
+                      shrinkWrap: true,
+                      itemCount: items.length,
+                      itemBuilder: (buildContext, index) {
+                        items[index].totalPurchase = purchaseModel
+                            .getTotalPurchaseByItemId(items[index].id);
+                        items[index].totalSales =
+                            saleModel.getTotalSaleByItemId(items[index].id);
+                        items[index].inStock = (items[index].totalPurchase +
+                                items[index].openingStock) -
+                            items[index].totalSales;
+                        Color color = items[index].inStock == 0
+                            ? Colors.red
+                            : items[index].inStock > items[index].alertQty
+                                ? Colors.green
+                                : Colors.orange;
+                        items[index].category = itemModel
+                            .getCategoryById(items[index].categoryId)
+                            ?.name;
+                        return Column(
+                          children: [
+                            Divider(
+                              height: 5.0,
+                            ),
+                            Container(
+                              // padding: const EdgeInsets.only(top: 16.0),
+                              color: selectedIndex != null &&
+                                      selectedIndex == index &&
+                                      isLargeScreen
+                                  ? Theme.of(context).colorScheme.primary
+                                  : Theme.of(context)
+                                      .colorScheme
+                                      .primaryVariant,
+                              child: ListTile(
+                                leading: ExcludeSemantics(
+                                  child: CircleAvatar(
+                                    radius: 25.0,
+                                    backgroundColor: Theme.of(context)
                                         .colorScheme
-                                        .primaryVariant,
-                                child: ListTile(
-                                  leading: ExcludeSemantics(
-                                    child: CircleAvatar(
-                                      radius: 25.0,
-                                      backgroundColor: Theme.of(context)
-                                          .colorScheme
-                                          .onPrimary,
-                                      child: Text(
-                                        model.items[index].name
-                                            .substring(0, 2)
-                                            .toUpperCase(),
-                                        style: TextStyle(
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .primary,
-                                          fontWeight: selectedIndex != null &&
-                                                  selectedIndex == index
-                                              ? FontWeight.bold
-                                              : FontWeight.normal,
-                                        ),
+                                        .onPrimary,
+                                    child: Text(
+                                      items[index]
+                                          .name
+                                          .substring(0, 2)
+                                          .toUpperCase(),
+                                      style: TextStyle(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .primary,
+                                        fontWeight: selectedIndex != null &&
+                                                selectedIndex == index
+                                            ? FontWeight.bold
+                                            : FontWeight.normal,
                                       ),
                                     ),
                                   ),
-                                  title: Row(
-                                    children: <Widget>[
-                                      Text(
-                                        '${model.items[index].name.toUpperCase()}',
-                                        overflow: TextOverflow.ellipsis,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyText1,
-                                      ),
-                                      SizedBox(
-                                        width: 16.0,
-                                      ),
-                                      Text(
-                                        '${model.items[index].inStock} ${model.items[index].unit}',
-                                        style: TextStyle(
-                                          color: color,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  subtitle: Text(
-                                    '${model.items[index].category}',
-                                    overflow: TextOverflow.ellipsis,
-                                    style:
-                                        Theme.of(context).textTheme.subtitle2,
-                                  ),
-                                  trailing: Icon(
-                                     Icons.arrow_forward_ios,
-                      color: Theme.of(context).iconTheme.color,
-                                  ),
-                                  onTap: () {
-                                    if (isLargeScreen) {
-                                      selectedValue = model.items[index];
-                                      setState(() {
-                                        selectedIndex = index;
-                                      });
-                                    } else {
-                             
-
-                                      Navigator.pushNamed(
-                                          context, AppRoutes.item_detail,
-                                          arguments:  model.items[index]);
-                                    }
-                                  },
                                 ),
+                                title: Row(
+                                  children: <Widget>[
+                                    Text(
+                                      '${items[index].name.toUpperCase()}',
+                                      overflow: TextOverflow.ellipsis,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyText1,
+                                    ),
+                                    SizedBox(
+                                      width: 16.0,
+                                    ),
+                                    Text(
+                                      '${items[index].inStock} ${items[index].unit}',
+                                      style: TextStyle(
+                                        color: color,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                subtitle: Text(
+                                  '${items[index].category}',
+                                  overflow: TextOverflow.ellipsis,
+                                  style:
+                                      Theme.of(context).textTheme.subtitle2,
+                                ),
+                                trailing: Icon(
+                                  Icons.arrow_forward_ios,
+                                  color: Theme.of(context).iconTheme.color,
+                                ),
+                                onTap: () {
+                                  if (isLargeScreen) {
+                                    selectedValue = items[index];
+                                    setState(() {
+                                      selectedIndex = index;
+                                    });
+                                  } else {
+                                    Navigator.pushNamed(
+                                        context, AppRoutes.item_detail,
+                                        arguments: items[index].id);
+                                  }
+                                },
                               ),
-                            ],
-                          );
-                        },
-                      )
-                : Center(
-                    child: CircularProgressIndicator(
-                        // valueColor:
-                        //     AlwaysStoppedAnimation(Theme.of(context).accentColor),
-                        ),
-                  )),
+                            ),
+                          ],
+                        );
+                      },
+                    ),
+                )
+            : Center(
+                child: CircularProgressIndicator(
+                    // valueColor:
+                    //     AlwaysStoppedAnimation(Theme.of(context).accentColor),
+                    ),
+              ),
       ],
-    );
-  }
-
-  Widget chipDesign(String label, Color color) {
-    return GestureDetector(
-      onTap: () {},
-      child: Container(
-        child: Chip(
-          label: Text(
-            label,
-            style: TextStyle(
-              color: Colors.white,
-            ),
-          ),
-          backgroundColor: color,
-          elevation: 4,
-          shadowColor: Colors.grey[50],
-          padding: EdgeInsets.all(4),
-        ),
-        margin: EdgeInsets.only(left: 12, right: 12, top: 2, bottom: 2),
-      ),
     );
   }
 }

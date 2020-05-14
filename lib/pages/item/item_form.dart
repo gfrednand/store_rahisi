@@ -121,9 +121,8 @@ class _ItemFormState extends State<ItemForm> {
                         controller: alertQtyController,
                         validator: requiredValidator,
                         decoration: new InputDecoration(
-                          // hintText: "Alert Quantity",
-                          labelText: "Alert Quantity"
-                        ),
+                            // hintText: "Alert Quantity",
+                            labelText: "Alert Quantity"),
                       ),
                     ),
                     verticalSpaceSmall,
@@ -188,6 +187,8 @@ class _ItemFormState extends State<ItemForm> {
                             ));
                             _formKey.currentState.reset();
                             if (success) {
+                              Navigator.pop(context);
+
                               Toast.show(
                                   message: 'Item successfully Added',
                                   context: context);

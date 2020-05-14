@@ -60,8 +60,6 @@ class TransactionModel extends BaseModel {
           await Api(path: 'transactions', companyId: currentUser?.companyId)
               .addDocument(data.toMap());
     } else {
-      print('*********************${data.toMap()}');
-
       result =
           await Api(path: 'transactions', companyId: currentUser?.companyId)
               .updateDocument(data.toMap(), data.id);

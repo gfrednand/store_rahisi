@@ -135,7 +135,7 @@ class _PurchaseReportState extends State<PurchaseReport> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Total Amount: ${purchaseModel.totalPurchaseAmount?.toString()?.replaceAllMapped(reg, mathFunc)}',
+                      'Total Amount: ${currencyFormat.format(purchaseModel.totalPurchaseAmount)}',
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                     Text(
@@ -256,7 +256,7 @@ class _PurchaseReportState extends State<PurchaseReport> {
                                             children: itemNames,
                                           )),
                                           DataCell(
-                                            Text('${purchase.paidAmount?.toString()?.replaceAllMapped(reg, mathFunc)}'),
+                                            Text('${currencyFormat.format(purchase.paidAmount)}'),
                                           ),
                                           DataCell(
                                             Text('$purchaseDate'),
@@ -359,7 +359,7 @@ class _PurchaseReportState extends State<PurchaseReport> {
       row.add(purchases[index].referenceNumber);
       row.add(purchases[index].companyName);
       row.add(iNames.join(','));
-      row.add(purchases[index].paidAmount?.toString()?.replaceAllMapped(reg, mathFunc));
+      row.add(currencyFormat.format(purchases[index].paidAmount));
       row.add(purchases[index].purchaseDate);
 
       rows.add(row);

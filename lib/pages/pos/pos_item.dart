@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:storeRahisi/app_localizations.dart';
+import 'package:storeRahisi/constants/ui_helpers.dart';
 import 'package:storeRahisi/models/item.dart';
 import 'package:storeRahisi/providers/cart_model.dart';
 import 'package:storeRahisi/providers/index.dart';
@@ -83,44 +84,50 @@ class _PosItemState extends State<PosItem> {
                     SizedBox(
                       height: 5.0,
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        Text(
-                          "\Tsh ${widget.currentPrice}",
+                       Text(
+                          "\Tsh ${currencyFormat.format(widget.item.salePrice??0)}",
                           style:
                               TextStyle(fontSize: 15.0, color: Colors.green[900]),
                         ),
-                        SizedBox(
-                          width: 8.0,
-                        ),
-                        widget.originalPrice > 0
-                            ? Text(
-                                "\Tsh ${widget.originalPrice}",
-                                style: TextStyle(
-                                  fontSize: 12.0,
-                                  color: Colors.red,
-                                  decoration: TextDecoration.lineThrough,
-                                ),
-                              )
-                            : Text(""),
-                        SizedBox(
-                          width: 8.0,
-                        ),
-                        widget.discount > 0
-                            ? Text(
-                                "${widget.discount.toStringAsFixed(1)}\% " +
-                                    AppLocalizations.of(context).translate('off'),
-                                style:
-                                    TextStyle(fontSize: 12.0, color: Colors.grey),
-                              )
-                            : Text("")
-                      ],
-                    ),
-                    SizedBox(
-                      height: 8.0,
-                    ),
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.start,
+                    //   mainAxisSize: MainAxisSize.min,
+                    //   children: <Widget>[
+                    //     Text(
+                    //       "\Tsh ${currencyFormat.format(widget.currentPrice)}",
+                    //       style:
+                    //           TextStyle(fontSize: 15.0, color: Colors.green[900]),
+                    //     ),
+                    //     SizedBox(
+                    //       width: 8.0,
+                    //     ),
+                    //     widget.originalPrice > 0
+                    //         ? Text(
+                    //             "\Tsh ${currencyFormat.format(widget.originalPrice)}",
+                    //             style: TextStyle(
+                    //               fontSize: 12.0,
+                    //               color: Colors.red,
+                    //               decoration: TextDecoration.lineThrough,
+                    //             ),
+                    //           )
+                    //         : Text(""),
+                    //     SizedBox(
+                    //       width: 8.0,
+                    //     ),
+                    //     widget.discount > 0
+                    //         ? Text(
+                    //             "${widget.discount.toStringAsFixed(1)}\% " +
+                    //                 AppLocalizations.of(context).translate('off'),
+                    //             style:
+                    //                 TextStyle(fontSize: 12.0, color: Colors.grey),
+                    //           )
+                    //         : Text("")
+                    //   ],
+                    // ),
+                   
+                    // SizedBox(
+                    //   height: 8.0,
+                    // ),
                   ],
                 ),
                 Row(

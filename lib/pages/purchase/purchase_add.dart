@@ -127,13 +127,13 @@ class _PurchaseAddState extends State<PurchaseAdd> {
                                 Text(
                                   AppLocalizations.of(context)
                                           .translate('purchasePrice') +
-                                      ': ${items[index].purchasePrice?.toString()?.replaceAllMapped(reg, mathFunc)} @1',
+                                      ': ${currencyFormat.format(items[index].purchasePrice)} @1',
                                   overflow: TextOverflow.ellipsis,
                                 ),
                                 Text(
                                   AppLocalizations.of(context)
                                           .translate('salePrice') +
-                                      ': ${items[index].salePrice?.toString()?.replaceAllMapped(reg, mathFunc)} @1',
+                                      ': ${currencyFormat.format(items[index].salePrice)} @1',
                                   overflow: TextOverflow.ellipsis,
                                 ),
                                 Text(

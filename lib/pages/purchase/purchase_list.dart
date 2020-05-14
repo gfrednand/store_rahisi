@@ -132,7 +132,7 @@ class _PurchaseListState extends State<PurchaseList> {
                                   Text(
                                     AppLocalizations.of(context)
                                             .translate('grandTotal') +
-                                        ': ${model.purchases[index]?.grandTotalAmount?.toString()?.replaceAllMapped(reg, mathFunc)}/=',
+                                        ': ${currencyFormat.format(model.purchases[index]?.grandTotalAmount)}/=',
                                     style:
                                         Theme.of(context).textTheme.subtitle2,
                                     overflow: TextOverflow.ellipsis,

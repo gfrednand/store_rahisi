@@ -129,7 +129,7 @@ class _ItemReportState extends State<ItemReport> {
               : Container(),
           items.length > 0
               ? Text(
-                  'Total Profit: ${itemModel.totalProfit?.toString()?.replaceAllMapped(reg, mathFunc)}',
+                  'Total Profit: ${currencyFormat.format(itemModel.totalProfit)}',
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: itemModel.totalProfit > 0
@@ -222,7 +222,7 @@ class _ItemReportState extends State<ItemReport> {
                                             Text('${item.inStock}'),
                                           ),
                                           DataCell(
-                                            Text('${item.profit?.toString()?.replaceAllMapped(reg, mathFunc)}'),
+                                            Text('${currencyFormat.format(item.profit)}'),
                                           ),
                                         ]);
                                   },
@@ -312,7 +312,7 @@ class _ItemReportState extends State<ItemReport> {
       row.add(items[index].purchaseQuantity);
       row.add(items[index].saleQuantity);
       row.add(items[index].inStock);
-      row.add(items[index].profit?.toString()?.replaceAllMapped(reg, mathFunc));
+      row.add(currencyFormat.format(items[index].profit));
 
       rows.add(row);
     }

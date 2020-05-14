@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:storeRahisi/app_localizations.dart';
 import 'package:storeRahisi/constants/routes.dart';
 import 'package:storeRahisi/models/item.dart';
+import 'package:storeRahisi/providers/index.dart';
 
 class ItemSearchDelegate extends SearchDelegate<List<Item>> {
   final List<Item> history;
@@ -52,6 +54,10 @@ class ItemSearchDelegate extends SearchDelegate<List<Item>> {
 
   @override
   Widget buildSuggestions(BuildContext context) {
+    ItemModel itemModel = Provider.of<ItemModel>(context, listen: false);
+    PurchaseModel purchaseModel = Provider.of<PurchaseModel>(context, listen: false);
+    SaleModel saleModel = Provider.of<SaleModel>(context, listen: false);
+
     List<Item> suggestionList = query.isEmpty && history == null
         ? history
         : history != null
@@ -74,13 +80,29 @@ class ItemSearchDelegate extends SearchDelegate<List<Item>> {
             itemCount: suggestionList.length,
             itemBuilder: (context, index) {
               Item suggestion = suggestionList[index];
+
+                    suggestion.totalPurchase = purchaseModel
+                            .getTotalPurchaseByItemId(suggestion.id);
+                        suggestion.totalSales =
+                            saleModel.getTotalSaleByItemId(suggestion.id);
+                        suggestion.inStock = (suggestion.totalPurchase +
+                                suggestion.openingStock) -
+                            suggestion.totalSales;
+                        Color color = suggestion.inStock == 0
+                            ? Colors.red
+                            : suggestion.inStock > suggestion.alertQty
+                                ? Colors.green
+                                : Colors.orange;
+                        suggestion.category = itemModel
+                            .getCategoryById(suggestion.categoryId)
+                            ?.name;
               return suggestion != null
                   ? ListTile(
                       onTap: () {
                         query = suggestion.name;
                         Navigator.pushReplacementNamed(
                             context, AppRoutes.item_detail,
-                            arguments: suggestion);
+                            arguments: suggestion.id);
                       },
                       title: Text(
                         '${suggestion.name}',

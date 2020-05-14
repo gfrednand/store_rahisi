@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:storeRahisi/app_localizations.dart';
+import 'package:storeRahisi/constants/currency_input_formatter.dart';
 import 'package:storeRahisi/constants/ui_helpers.dart';
 import 'package:storeRahisi/models/index.dart';
 import 'package:storeRahisi/providers/purchase_model.dart';
@@ -108,6 +110,11 @@ class _ItemPurchaseFormState extends State<ItemPurchaseForm> {
                         // textInputAction: TextInputAction.continueAction,
                         keyboardType: TextInputType.numberWithOptions(),
                         controller: purchasePriceController,
+                        inputFormatters: [
+                          WhitelistingTextInputFormatter.digitsOnly,
+                          // Fit the validating format.
+                          CurrencyInputFormatter()
+                        ],
                         decoration: const InputDecoration(
                           icon: const Icon(Icons.attach_money),
                           hintText: '0',
@@ -122,6 +129,11 @@ class _ItemPurchaseFormState extends State<ItemPurchaseForm> {
                         // initialValue: purchasePriceController.text??'',
                         keyboardType: TextInputType.numberWithOptions(),
                         controller: paidAmountController,
+                        inputFormatters: [
+                          WhitelistingTextInputFormatter.digitsOnly,
+                          // Fit the validating format.
+                          CurrencyInputFormatter()
+                        ],
                         decoration: const InputDecoration(
                           icon: const Icon(Icons.attach_money),
                           hintText: '0',
@@ -135,6 +147,11 @@ class _ItemPurchaseFormState extends State<ItemPurchaseForm> {
                         keyboardType: TextInputType.numberWithOptions(),
                         // textInputAction: TextInputAction.continueAction,
                         controller: salePriceController,
+                        inputFormatters: [
+                          WhitelistingTextInputFormatter.digitsOnly,
+                          // Fit the validating format.
+                          CurrencyInputFormatter()
+                        ],
                         decoration: const InputDecoration(
                           icon: const Icon(Icons.attach_money),
                           hintText: '0',
@@ -162,13 +179,18 @@ class _ItemPurchaseFormState extends State<ItemPurchaseForm> {
                     : Center(
                         child: RaisedButton(
                           onPressed: () {
-                            _item.purchasePrice =
-                                double.parse(purchasePriceController.text);
-                            _item.paidAmount =
-                                double.parse(paidAmountController.text);
-                            _item.salePrice =
-                                double.parse(salePriceController.text);
-                            _item.quantity = int.parse(quantityController.text);
+                            _item.purchasePrice = double.tryParse(
+                                purchasePriceController.text
+                                    .replaceAll(new RegExp(r','), ''));
+                            _item.paidAmount = double.tryParse(
+                                paidAmountController.text
+                                    .replaceAll(new RegExp(r','), ''));
+                            _item.salePrice = double.tryParse(
+                                salePriceController.text
+                                    .replaceAll(new RegExp(r','), ''));
+                            _item.quantity = int.tryParse(quantityController
+                                .text
+                                .replaceAll(new RegExp(r','), ''));
                             _item.userId =
                                 widget.purchaseModel.currentUser.id ?? '';
                             widget.purchaseModel.setSelectedItem(_item);

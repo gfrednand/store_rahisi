@@ -69,10 +69,10 @@ class Router {
         ));
         break;
       case AppRoutes.item_detail:
-        var args = settings.arguments as Item;
+        var args = settings.arguments as String;
         return MaterialPageRoute(
             builder: (_) => ItemDetail(
-                  item: args,
+                  id: args,
                 ));
         break;
       case AppRoutes.item_form:

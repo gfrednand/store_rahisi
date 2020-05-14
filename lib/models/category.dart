@@ -10,6 +10,11 @@ class Category {
         name: json["name"] ?? '',
         subCategoryId: json["subCategoryId"] ?? '',
       );
+  factory Category.all() => Category(
+        id: 'All',
+        name: 'All',
+        subCategoryId: '',
+      );
 
   Map<String, dynamic> toMap() => {
         "id": id,

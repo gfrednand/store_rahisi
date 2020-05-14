@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:storeRahisi/constants/currency_input_formatter.dart';
+import 'package:storeRahisi/constants/ui_helpers.dart';
 import 'package:storeRahisi/models/index.dart';
 import 'package:storeRahisi/providers/index.dart';
 import 'package:storeRahisi/widgets/busy_button.dart';
 import 'package:storeRahisi/widgets/toast.dart';
+
 class PaymentPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => PaymentPageState();
@@ -13,7 +17,7 @@ class PaymentPageState extends State<PaymentPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   double paidAmount = 0.0;
   TextEditingController paidAmountController =
-      new TextEditingController(text: '0.0');
+      new TextEditingController();
 
   int radioValue = 0;
   void handleRadioValueChanged(int value) {
@@ -28,7 +32,7 @@ class PaymentPageState extends State<PaymentPage> {
   @override
   void initState() {
     paidAmountController.addListener(() {
-      paidAmount = double.tryParse(paidAmountController.text) ?? 0.0;
+      paidAmount = double.tryParse(paidAmountController.text.replaceAll(new RegExp(r','), '')) ?? 0.0;
       setState(() {});
     });
     super.initState();
@@ -39,7 +43,6 @@ class PaymentPageState extends State<PaymentPage> {
     CartModel cartModel = Provider.of<CartModel>(context);
     SaleModel saleModel = Provider.of<SaleModel>(context);
     ClientModel clientModel = Provider.of<ClientModel>(context);
-
 
     return new Scaffold(
       key: _scaffoldKey,
@@ -69,7 +72,8 @@ class PaymentPageState extends State<PaymentPage> {
                   child: Container(
                       padding:
                           const EdgeInsets.fromLTRB(15.0, 15.0, 15.0, 15.0),
-                      child: Text("Total Amount: TShs ${cartModel.totalPrice}",
+                      child: Text(
+                          "Total Amount: TShs ${currencyFormat.format(cartModel.totalPrice)}",
                           maxLines: 10,
                           style: TextStyle(
                               fontSize: 15.0, color: Colors.black87))),
@@ -92,6 +96,11 @@ class PaymentPageState extends State<PaymentPage> {
             margin: EdgeInsets.all(10.0),
             child: TextField(
               controller: paidAmountController,
+              inputFormatters: [
+                WhitelistingTextInputFormatter.digitsOnly,
+                // Fit the validating format.
+                CurrencyInputFormatter()
+              ],
               keyboardType: TextInputType.number,
               decoration: InputDecoration(
                   labelText: "Paid Amount",
@@ -104,14 +113,16 @@ class PaymentPageState extends State<PaymentPage> {
           cartModel.totalPrice > paidAmount
               ? Container(
                   padding: EdgeInsets.only(left: 10.0),
-                  child: Text("Amount Due ${cartModel.totalPrice - paidAmount}",
+                  child: Text(
+                      "Amount Due ${currencyFormat.format(cartModel.totalPrice - paidAmount)}",
                       maxLines: 10,
                       style: TextStyle(fontSize: 15.0, color: Colors.black)),
                 )
               : paidAmount > cartModel.totalPrice
                   ? Container(
                       padding: EdgeInsets.only(left: 10.0),
-                      child: Text("Change ${cartModel.totalPrice - paidAmount}",
+                      child: Text(
+                          "Change ${currencyFormat.format(cartModel.totalPrice - paidAmount)}",
                           maxLines: 10,
                           style:
                               TextStyle(fontSize: 15.0, color: Colors.black)),
@@ -148,11 +159,10 @@ class PaymentPageState extends State<PaymentPage> {
                           subTotal: cartModel.totalPrice - discount,
                           tax: tax,
                           items: items));
-                          if(success){
-                            Toast.show(
-                                  message: 'Purchased Successful',
-                                  context: context);
-                          }
+                  if (success) {
+                    Toast.show(
+                        message: 'Sold Successful', context: context);
+                  }
                 },
               ),
             ),

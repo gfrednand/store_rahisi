@@ -29,6 +29,7 @@ class PurchaseModel extends BaseModel {
   NavigationService _navigationService = locator<NavigationService>();
   // ClientModel _clientModel = locator<ClientModel>();
   PaymentModel _paymentModel = locator<PaymentModel>();
+  ItemModel _itemModel;
 
   Purchase _purchase;
   bool get _editting => _purchase != null;
@@ -45,6 +46,10 @@ class PurchaseModel extends BaseModel {
   //   _clients = _clientModel.clients;
   //   // setBusy(false);
   // }
+
+  void updateItemModel(ItemModel itemModel) {
+    _itemModel = itemModel;
+  }
 
   Item findItemById(String id) {
     return _items.firstWhere((element) => element.id == id);
@@ -228,12 +233,30 @@ class PurchaseModel extends BaseModel {
               note: 'Paid for Bill ${data.referenceNumber}',
               clientId: data.clientId,
               type: 'Debit'));
+      _itemModel.updateItemsFromPurchase(items: data.items);
+
       _selectedItems = [];
       _navigationService.pop();
 
       return true;
     }
   }
+
+  //   List<Item> generateReport(DateTime fromDate, DateTime toDate) {
+  //   _totalProfit = 0.0;
+
+  //   return _items.map((item) {
+  //     Map<String, dynamic> purMap =
+  //         _purchaseModel.getPurchaseQuantityAmount(item.id, fromDate, toDate);
+  //     Map<String, dynamic> salMap =
+  //         _saleModel.getSaleQuantityAmount(item.id, fromDate, toDate);
+  //     item.purchaseQuantity = purMap['quantity'];
+  //     item.saleQuantity = salMap['quantity'];
+  //     item.profit = salMap['purchaseAmount'] - purMap['purchaseAmount'];
+  //     _totalProfit = _totalProfit + item.profit;
+  //     return item;
+  //   }).toList();
+  // }
 
   List<Purchase> generateReport(DateTime fromDate, DateTime toDate) {
     _totalPurchaseAmount = 0.0;

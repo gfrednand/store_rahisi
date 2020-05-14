@@ -83,9 +83,6 @@ class SaleModel extends BaseModel {
   }
 
   List<Sale> getSaleHistoryByClientId(String id) {
-    if (_sales.length == 0) {
-      listenToSales();
-    }
     List<Sale> sals = [];
     _sales.forEach((sale) {
       if (sale.clientId == id) {

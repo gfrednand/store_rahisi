@@ -26,7 +26,6 @@ class CheckoutPageState extends State<CheckoutPage> {
     CartModel cartModel = Provider.of<CartModel>(context);
 
     return new BaseView<ClientModel>(
-        onModelReady: (model) => model.listenToClients(),
         builder: (context, model, child) {
           List<Client> clients = model.clients != null
               ? model.clients
