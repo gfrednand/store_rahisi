@@ -8,7 +8,7 @@ import 'package:storeRahisi/models/index.dart';
 import 'package:storeRahisi/providers/item_model.dart';
 import 'package:storeRahisi/widgets/busy_button.dart';
 import 'package:storeRahisi/widgets/dropdown_formfield.dart';
-
+import 'package:provider/provider.dart';
 import 'package:barcode_flutter/barcode_flutter.dart';
 import 'package:storeRahisi/widgets/toast.dart';
 import '../base_view.dart';
@@ -56,11 +56,12 @@ class _ItemFormState extends State<ItemForm> {
   @override
   Widget build(BuildContext context) {
     var isEditing = widget.item != null;
-
+    List<Category> categories =
+        context.select((ItemModel itemModel) => itemModel.categories);
     // Build a Form widget using the _formKey created above.
     return BaseView<ItemModel>(
       onModelReady: (model) {
-        model.listenToCategories();
+       
         // update the text in the controller
         if (isEditing) {
           nameController.text = widget.item?.name ?? '';
@@ -129,7 +130,7 @@ class _ItemFormState extends State<ItemForm> {
                     buildDropdown(
                         model,
                         context,
-                        model.categories.map((Category category) {
+                        categories.map((Category category) {
                           return {'display': category.name, 'value': category};
                         }).toList(),
                         'Category'),
@@ -393,6 +394,7 @@ class _ItemFormState extends State<ItemForm> {
                         color: Colors.black,
                       ),
                       onPressed: () {
+                         model.filter = null;
                         setState(() {
                           selectedCategory = null;
                         });

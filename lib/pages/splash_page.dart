@@ -15,31 +15,41 @@ class SplashPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: new Center(
-          child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          SizedBox(),
-          Center(
-            child: CircularProgressIndicator(
-              strokeWidth: 3,
-              valueColor: AlwaysStoppedAnimation<Color>(
-                Theme.of(context).textTheme.headline6.color,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            SizedBox(),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(8.0),
+              child: new Image(
+                image: AssetImage("assets/images/playstore.png"),
+                height: 150.0,
+                width: 100.0,
               ),
             ),
-          ),
-          Container(
-            child: Align(
-              alignment: Alignment.bottomRight,
-              child: Text(
-                'V 0.1 ',
-                style: TextStyle(
-                    color: Theme.of(context).textTheme.headline6.color,
-                    fontSize: 15.0),
+        
+            Center(
+              child: CircularProgressIndicator(
+                strokeWidth: 3,
+                valueColor: AlwaysStoppedAnimation<Color>(
+                  Theme.of(context).colorScheme.onPrimary,
+                ),
               ),
             ),
-          ),
-        ],
-      )),
+            Container(
+              child: Align(
+                alignment: Alignment.bottomRight,
+                child: Text(
+                  'V 0.1 ',
+                  style: TextStyle(
+                      color: Theme.of(context).colorScheme.onPrimary,
+                      fontSize: 15.0),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

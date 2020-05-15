@@ -63,7 +63,7 @@ class _ItemDetailWidgetState extends State<ItemDetailWidget> {
             child: SizedBox(
                 child: Column(children: [
               TabBar(
-                isScrollable: false,
+                isScrollable: true,
                 // indicator: CircleTabIndicator(
                 //     color: Theme.of(context).accentColor, radius: 3),
                 tabs: [

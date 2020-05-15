@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:storeRahisi/constants/routes.dart';
 import 'package:storeRahisi/constants/ui_helpers.dart';
 import 'package:storeRahisi/models/index.dart';
-import 'package:storeRahisi/pages/base_view.dart';
 import 'package:storeRahisi/pages/item/item_detail_widget.dart';
 import 'package:storeRahisi/providers/item_model.dart';
 import 'package:storeRahisi/providers/purchase_model.dart';
@@ -22,93 +21,89 @@ class _ItemListState extends State<ItemList> {
 
   @override
   Widget build(BuildContext context) {
-    PurchaseModel purchaseModel =
-        Provider.of<PurchaseModel>(context, listen: true);
+    PurchaseModel purchaseModel = context.watch<PurchaseModel>();
     SaleModel saleModel = Provider.of<SaleModel>(context, listen: true);
-    // ItemModel itemModel = Provider.of<ItemModel>(context);
-    return Selector<ItemModel, List<Item>>(
-      selector: (_, model) => model.filteredItems,
-      builder: (context, items, _) {
-        return OrientationBuilder(builder: (context, orientation) {
-          if (MediaQuery.of(context).size.width > 600) {
-            isLargeScreen = true;
-          } else {
-            isLargeScreen = false;
-          }
+    ItemModel itemModel = context.watch<ItemModel>();
+    List<Item> items =
+        context.select((ItemModel itemModel) => itemModel.filteredItems);
 
-          return Row(children: <Widget>[
-            Expanded(
-              flex: 2,
-              child: buildScrollbar(items, context, purchaseModel, saleModel),
+    return OrientationBuilder(builder: (context, orientation) {
+      if (MediaQuery.of(context).size.width > 600) {
+        isLargeScreen = true;
+      } else {
+        isLargeScreen = false;
+      }
+
+      return Row(children: <Widget>[
+        Expanded(
+          flex: 2,
+          child: buildScrollbar(
+              items, context, purchaseModel, saleModel, itemModel),
+        ),
+        isLargeScreen
+            ? Expanded(
+                flex: 3,
+                child: ItemDetailWidget(
+                  item: selectedValue,
+                ))
+            : Container(),
+      ]);
+    });
+  }
+
+  Widget _buildFilter(ItemModel model, List<Category> filters) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8.0, right: 8.0, top: 8.0),
+      child: Align(
+        alignment: Alignment.bottomRight,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: <Widget>[
+            Text('Filter by:'),
+            const SizedBox(width: 8.0),
+            Container(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4.0),
+              decoration: ShapeDecoration(
+                shape: RoundedRectangleBorder(
+                  side: BorderSide(width: 1.0, style: BorderStyle.solid),
+                  borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                ),
+              ),
+              child: DropdownButtonHideUnderline(
+                child: DropdownButton<Category>(
+                  isDense: true,
+                  value: model.filter == null ? null : model.filter,
+                  items: filters
+                      .map((category) => DropdownMenuItem<Category>(
+                            child: Text(category.name),
+                            value: category,
+                          ))
+                      .toList(),
+                  onChanged: (filter) {
+                    model.filter = filter;
+                  },
+                ),
+              ),
             ),
-            isLargeScreen
-                ? Expanded(
-                    flex: 3,
-                    child: ItemDetailWidget(
-                      item: selectedValue,
-                    ))
-                : Container(),
-          ]);
-        });
-      },
+          ],
+        ),
+      ),
     );
   }
 
-  Widget _buildFilter(ItemModel model) {
-    return Selector<ItemModel, List<Category>>(
-        selector: (_, model) => model.filters,
-        builder: (context, filters, _) {
-          return Padding(
-            padding: const EdgeInsets.only(bottom: 8.0, right: 8.0, top: 8.0),
-            child: Align(
-              alignment: Alignment.bottomRight,
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: <Widget>[
-                  Text('Filter by:'),
-                  const SizedBox(width: 8.0),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 12.0, vertical: 4.0),
-                    decoration: ShapeDecoration(
-                      shape: RoundedRectangleBorder(
-                        side: BorderSide(width: 1.0, style: BorderStyle.solid),
-                        borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                      ),
-                    ),
-                    child: DropdownButtonHideUnderline(
-                      child: DropdownButton<Category>(
-                        isDense: true,
-                        value: model.filter == null ? null : model.filter,
-                        items: filters
-                            .map((category) => DropdownMenuItem<Category>(
-                                  child: Text(category.name),
-                                  value: category,
-                                ))
-                            .toList(),
-                        onChanged: (filter) {
-                          model.filter = filter;
-                        },
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
-        });
-  }
-
   Column buildScrollbar(List<Item> items, BuildContext context,
-      PurchaseModel purchaseModel, SaleModel saleModel) {
-    ItemModel itemModel = Provider.of<ItemModel>(context, listen: false);
+      PurchaseModel purchaseModel, SaleModel saleModel, ItemModel model) {
+    List<Category> categories =
+        context.select((ItemModel itemModel) => itemModel.categories);
+    bool busy = context.select((ItemModel itemModel) => itemModel.busy);
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        _buildFilter(itemModel),
+        _buildFilter(model, categories),
         verticalSpaceTiny,
-        !itemModel.busy
+        !busy
             ? items.length == 0
                 ? Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -118,7 +113,7 @@ class _ItemListState extends State<ItemList> {
                     ],
                   )
                 : Expanded(
-                                  child: ListView.builder(
+                    child: ListView.builder(
                       scrollDirection: Axis.vertical,
                       shrinkWrap: true,
                       itemCount: items.length,
@@ -135,7 +130,7 @@ class _ItemListState extends State<ItemList> {
                             : items[index].inStock > items[index].alertQty
                                 ? Colors.green
                                 : Colors.orange;
-                        items[index].category = itemModel
+                        items[index].category = model
                             .getCategoryById(items[index].categoryId)
                             ?.name;
                         return Column(
@@ -156,9 +151,8 @@ class _ItemListState extends State<ItemList> {
                                 leading: ExcludeSemantics(
                                   child: CircleAvatar(
                                     radius: 25.0,
-                                    backgroundColor: Theme.of(context)
-                                        .colorScheme
-                                        .onPrimary,
+                                    backgroundColor:
+                                        Theme.of(context).colorScheme.onPrimary,
                                     child: Text(
                                       items[index]
                                           .name
@@ -181,9 +175,8 @@ class _ItemListState extends State<ItemList> {
                                     Text(
                                       '${items[index].name.toUpperCase()}',
                                       overflow: TextOverflow.ellipsis,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyText1,
+                                      style:
+                                          Theme.of(context).textTheme.bodyText1,
                                     ),
                                     SizedBox(
                                       width: 16.0,
@@ -200,8 +193,7 @@ class _ItemListState extends State<ItemList> {
                                 subtitle: Text(
                                   '${items[index].category}',
                                   overflow: TextOverflow.ellipsis,
-                                  style:
-                                      Theme.of(context).textTheme.subtitle2,
+                                  style: Theme.of(context).textTheme.subtitle2,
                                 ),
                                 trailing: Icon(
                                   Icons.arrow_forward_ios,
@@ -225,7 +217,7 @@ class _ItemListState extends State<ItemList> {
                         );
                       },
                     ),
-                )
+                  )
             : Center(
                 child: CircularProgressIndicator(
                     // valueColor:
