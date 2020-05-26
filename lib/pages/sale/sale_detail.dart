@@ -26,6 +26,7 @@ class SaleDetail extends StatelessWidget {
       length: tabs.length,
       child: Scaffold(
         appBar: AppBar(
+          centerTitle: true,
           title: sale.saleDate == null
               ? Text(AppLocalizations.of(context).translate('customerDetails'),
                   style: Theme.of(context).textTheme.headline6)

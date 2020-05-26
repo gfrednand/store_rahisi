@@ -59,7 +59,7 @@ class _LayoutPageState extends State<LayoutPage> with TickerProviderStateMixin {
                         leading: Icon(Icons.person,
                             color: Theme.of(context).iconTheme.color),
                         title: Text(
-                          '${model.currentUser.fname} ${model.currentUser.lname}',
+                          '${model.currentUser.fullName} ',
                           style: Theme.of(context).textTheme.bodyText1,
                         ),
                         subtitle: Text(

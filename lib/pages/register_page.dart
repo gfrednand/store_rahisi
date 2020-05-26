@@ -17,19 +17,21 @@ class RegisterPage extends StatefulWidget {
 
 class _RegisterPageState extends State<RegisterPage> {
   final GlobalKey<FormState> _registerFormKey = GlobalKey<FormState>();
-  TextEditingController firstNameInputController;
-  TextEditingController lastNameInputController;
+  TextEditingController fullNameInputController;
+  // TextEditingController lastNameInputController;
   TextEditingController emailInputController;
   TextEditingController pwdInputController;
+  TextEditingController businessNameInputController;
   TextEditingController confirmPwdInputController;
   TextEditingController phoneNumberInputController;
 
   @override
   initState() {
-    firstNameInputController = new TextEditingController();
-    lastNameInputController = new TextEditingController();
+    fullNameInputController = new TextEditingController();
+    // lastNameInputController = new TextEditingController();
     emailInputController = new TextEditingController();
     pwdInputController = new TextEditingController();
+    businessNameInputController = new TextEditingController();
     confirmPwdInputController = new TextEditingController();
     phoneNumberInputController = new TextEditingController();
 
@@ -63,7 +65,8 @@ class _RegisterPageState extends State<RegisterPage> {
       if (!model.busy) {}
       return Scaffold(
         appBar: AppBar(
-          title: Text("Register"),
+          centerTitle: true,
+          title: Text("Register", style: Theme.of(context).textTheme.headline6),
         ),
         body: Container(
           padding: const EdgeInsets.all(20.0),
@@ -73,19 +76,19 @@ class _RegisterPageState extends State<RegisterPage> {
               child: Column(
                 children: <Widget>[
                   InputField(
-                      placeholder: 'First Name',
-                      controller: firstNameInputController,
-                   ),
-                  verticalSpaceSmall,
-                  InputField(
-                    placeholder: 'Last Name',
-                    controller: lastNameInputController,
+                    placeholder: 'Full Name',
+                    controller: fullNameInputController,
+                    // validationMessage: '',
                   ),
                   verticalSpaceSmall,
+                  // InputField(
+                  //   placeholder: 'Last Name',
+                  //   controller: lastNameInputController,
+                  // ),
+                  // verticalSpaceSmall,
                   InputField(
                       placeholder: 'Email',
                       controller: emailInputController,
-               
                       textInputType: TextInputType.emailAddress),
                   verticalSpaceSmall,
                   InputField(
@@ -93,15 +96,19 @@ class _RegisterPageState extends State<RegisterPage> {
                     controller: phoneNumberInputController,
                   ),
                   verticalSpaceSmall,
-                  ExpansionList<String>(
-                      items: ['Admin', 'Cashier', 'User'],
-                      title: model.selectedRole,
-                      onItemSelected: model.setSelectedRole),
+                  // ExpansionList<String>(
+                  //     items: ['Admin', 'Cashier', 'User'],
+                  //     title: model.selectedRole,
+                  //     onItemSelected: model.setSelectedRole),
+                  // verticalSpaceSmall,
+                  InputField(
+                    placeholder: 'Business Name',
+                    controller: businessNameInputController,
+                  ),
                   verticalSpaceSmall,
                   InputField(
                     placeholder: 'Password',
                     controller: pwdInputController,
-                 
                     additionalNote:
                         'Password has to be a minimum of 8 characters.',
                     password: true,
@@ -110,7 +117,6 @@ class _RegisterPageState extends State<RegisterPage> {
                   InputField(
                     placeholder: 'Confirm Password',
                     controller: confirmPwdInputController,
-             
                     password: true,
                   ),
                   verticalSpaceSmall,
@@ -124,11 +130,11 @@ class _RegisterPageState extends State<RegisterPage> {
                             confirmPwdInputController.text) {
                           model.signUp(
                             password: pwdInputController.text,
-                            fname: firstNameInputController.text,
-                            lname: lastNameInputController.text,
+                            fullName: fullNameInputController.text,
+                            // lname: lastNameInputController.text,
                             email: emailInputController.text,
                             phoneNumber: phoneNumberInputController.text,
-                            companyId: '1',
+                            businessName: businessNameInputController.text,
                           );
                         } else {
                           showDialog(

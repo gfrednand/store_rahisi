@@ -21,6 +21,7 @@ import 'package:storeRahisi/pages/purchase/purchase_add.dart';
 import 'package:storeRahisi/pages/register_page.dart';
 import 'package:storeRahisi/pages/report/index.dart';
 import 'package:storeRahisi/pages/sale/sale_detail.dart';
+import 'package:storeRahisi/pages/sale/sale_list.dart';
 import 'package:storeRahisi/pages/settings/settings_page.dart';
 import 'package:storeRahisi/pages/splash_page.dart';
 import 'package:storeRahisi/pages/client/client_detail.dart';
@@ -150,6 +151,9 @@ class Router {
         break;
       case AppRoutes.sale_report:
         return MaterialPageRoute(builder: (_) => SaleReport());
+        break;
+      case AppRoutes.sale:
+        return MaterialPageRoute(builder: (_) => SaleList());
         break;
       case AppRoutes.profit_report:
         return MaterialPageRoute(builder: (_) => ProfitReport());

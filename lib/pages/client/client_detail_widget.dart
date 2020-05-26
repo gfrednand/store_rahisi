@@ -207,7 +207,7 @@ class _ClientDetailWidgetState extends State<ClientDetailWidget>
                   widget.client.proviousDue > 0
                       ? PaymentForm(
                           dueAmount: widget.client.proviousDue,
-                          referenceNo: 'defaultSakeRef',
+                          referenceNo: 'defaultSaleRef',
                           clientId: widget.client.id,
                           tabController: _tabController,
                         )

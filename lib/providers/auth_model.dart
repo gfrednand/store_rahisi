@@ -57,27 +57,27 @@ class AuthModel extends BaseModel {
   Future signUp({
     @required String email,
     @required String password,
-    @required String fname,
-    @required String lname,
+    @required String fullName,
+    // @required String lname,
     @required String phoneNumber,
-    @required String companyId,
+    @required String businessName,
   }) async {
     setBusy(true);
 
     var result = await _authService.signUpWithEmail(
         email: email,
         password: password,
-        fname: fname,
-        lname: lname,
+        fullName: fullName,
+        // lname: lname,
         phoneNumber: phoneNumber,
         designation: _selectedRole,
-        companyId: companyId);
+        businessName: businessName);
 
     setBusy(false);
 
     if (result is bool) {
       if (result) {
-        _navigationService.navigateTo(routeName: AppRoutes.home);
+        _navigationService.navigateTo(routeName: AppRoutes.layout);
       } else {
         await _dialogService.showDialog(
           title: 'Sign Up Failure',

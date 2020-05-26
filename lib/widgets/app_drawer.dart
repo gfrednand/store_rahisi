@@ -28,7 +28,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                 leading: Icon(Icons.person,
                     color: Theme.of(context).iconTheme.color),
                 title: Text(
-                  '${widget.user.fname} ${widget.user.lname}',
+                  '${widget.user.fullName}',
                   style: Theme.of(context).textTheme.bodyText1,
                 ),
                 subtitle: Text(
@@ -110,6 +110,22 @@ class _CustomDrawerState extends State<CustomDrawer> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       // mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
+        Expanded(
+          child: ListTile(
+            leading: Icon(
+              Icons.attach_money,
+              color: Theme.of(context).iconTheme.color,
+            ),
+            title: Text(
+              AppLocalizations.of(ctx).translate('sales'),
+              style: Theme.of(context).textTheme.bodyText1,
+            ),
+            onTap: () {
+              Navigator.pop(ctx);
+              Navigator.pushNamed(ctx, AppRoutes.sale);
+            },
+          ),
+        ),
         Expanded(
           child: ListTile(
             leading: Icon(
@@ -241,7 +257,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                 children: <Widget>[
                   UserAccountsDrawerHeader(
                     accountName:
-                        Text('${widget.user.fname} ${widget.user.lname}'),
+                        Text('${widget.user.businessName} '),
                     accountEmail: Text("${widget.user.email}"),
                     currentAccountPicture: CircleAvatar(
                       backgroundColor:

@@ -22,45 +22,64 @@ class MyApp extends StatelessWidget {
       providers: [
         // StreamProvider<FirebaseUser>.value(value:  FirebaseAuth.instance.onAuthStateChanged),
         ChangeNotifierProvider(create: (_) => locator<AuthModel>()),
-        ChangeNotifierProvider(create: (_) =>locator<SaleModel>()..listenToSales()),
+        ChangeNotifierProvider(
+            create: (_) => locator<SaleModel>()..listenToSales()),
         ChangeNotifierProvider(create: (_) => locator<SettingsModel>()),
-        ChangeNotifierProvider(create: (_) => locator<ItemModel>()..listenToItems()..listenToCategories()),
-        ChangeNotifierProvider(create: (_) => locator<ClientModel>()..listenToClients()),
-        ChangeNotifierProvider(create: (_) => locator<PaymentModel>()..listenToPayments()),
+        ChangeNotifierProvider(
+            create: (_) => locator<ItemModel>()
+              ..listenToItems()
+              ..listenToCategories()),
+        ChangeNotifierProvider(
+            create: (_) => locator<ClientModel>()..listenToClients()),
+        ChangeNotifierProvider(
+            create: (_) => locator<PaymentModel>()..listenToPayments()),
         ChangeNotifierProvider(create: (_) => locator<CartModel>()),
         ChangeNotifierProvider(create: (_) => locator<ExpenseModel>()),
         ChangeNotifierProxyProvider<ItemModel, PurchaseModel>(
           create: (_) => locator<PurchaseModel>(),
-          update: (_, itemModel, purchaseModel) => purchaseModel..listenToPurchases()..updateItemModel(itemModel),
-     
+          update: (_, itemModel, purchaseModel) => purchaseModel
+            ..listenToPurchases()
+            ..updateItemModel(itemModel),
         ),
       ],
       child: Consumer<SettingsModel>(
         builder: (context, settings, _) {
-          return MaterialApp(
-            debugShowCheckedModeBanner: false,
-            locale: settings.appLocal,
-            supportedLocales: [
-              Locale('en', 'US'),
-              Locale('sw', 'TZ'),
-            ],
-            localizationsDelegates: [
-              AppLocalizations.delegate,
-              GlobalMaterialLocalizations.delegate,
-              GlobalWidgetsLocalizations.delegate,
-            ],
-            // title: AppLocalizations.of(context).translate('appTitle'),
-            builder: (context, child) => Navigator(
-              key: settings.dialogNavigationKey,
-              onGenerateRoute: (settings) => MaterialPageRoute(
-                  builder: (context) => DialogManager(child: child)),
+          return GestureDetector(
+            onTap: () {
+              // WidgetsBinding.instance.focusManager.primaryFocus?.unfocus();
+
+              FocusScopeNode currentFocus = FocusScope.of(context);
+              if (!currentFocus.hasPrimaryFocus &&
+                  currentFocus.focusedChild != null) {
+                currentFocus.focusedChild.unfocus();
+              }
+            },
+            child: MaterialApp(
+              debugShowCheckedModeBanner: false,
+              locale: settings.appLocal,
+              supportedLocales: [
+                Locale('en', 'US'),
+                Locale('sw', 'TZ'),
+              ],
+              localizationsDelegates: [
+                AppLocalizations.delegate,
+                GlobalMaterialLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+              ],
+              // title: AppLocalizations.of(context).translate('appTitle'),
+              builder: (context, child) => Navigator(
+                key: settings.dialogNavigationKey,
+                onGenerateRoute: (settings) => MaterialPageRoute(
+                    builder: (context) => DialogManager(child: child)),
+              ),
+              theme: AppTheme.lightTheme,
+              darkTheme: AppTheme.darkTheme,
+              themeMode:
+                  settings.isDarkModeOn ? ThemeMode.dark : ThemeMode.light,
+              navigatorKey: settings.navigatorKey,
+              initialRoute: AppRoutes.splash,
+              onGenerateRoute: Router.generateRoute,
             ),
-            theme: AppTheme.lightTheme,
-            darkTheme: AppTheme.darkTheme,
-            themeMode: settings.isDarkModeOn ? ThemeMode.dark : ThemeMode.light,
-            navigatorKey: settings.navigatorKey,
-            initialRoute: AppRoutes.splash,
-            onGenerateRoute: Router.generateRoute,
           );
         },
       ),

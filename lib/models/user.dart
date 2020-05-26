@@ -12,31 +12,34 @@ class User {
     String id;
     String email;
     bool active;
-    String fname;
-    String lname;
+    String fullName;
+    // String lname;
     String phoneNumber;
     String designation;
     String companyId;
+    String businessName;
 
     User({
         this.id,
         this.email,
         this.active,
-        this.fname,
-        this.lname,
+        this.fullName,
+        // this.lname,
         this.phoneNumber,
         this.designation,
         this.companyId,
+        this.businessName,
     });
 
     factory User.fromMap(Map<String, dynamic> json) => User(
         id: json["id"],
         email: json["email"],
         active: json["active"],
-        fname: json["fname"],
-        lname: json["lname"],
+        fullName: json["fullName"],
+        // lname: json["lname"],
         phoneNumber: json["phoneNumber"],
         designation: json["designation"],
+        businessName: json["businessName"],
         companyId: json["companyId"].toString(),
     );
 
@@ -44,10 +47,11 @@ class User {
         "id": id,
         "email": email,
         "active": active,
-        "fname": fname,
-        "lname": lname,
+        "fullName": fullName,
+        // "lname": lname,
         "phoneNumber": phoneNumber,
         "designation": designation,
         "companyId": companyId,
+        "businessName": businessName,
     };
 }

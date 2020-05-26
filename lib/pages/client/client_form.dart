@@ -5,7 +5,6 @@ import 'package:storeRahisi/app_localizations.dart';
 import 'package:storeRahisi/constants/app_constants.dart';
 import 'package:storeRahisi/models/client.dart';
 import 'package:storeRahisi/providers/client_model.dart';
-import 'package:storeRahisi/pages/base_view.dart';
 import 'package:storeRahisi/widgets/toast.dart';
 
 class ClientForm extends StatefulWidget {

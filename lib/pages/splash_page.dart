@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:storeRahisi/app_localizations.dart';
 import 'package:storeRahisi/providers/auth_model.dart';
 
-import 'base_view.dart';
 
 class SplashPage extends StatelessWidget {
   SplashPage({Key key}) : super(key: key);

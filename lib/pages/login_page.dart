@@ -99,18 +99,18 @@ class LoginPage extends StatelessWidget {
                         )
                       ],
                     ),
-                    // SizedBox(
-                    //   height: 20.0,
-                    // ),
-                    // Text(AppLocalizations.of(context)
-                    //     .translate('dontHaveAccount')),
-                    // FlatButton(
-                    //   child: Text(AppLocalizations.of(context)
-                    //       .translate('registerHere')),
-                    //   onPressed: () {
-                    //     model.navigateToSignUp();
-                    //   },
-                    // )
+                    SizedBox(
+                      height: 20.0,
+                    ),
+                    Text(AppLocalizations.of(context)
+                        .translate('dontHaveAccount')),
+                    FlatButton(
+                      child: Text(AppLocalizations.of(context)
+                          .translate('registerHere')),
+                      onPressed: () {
+                        model.navigateToSignUp();
+                      },
+                    )
                   ],
                 ),
               ),
