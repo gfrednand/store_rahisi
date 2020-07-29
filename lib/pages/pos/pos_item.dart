@@ -36,9 +36,9 @@ class _PosItemState extends State<PosItem> {
   TextEditingController quantityController = new TextEditingController();
   @override
   void initState() {
-   if(widget.initialCount!=null){
-     _itemCount =widget.initialCount;
-   }
+    if (widget.initialCount != null) {
+      _itemCount = widget.initialCount;
+    }
     super.initState();
   }
 
@@ -55,7 +55,9 @@ class _PosItemState extends State<PosItem> {
 
     return Column(
       children: [
-        Divider(height: 5.0,),
+        Divider(
+          height: 5.0,
+        ),
         new Container(
           padding: const EdgeInsets.symmetric(horizontal: 5.0),
           width: screenSize.width,
@@ -72,22 +74,25 @@ class _PosItemState extends State<PosItem> {
                   children: <Widget>[
                     Text(
                       '${widget.item.name?.toUpperCase()} x$_itemCount =${widget.currentPrice * _itemCount}  ',
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          color: Theme.of(context).colorScheme.primary),
                     ),
                     SizedBox(
                       height: 5.0,
                     ),
                     Text(
                       'In Stock $inStock ',
+                      style: TextStyle(color: Theme.of(context).colorScheme.primary),
                     ),
                     SizedBox(
                       height: 5.0,
                     ),
-                       Text(
-                          "\Tsh ${currencyFormat.format(widget.item.salePrice??0)}",
-                          style:
-                              TextStyle(fontSize: 15.0, color: Colors.green[900]),
-                        ),
+                    Text(
+                      "\Tsh ${currencyFormat.format(widget.item.salePrice ?? 0)}",
+                      style:
+                          TextStyle(fontSize: 15.0, color: Colors.green[800]),
+                    ),
                     // Row(
                     //   mainAxisAlignment: MainAxisAlignment.start,
                     //   mainAxisSize: MainAxisSize.min,
@@ -123,7 +128,7 @@ class _PosItemState extends State<PosItem> {
                     //         : Text("")
                     //   ],
                     // ),
-                   
+
                     // SizedBox(
                     //   height: 8.0,
                     // ),

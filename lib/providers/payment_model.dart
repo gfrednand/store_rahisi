@@ -86,6 +86,7 @@ class PaymentModel extends BaseModel {
 
   Future<bool> savePayment({@required Payment data}) async {
     // setBusy(true);
+    data.userId = currentUser?.uid;
     var result;
     if (!_editting) {
       result = await Api(path: 'payments', companyId: currentUser?.companyId)

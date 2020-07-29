@@ -22,20 +22,20 @@ class AppTheme {
         color: _lightBlueColor,
       ),
     ),
-    
+
     bottomSheetTheme: BottomSheetThemeData(backgroundColor: Colors.transparent),
-    bottomNavigationBarTheme: BottomNavigationBarThemeData(
-        backgroundColor: _lightWhiteGreyColor,
-        selectedItemColor: _lightBlueColor,
-        unselectedItemColor: _lightDarkGreyColor,
-        unselectedIconTheme: IconThemeData(size: 23.0),
-        selectedIconTheme: IconThemeData(size: 26.0)),
+    // bottomNavigationBarTheme: BottomNavigationBarThemeData(
+    //     backgroundColor: _lightWhiteGreyColor,
+    //     selectedItemColor: _lightBlueColor,
+    //     unselectedItemColor: _lightDarkGreyColor,
+    //     unselectedIconTheme: IconThemeData(size: 23.0),
+    //     selectedIconTheme: IconThemeData(size: 26.0)),
     floatingActionButtonTheme: FloatingActionButtonThemeData(
       foregroundColor: _lightWhiteColor,
       backgroundColor: _lightBlueColor,
     ),
     colorScheme: ColorScheme.light(
-      primary: Colors.white,
+      primary: Colors.black,
       onPrimary: _lightBlueColor,
       primaryVariant: Colors.white38,
       secondary: _darkBlack7Color,
@@ -69,17 +69,17 @@ class AppTheme {
       ),
     ),
     bottomSheetTheme: BottomSheetThemeData(backgroundColor: Colors.transparent),
-    bottomNavigationBarTheme: BottomNavigationBarThemeData(
-        backgroundColor: _darkBlack7Color,
-        selectedItemColor: _lightBlueColor,
-        unselectedItemColor: _lightDarkGreyColor,
-        unselectedIconTheme: IconThemeData(size: 23.0),
-        selectedIconTheme: IconThemeData(size: 26.0)),
+    // bottomNavigationBarTheme: BottomNavigationBarThemeData(
+    //     backgroundColor: _darkBlack7Color,
+    //     selectedItemColor: _lightBlueColor,
+    //     unselectedItemColor: _lightDarkGreyColor,
+    //     unselectedIconTheme: IconThemeData(size: 23.0),
+    //     selectedIconTheme: IconThemeData(size: 26.0)),
     floatingActionButtonTheme: FloatingActionButtonThemeData(
       foregroundColor: _lightWhiteColor,
       backgroundColor: _lightBlueColor,
     ),
-    colorScheme: ColorScheme.light(
+    colorScheme: ColorScheme.dark(
         primary: Colors.white,
         onPrimary: Colors.black54,
         primaryVariant: Colors.black,

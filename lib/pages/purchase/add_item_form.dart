@@ -192,7 +192,7 @@ class _ItemPurchaseFormState extends State<ItemPurchaseForm> {
                                 .text
                                 .replaceAll(new RegExp(r','), ''));
                             _item.userId =
-                                widget.purchaseModel.currentUser.id ?? '';
+                                widget.purchaseModel.currentUser.uid ?? '';
                             widget.purchaseModel.setSelectedItem(_item);
                             Navigator.pop(context);
                           },

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
@@ -16,15 +18,15 @@ Future<void> main() async {
 }
 
 class MyApp extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        // StreamProvider<FirebaseUser>.value(value:  FirebaseAuth.instance.onAuthStateChanged),
         ChangeNotifierProvider(create: (_) => locator<AuthModel>()),
         ChangeNotifierProvider(
             create: (_) => locator<SaleModel>()..listenToSales()),
-        ChangeNotifierProvider(create: (_) => locator<SettingsModel>()),
+        ChangeNotifierProvider(create: (_) => locator<SettingsModel>().. fetchLocale()),
         ChangeNotifierProvider(
             create: (_) => locator<ItemModel>()
               ..listenToItems()

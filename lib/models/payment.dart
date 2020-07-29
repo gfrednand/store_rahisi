@@ -39,7 +39,7 @@ class Payment {
         referenceNo: json["referenceNo"],
         amount: json["amount"].toDouble(),
         note: json["note"],
-        paymentDate: DateTime.tryParse(json["paymentDate"].toDate().toString()),
+        paymentDate: json["paymentDate"].toDate(),
       );
 
   Map<String, dynamic> toMap() => {

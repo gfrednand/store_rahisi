@@ -110,12 +110,12 @@ class _LayoutPageState extends State<LayoutPage> with TickerProviderStateMixin {
                         ),
                       )
                     : Container(),
-                model.currentUser != null && model.currentUser.id != null
+                model.currentUser != null && model.currentUser.uid != null
                     ? ListTile(
                         leading: Icon(Icons.label_important,
                             color: Theme.of(context).iconTheme.color),
                         title: Text(
-                          "${model.currentUser.id}",
+                          "${model.currentUser.uid}",
                           style: Theme.of(context).textTheme.bodyText1,
                         ),
                         subtitle: Text(

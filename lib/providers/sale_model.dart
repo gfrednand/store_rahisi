@@ -149,7 +149,9 @@ class SaleModel extends BaseModel {
     setBusy(true);
     var result;
 
-    data.userId = currentUser?.id;
+    data.userId = currentUser?.uid;
+    data.companyId = currentUser?.companyId;
+    data.companyName = currentUser?.companyName;
 
     if (!_editting) {
       result = await Api(path: 'sales', companyId: currentUser?.companyId)

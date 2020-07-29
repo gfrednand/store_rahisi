@@ -256,19 +256,25 @@ class _CustomDrawerState extends State<CustomDrawer> {
               child: Column(
                 children: <Widget>[
                   UserAccountsDrawerHeader(
-                    accountName:
-                        Text('${widget.user.businessName} '),
+                    accountName: Text('${widget.user.companyName ?? ""} '),
                     accountEmail: Text("${widget.user.email}"),
-                    currentAccountPicture: CircleAvatar(
-                      backgroundColor:
-                          Theme.of(ctx).platform == TargetPlatform.iOS
-                              ? Theme.of(context).colorScheme.onPrimary
-                              : Colors.white,
-                      child: Text(
-                        "S",
-                        style: TextStyle(fontSize: 40.0),
-                      ),
-                    ),
+                    currentAccountPicture: widget.user.photoUrl == null
+                        ? CircleAvatar(
+                            backgroundColor:
+                                Theme.of(ctx).platform == TargetPlatform.iOS
+                                    ? Theme.of(context).colorScheme.onPrimary
+                                    : Colors.white,
+                            child: Text(
+                              "S",
+                              style: TextStyle(fontSize: 40.0),
+                            ),
+                          )
+                        : new CircleAvatar(
+                            radius: 50.0,
+                            backgroundColor: const Color(0xFF778899),
+                            backgroundImage:
+                                NetworkImage("widget.user.photoUrl"),
+                          ),
                     margin: EdgeInsets.zero,
                     onDetailsPressed: () {
                       setState(() {

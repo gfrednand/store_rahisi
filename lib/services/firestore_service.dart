@@ -9,7 +9,7 @@ class FirestoreService {
 
   Future createUser(User user) async {
     try {
-      await _usersCollectionReference.document(user.id).setData(user.toMap());
+      await _usersCollectionReference.document(user.uid).setData(user.toMap());
     } catch (e) {
       if (e is PlatformException) {
         return e.message;

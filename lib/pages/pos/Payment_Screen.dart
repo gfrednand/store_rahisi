@@ -158,6 +158,7 @@ class PaymentPageState extends State<PaymentPage> {
                           paidAmount: paidAmount,
                           subTotal: cartModel.totalPrice - discount,
                           tax: tax,
+                          
                           items: items));
                   if (success) {
                     Toast.show(

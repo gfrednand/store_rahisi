@@ -15,6 +15,30 @@
       },
       "oauth_client": [
         {
+          "client_id": "756033135438-hp4sjquq27gcfjhej2b6nr782scuo0p5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.apprahisi.store",
+            "certificate_hash": "fc566bf66b02a457a0e1d5ffc99221bf3412c151"
+          }
+        },
+        {
+          "client_id": "756033135438-ku93nmfkcilt1lpqp1fe1vjdp2qcthiq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.apprahisi.store",
+            "certificate_hash": "727e73a09411bd4af3273baab6524de962037b89"
+          }
+        },
+        {
+          "client_id": "756033135438-jm0bj29vrrvsfvapv6iv65a8q3aq82q8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.apprahisi.store",
+            "certificate_hash": "1c9be6c014501f8e9a1abdea6217f45804a74015"
+          }
+        },
+        {
           "client_id": "756033135438-ipvinh9mdfec8866fefj3t8iqrgh5kni.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -28,7 +52,7 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "756033135438-ipvinh9mdfec8866fefj3t8iqrgh5kni.apps.googleusercontent.com",
+              "client_id": "756033135438-3v8vjmfgl2oj0hcgp8j428cn6dl9vju5.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

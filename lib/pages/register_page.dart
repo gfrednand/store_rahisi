@@ -21,7 +21,7 @@ class _RegisterPageState extends State<RegisterPage> {
   // TextEditingController lastNameInputController;
   TextEditingController emailInputController;
   TextEditingController pwdInputController;
-  TextEditingController businessNameInputController;
+  TextEditingController companyNameInputController;
   TextEditingController confirmPwdInputController;
   TextEditingController phoneNumberInputController;
 
@@ -31,7 +31,7 @@ class _RegisterPageState extends State<RegisterPage> {
     // lastNameInputController = new TextEditingController();
     emailInputController = new TextEditingController();
     pwdInputController = new TextEditingController();
-    businessNameInputController = new TextEditingController();
+    companyNameInputController = new TextEditingController();
     confirmPwdInputController = new TextEditingController();
     phoneNumberInputController = new TextEditingController();
 
@@ -103,7 +103,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   // verticalSpaceSmall,
                   InputField(
                     placeholder: 'Business Name',
-                    controller: businessNameInputController,
+                    controller: companyNameInputController,
                   ),
                   verticalSpaceSmall,
                   InputField(
@@ -134,7 +134,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             // lname: lastNameInputController.text,
                             email: emailInputController.text,
                             phoneNumber: phoneNumberInputController.text,
-                            businessName: businessNameInputController.text,
+                            companyName: companyNameInputController.text,
                           );
                         } else {
                           showDialog(

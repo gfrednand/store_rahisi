@@ -126,6 +126,7 @@ class ItemModel extends BaseModel {
       List<Category> updatedCategory = categoryData;
       if (updatedCategory != null && updatedCategory.length > 0) {
         _categories = updatedCategory;
+        _categories.insert(0, Category.all());
         notifyListeners();
       }
     });
@@ -187,7 +188,7 @@ class ItemModel extends BaseModel {
     setBusy(true);
     var result;
 
-    data.userId = currentUser?.id;
+    data.userId = currentUser?.uid;
     if (!_editting) {
       result = await Api(path: 'items', companyId: currentUser?.companyId)
           .addDocument(data.toMap());

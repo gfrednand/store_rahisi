@@ -141,7 +141,7 @@ class ClientModel extends BaseModel {
 
     var result;
 
-    data.userId = currentUser?.id;
+    data.userId = currentUser?.uid;
     if (!_editting) {
       result = await Api(path: 'clients', companyId: currentUser?.companyId)
           .addDocument(data.toMap());

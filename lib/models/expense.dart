@@ -29,7 +29,7 @@ class Expense {
 
   factory Expense.fromMap(Map<String, dynamic> json, String id) => Expense(
         id: id ?? '',
-        date: DateTime.tryParse(json["date"].toDate().toString()),
+        date: json["date"].toDate(),
         userId: json["userId"],
         active: json["active"],
         responsiblePerson: json["ResponsiblePerson"],

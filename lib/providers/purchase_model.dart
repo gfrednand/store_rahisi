@@ -205,7 +205,7 @@ class PurchaseModel extends BaseModel {
     setBusy(true);
     var result;
 
-    data.userId = currentUser?.id;
+    data.userId = currentUser?.uid;
     if (!_editting) {
       result = await Api(path: 'purchases', companyId: currentUser?.companyId)
           .addDocument(data.toMap());

@@ -6,6 +6,7 @@ import 'package:storeRahisi/services/dialog_service.dart';
 import 'package:storeRahisi/services/firestore_service.dart';
 import 'package:storeRahisi/services/navigation_service.dart';
 import 'package:storeRahisi/services/shared_pref_util.dart';
+import 'package:storeRahisi/services/push_notification_service.dart';
 
 GetIt locator = GetIt.I;
 
@@ -25,6 +26,7 @@ void setupLocator() {
   locator.registerLazySingleton(() => AuthService());
   locator.registerLazySingleton(() => FirestoreService());
   locator.registerLazySingleton(() => AuthModel());
+  locator.registerLazySingleton(() => PushNotificationService());
   locator.registerLazySingleton<SharedPrefsUtil>(() => SharedPrefsUtil());
   // locator.registerLazySingleton<BillDbProvider>(() => BillDbProvider());
   // locator.registerLazySingleton<SharedPrefsUtil>(() => SharedPrefsUtil());

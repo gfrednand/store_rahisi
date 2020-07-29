@@ -23,7 +23,7 @@ class Setting extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
-    SettingsModel appThemeModel = Provider.of<SettingsModel>(context);
+    SettingsModel settingModel = Provider.of<SettingsModel>(context);
     final ThemeData theme = Theme.of(context);
     final TextStyle dialogTextStyle = theme.textTheme.subtitle1
         .copyWith(color: theme.textTheme.caption.color);
@@ -91,10 +91,11 @@ class Setting extends State<SettingsPage> {
                         ],
                       ),
                       Switch(
-                          value: switchValue,
+                          value: settingModel.isNotificationOn,
                           onChanged: (bool value) {
                             setState(() {
-                              switchValue = value;
+                            
+                                settingModel.updateNotification(value);
                             });
                           }),
                     ],
@@ -219,10 +220,10 @@ class Setting extends State<SettingsPage> {
                     ),
                     Spacer(),
                     Switch(
-                        value: appThemeModel.isDarkModeOn,
+                        value: settingModel.isDarkModeOn,
                         onChanged: (booleanValue) {
                           setState(() {
-                            appThemeModel.updateTheme(booleanValue);
+                            settingModel.updateTheme(booleanValue);
                           });
                         }),
                   ],

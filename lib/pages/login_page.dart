@@ -4,8 +4,10 @@ import 'package:storeRahisi/constants/ui_helpers.dart';
 import 'package:storeRahisi/pages/base_view.dart';
 import 'package:storeRahisi/providers/auth_model.dart';
 import 'package:storeRahisi/widgets/busy_button.dart';
+import 'package:storeRahisi/widgets/google_sign_in_button.dart';
 import 'package:storeRahisi/widgets/input_field.dart';
 import 'package:storeRahisi/widgets/busy_overlay.dart';
+import 'package:storeRahisi/constants/routes.dart';
 
 class LoginPage extends StatelessWidget {
   LoginPage({Key key}) : super(key: key);
@@ -60,7 +62,7 @@ class LoginPage extends StatelessWidget {
                         AppLocalizations.of(context).translate('appTitle'),
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            color: Theme.of(context).colorScheme.onPrimary,
+                            color: Theme.of(context).colorScheme.primary,
                             fontSize: 25.0),
                       ),
                     ),
@@ -82,7 +84,7 @@ class LoginPage extends StatelessWidget {
                     verticalSpaceMedium,
                     Row(
                       mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         BusyButton(
                           title:
@@ -102,15 +104,34 @@ class LoginPage extends StatelessWidget {
                     SizedBox(
                       height: 20.0,
                     ),
-                    Text(AppLocalizations.of(context)
-                        .translate('dontHaveAccount')),
+                    Text(
+                      AppLocalizations.of(context).translate('dontHaveAccount'),
+                      style: TextStyle(
+                          color: Theme.of(context).colorScheme.primary),
+                    ),
                     FlatButton(
-                      child: Text(AppLocalizations.of(context)
-                          .translate('registerHere')),
+                      child: Text(
+                        AppLocalizations.of(context).translate('registerHere'),
+                        style: TextStyle(
+                            color: Theme.of(context).colorScheme.primary),
+                      ),
                       onPressed: () {
-                        model.navigateToSignUp();
+                        Navigator.pushNamed(context, AppRoutes.register);
                       },
-                    )
+                    ),
+                    SizedBox(
+                      height: 20.0,
+                    ),
+                    GoogleSignInButton(
+                      onPressed: () {
+                        if (!model.busy) {
+                          model.signInWithGoogle();
+                        }
+                      },
+                    ),
+                    SizedBox(
+                      height: 5.0,
+                    ),
                   ],
                 ),
               ),

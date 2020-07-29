@@ -170,30 +170,17 @@ class _ItemListState extends State<ItemList> {
                                     ),
                                   ),
                                 ),
-                                title: Row(
-                                  children: <Widget>[
-                                    Text(
-                                      '${items[index].name.toUpperCase()}',
-                                      overflow: TextOverflow.ellipsis,
-                                      style:
-                                          Theme.of(context).textTheme.bodyText1,
-                                    ),
-                                    SizedBox(
-                                      width: 16.0,
-                                    ),
-                                    Text(
-                                      '${items[index].inStock} ${items[index].unit}',
-                                      style: TextStyle(
-                                        color: color,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ],
+                                title: Text(
+                                  '${items[index].name.toUpperCase()}',
+                                  overflow: TextOverflow.ellipsis,
+                                  style: Theme.of(context).textTheme.bodyText1,
                                 ),
                                 subtitle: Text(
-                                  '${items[index].category}',
-                                  overflow: TextOverflow.ellipsis,
-                                  style: Theme.of(context).textTheme.subtitle2,
+                                  'In Stock: ${items[index].inStock} ${items[index].unit}',
+                                  style: TextStyle(
+                                    color: color,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                                 trailing: Icon(
                                   Icons.arrow_forward_ios,
