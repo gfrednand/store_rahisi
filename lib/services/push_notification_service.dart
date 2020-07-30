@@ -2,17 +2,14 @@ import 'dart:io';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:storeRahisi/locator.dart';
-import 'package:storeRahisi/models/user.dart';
 import 'package:storeRahisi/services/auth_service.dart';
 import 'package:storeRahisi/services/dialog_service.dart';
-import 'package:storeRahisi/services/shared_pref_util.dart';
 
 class PushNotificationService {
   final DialogService _dialogService = locator<DialogService>();
   final FirebaseMessaging _fcm = FirebaseMessaging();
   final AuthService _authService = locator<AuthService>();
 
-  final SharedPrefsUtil _sharedPrefsUtil = locator<SharedPrefsUtil>();
   Future initialise() async {
     if (Platform.isIOS) {
       _fcm.onIosSettingsRegistered.listen((data) {

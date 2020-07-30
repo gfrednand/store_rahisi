@@ -1,15 +1,23 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:storeRahisi/constants/routes.dart';
 import 'package:storeRahisi/locator.dart';
 import 'package:storeRahisi/models/user.dart';
 import 'package:storeRahisi/providers/base_model.dart';
 import 'package:storeRahisi/providers/settings_model.dart';
+import 'package:storeRahisi/services/api.dart';
 import 'package:storeRahisi/services/auth_service.dart';
 import 'package:storeRahisi/services/dialog_service.dart';
 import 'package:storeRahisi/services/navigation_service.dart';
 import 'package:storeRahisi/services/push_notification_service.dart';
 
 class AuthModel extends BaseModel {
+  final StreamController<List<User>> _userController =
+      StreamController<List<User>>.broadcast();
+  List<User> _users = [];
+  List<User> get users => _users;
+
   final AuthService _authService = locator<AuthService>();
   final DialogService _dialogService = locator<DialogService>();
   final PushNotificationService _pushNotificationService =
@@ -33,9 +41,31 @@ class AuthModel extends BaseModel {
     setBusy(true);
     var result = await _authService.signInWithGoogle();
     setBusy(false);
+    await _navigateToPage(result);
+  }
+
+  login(String email, String password) async {
+    setBusy(true);
+
+    var result = await _authService.loginWithEmail(
+      email: email,
+      password: password,
+    );
+
+    await _navigateToPage(result);
+    setBusy(false);
+  }
+
+  _navigateToPage(result) async {
     if (result is bool) {
       if (result) {
-        _navigationService.navigateTo(routeName: AppRoutes.layout);
+        if (currentUser != null && currentUser.companyId != null) {
+          _navigationService.navigateTo(routeName: AppRoutes.layout);
+        } else {
+          _navigationService.navigateTo(
+              routeName: AppRoutes.company_registration,
+              arguments: currentUser);
+        }
       } else {
         await _dialogService.showDialog(
           title: 'Login Failure',
@@ -50,31 +80,21 @@ class AuthModel extends BaseModel {
     }
   }
 
-  login(String email, String password) async {
+  saveUserCompany({String companyName, String companyId}) async {
     setBusy(true);
-
-    var result = await _authService.loginWithEmail(
-      email: email,
-      password: password,
-    );
-
-    setBusy(false);
-
-    if (result is bool) {
-      if (result) {
-        _navigationService.navigateTo(routeName: AppRoutes.layout);
-      } else {
-        await _dialogService.showDialog(
-          title: 'Login Failure',
-          description: 'General login failure. Please try again later',
-        );
-      }
+    var result;
+    Map<String, dynamic> data = {
+      "name": companyName,
+      "userId": currentUser.uid
+    };
+    if (companyId == null) {
+      result = await Api(path: 'companies').addDocument(data);
     } else {
-      await _dialogService.showDialog(
-        title: 'Login Failure',
-        description: result,
-      );
+      result = await Api(path: 'users')
+          .updateDocument({"companyId": companyId}, currentUser.uid);
     }
+    await _navigateToPage(result);
+    setBusy(false);
   }
 
   Future signUp({
@@ -119,11 +139,43 @@ class AuthModel extends BaseModel {
     await _pushNotificationService.initialise();
     var hasLoggedInUser = await _authService.isUserLoggedIn();
     await _settingsModel.initThemeSettings();
+
     if (hasLoggedInUser) {
-      await _settingsModel.initNotificationSettings();
-      _navigationService.navigateTo(routeName: AppRoutes.layout);
+      if (currentUser.companyId != null) {
+        await listenToUsers();
+        await _settingsModel.initNotificationSettings();
+        _navigationService.navigateTo(routeName: AppRoutes.layout);
+      } else {
+        _navigationService.navigateTo(routeName: AppRoutes.landing);
+      }
     } else {
-      _navigationService.navigateTo(routeName: AppRoutes.login);
+      _navigationService.navigateTo(routeName: AppRoutes.landing);
     }
+  }
+
+  listenToUsers() async {
+    Api(path: 'users')
+        .streamUserDataCollection(currentUser.companyId)
+        .listen((snapshot) {
+      if (snapshot.documents.isNotEmpty) {
+        var usrs = snapshot.documents.map((snapshot) {
+          Map<String, dynamic> json = snapshot.data;
+          json["uid"] = snapshot.documentID;
+
+          return User.fromMap(json);
+        }).toList();
+
+        // Add the purchases onto the controller
+        _userController.add(usrs);
+      }
+    });
+
+    _userController.stream.listen((userData) {
+      List<User> updatedUsers = userData;
+      if (updatedUsers != null && updatedUsers.length > 0) {
+        _users = updatedUsers;
+        notifyListeners();
+      }
+    });
   }
 }

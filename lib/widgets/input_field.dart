@@ -8,6 +8,7 @@ class InputField extends StatefulWidget {
   final TextEditingController controller;
   final TextInputType textInputType;
   final bool password;
+  final IconData icon;
   final bool isReadOnly;
   final String placeholder;
   final String validationMessage;
@@ -20,6 +21,7 @@ class InputField extends StatefulWidget {
   final Function(String) onChanged;
   final TextInputFormatter formatter;
   final Function validator;
+  final Function onIconPressed;
 
   InputField(
       {@required this.controller,
@@ -33,9 +35,11 @@ class InputField extends StatefulWidget {
       this.validationMessage,
       this.textInputAction = TextInputAction.next,
       this.textInputType = TextInputType.text,
+      this.icon,
+      this.onIconPressed,
       this.password = false,
       this.isReadOnly = false,
-      this.smallVersion = false, 
+      this.smallVersion = false,
       this.validator});
 
   @override
@@ -73,7 +77,6 @@ class _InputFieldState extends State<InputField> {
                   focusNode: widget.fieldFocusNode,
                   textInputAction: widget.textInputAction,
                   onChanged: widget.onChanged,
-                  
                   inputFormatters:
                       widget.formatter != null ? [widget.formatter] : null,
                   onEditingComplete: () {
@@ -96,9 +99,11 @@ class _InputFieldState extends State<InputField> {
                 ),
               ),
               GestureDetector(
-                onTap: () => setState(() {
-                  isPassword = !isPassword;
-                }),
+                onTap: widget.password
+                    ? () => setState(() {
+                          isPassword = !isPassword;
+                        })
+                    : widget.onIconPressed,
                 child: widget.password
                     ? Container(
                         width: fieldHeight,
@@ -107,7 +112,13 @@ class _InputFieldState extends State<InputField> {
                         child: Icon(isPassword
                             ? Icons.visibility
                             : Icons.visibility_off))
-                    : Container(),
+                    : widget.icon != null
+                        ? Container(
+                            width: fieldHeight,
+                            height: fieldHeight,
+                            alignment: Alignment.center,
+                            child: Icon(widget.icon))
+                        : Container(),
               ),
             ],
           ),

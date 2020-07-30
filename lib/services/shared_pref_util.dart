@@ -1,12 +1,12 @@
-import 'dart:convert';
+// import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:storeRahisi/constants/logger.dart';
-import 'package:storeRahisi/models/user.dart';
+// import 'package:storeRahisi/constants/logger.dart';
+// import 'package:storeRahisi/models/user.dart';
 
 class SharedPrefsUtil {
   final String _isLoggedIn = "USER_IS_LOGGED_IN";
-  final String _userDetails = "userDetails";
+  // final String _userDetails = "userDetails";
   final String _lastLoginEmail = "userEmail";
   final String _darkTheme = "darkTheme";
   final String _notification = "notification";

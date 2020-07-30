@@ -37,7 +37,7 @@ class AuthService {
       // Checking if email and name is null
       assert(user.email != null);
       assert(user.displayName != null);
-      assert(user.photoUrl != null);
+      // assert(user.photoUrl != null);
 
       // name = user.displayName;
       // email = user.email;
@@ -52,17 +52,14 @@ class AuthService {
       await _populateCurrentUser(user);
       return authResult.user != null;
     } catch (e) {
-      return e?.message ?? e;
+      print('Google Sign In Error::: $e');
+      return 'Google Sign in Failed';
     }
   }
 
   Future<void> logOut() async {
-    var isGoogleSignIn = await googleSignIn.isSignedIn();
-    if (isGoogleSignIn) {
-      await googleSignIn.signOut();
-    } else {
-      await _firebaseAuth.signOut();
-    }
+    await googleSignIn.signOut();
+    await _firebaseAuth.signOut();
     print("User Sign Out");
   }
 
@@ -164,4 +161,6 @@ class AuthService {
       }
     }
   }
+
+
 }

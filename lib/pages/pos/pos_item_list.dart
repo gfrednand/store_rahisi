@@ -3,9 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:storeRahisi/app_localizations.dart';
 import 'package:storeRahisi/constants/routes.dart';
 import 'package:storeRahisi/models/index.dart';
-import 'package:storeRahisi/pages/base_view.dart';
 import 'package:storeRahisi/pages/pos/pos_item.dart';
-import 'package:storeRahisi/pages/sale/sale_list.dart';
 import 'package:storeRahisi/providers/index.dart';
 import 'package:storeRahisi/widgets/total_bar.dart';
 

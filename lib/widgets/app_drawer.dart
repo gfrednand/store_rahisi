@@ -273,7 +273,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                             radius: 50.0,
                             backgroundColor: const Color(0xFF778899),
                             backgroundImage:
-                                NetworkImage("widget.user.photoUrl"),
+                                NetworkImage(widget.user.photoUrl),
                           ),
                     margin: EdgeInsets.zero,
                     onDetailsPressed: () {

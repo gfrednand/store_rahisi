@@ -8,6 +8,7 @@ static const expense = "expense";
 static const pos = "pos";
 static const splash = "splash";
 static const login = "login";
+static const landing = "landing";
 static const register = "register";
 static const loading = "loading";
 static const client = "client";
@@ -32,6 +33,7 @@ static const settings = "settings";
 static const help = "help";
 static const checkout = "checkout";
 static const payment = "payment";
+static const company_registration = "company_registration";
 
 
 }

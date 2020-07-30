@@ -5,7 +5,8 @@ import 'package:storeRahisi/constants/ui_helpers.dart';
 import 'package:storeRahisi/pages/base_view.dart';
 import 'package:storeRahisi/providers/auth_model.dart';
 import 'package:storeRahisi/widgets/busy_button.dart';
-import 'package:storeRahisi/widgets/expansion_list.dart';
+import 'package:storeRahisi/widgets/google_sign_in_button.dart';
+import 'package:storeRahisi/widgets/horizontal_line.dart';
 import 'package:storeRahisi/widgets/input_field.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -75,6 +76,14 @@ class _RegisterPageState extends State<RegisterPage> {
               key: _registerFormKey,
               child: Column(
                 children: <Widget>[
+                  GoogleSignInButton(
+                    onPressed: () {
+                      if (!model.busy) {
+                        model.signInWithGoogle();
+                      }
+                    },
+                  ),
+                  HorizontalLine(centerText: "OR",),
                   InputField(
                     placeholder: 'Full Name',
                     controller: fullNameInputController,
@@ -158,13 +167,13 @@ class _RegisterPageState extends State<RegisterPage> {
                     },
                   ),
 
-                  Text("Already have an account?"),
-                  FlatButton(
-                    child: Text("Login here!"),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                  )
+                  // Text("Already have an account?"),
+                  // FlatButton(
+                  //   child: Text("Login here!"),
+                  //   onPressed: () {
+                  //     Navigator.pop(context);
+                  //   },
+                  // )
                 ],
               ),
             ),

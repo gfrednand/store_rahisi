@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:storeRahisi/constants/routes.dart';
 import 'package:storeRahisi/models/index.dart';
 import 'package:storeRahisi/pages/client/client_form.dart';
+import 'package:storeRahisi/pages/company_registration_page.dart';
 import 'package:storeRahisi/pages/expense/expense_detail.dart';
 import 'package:storeRahisi/pages/expense/expense_form.dart';
 import 'package:storeRahisi/pages/expense/expense_list.dart';
@@ -10,6 +11,7 @@ import 'package:storeRahisi/pages/home_page.dart';
 import 'package:storeRahisi/pages/item/category_form.dart';
 import 'package:storeRahisi/pages/item/item_detail.dart';
 import 'package:storeRahisi/pages/item/item_form.dart';
+import 'package:storeRahisi/pages/landing_page.dart';
 import 'package:storeRahisi/pages/layout_page.dart';
 import 'package:storeRahisi/pages/login_page.dart';
 import 'package:storeRahisi/pages/pos/Payment_Screen.dart';
@@ -47,11 +49,21 @@ class Router {
       case AppRoutes.login:
         return MaterialPageRoute(builder: (_) => LoginPage());
         break;
+      case AppRoutes.landing:
+        return MaterialPageRoute(builder: (_) => LandingPage());
+        break;
       case AppRoutes.register:
         return MaterialPageRoute(builder: (_) => RegisterPage());
         break;
       case AppRoutes.client:
         return MaterialPageRoute(builder: (_) => ClientList());
+        break;
+      case AppRoutes.company_registration:
+        var args = settings.arguments as User;
+        return MaterialPageRoute(
+            builder: (_) => CompanyRegistrationPage(
+                  user: args,
+                ));
         break;
       case AppRoutes.client_detail:
         var args = settings.arguments as Map<String, dynamic>;

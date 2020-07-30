@@ -11,7 +11,11 @@ class Api {
   CollectionReference ref;
 
   Api({this.path, this.companyId}) {
-    ref = _db.collection("companies").document(companyId).collection(path);
+    if (companyId == null) {
+      ref = _db.collection(path);
+    } else {
+      ref = _db.collection("companies").document(companyId).collection(path);
+    }
   }
 
   Future<QuerySnapshot> getDataCollection() {
@@ -20,6 +24,9 @@ class Api {
 
   Stream<QuerySnapshot> streamDataCollection() {
     return ref.snapshots();
+  }
+  Stream<QuerySnapshot> streamUserDataCollection(id) {
+    return ref.where("companyId", isEqualTo: id ).snapshots();
   }
 
   getDocumentById(String id) {

@@ -37,12 +37,15 @@ class SettingsModel extends BaseModel {
 
   Future initNotificationSettings() async {
     _isNotificationOn = await _sharedPrefsUtil.getIsNotificationOn();
-    if (_isNotificationOn) {
-      _pushNotificationService.fcmSubscribe();
-    } else {
-      _pushNotificationService.fcmUnSubscribe();
+    if (currentUser != null && currentUser.companyId != null) {
+      print(currentUser.toMap());
+      if (_isNotificationOn) {
+        _pushNotificationService.fcmSubscribe();
+      } else {
+        _pushNotificationService.fcmUnSubscribe();
+      }
+      notifyListeners();
     }
-    notifyListeners();
   }
 
   Future<void> updateNotification(bool isNotificationOn) async {

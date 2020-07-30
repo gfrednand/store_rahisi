@@ -5,6 +5,7 @@ import 'package:storeRahisi/pages/base_view.dart';
 import 'package:storeRahisi/providers/auth_model.dart';
 import 'package:storeRahisi/widgets/busy_button.dart';
 import 'package:storeRahisi/widgets/google_sign_in_button.dart';
+import 'package:storeRahisi/widgets/horizontal_line.dart';
 import 'package:storeRahisi/widgets/input_field.dart';
 import 'package:storeRahisi/widgets/busy_overlay.dart';
 import 'package:storeRahisi/constants/routes.dart';
@@ -43,102 +44,99 @@ class LoginPage extends StatelessWidget {
         // onModelReady: (model) => model.getUserDetails(),
         builder: (context, model, child) {
       return Scaffold(
+          appBar: AppBar(
+            title: Text(
+              'Login',
+              style: Theme.of(context).textTheme.headline6,
+            ),
+            centerTitle: true,
+          ),
           body: BusyOverlay(
-        show: model.busy,
-        child: Container(
-          width: pageSize.width,
-          height: pageSize.height,
-          color: Theme.of(context).colorScheme.primaryVariant,
-          padding: const EdgeInsets.all(20.0),
-          child: Center(
-            child: SingleChildScrollView(
-              child: Form(
-                key: _loginFormKey,
-                child: Column(
-                  children: <Widget>[
-                    Padding(
-                      padding: new EdgeInsets.all(10.0),
-                      child: Text(
-                        AppLocalizations.of(context).translate('appTitle'),
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Theme.of(context).colorScheme.primary,
-                            fontSize: 25.0),
-                      ),
-                    ),
-                    InputField(
-                      placeholder:
-                          AppLocalizations.of(context).translate('email'),
-                      isReadOnly: model.busy,
-                      controller: emailInputController,
-                      textInputType: TextInputType.emailAddress,
-                    ),
-                    verticalSpaceSmall,
-                    InputField(
-                      isReadOnly: model.busy,
-                      placeholder:
-                          AppLocalizations.of(context).translate('password'),
-                      password: true,
-                      controller: pwdInputController,
-                    ),
-                    verticalSpaceMedium,
-                    Row(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        BusyButton(
-                          title:
-                              AppLocalizations.of(context).translate('login'),
-                          enabled: !model.busy,
+            show: model.busy,
+            child: Container(
+              width: pageSize.width,
+              height: pageSize.height,
+              color: Theme.of(context).colorScheme.primaryVariant,
+              padding: const EdgeInsets.all(20.0),
+              child: Center(
+                child: SingleChildScrollView(
+                  child: Form(
+                    key: _loginFormKey,
+                    child: Column(
+                      children: <Widget>[
+                        GoogleSignInButton(
                           onPressed: () {
-                            if (_loginFormKey.currentState.validate()) {
-                              model.login(
-                                emailInputController.text,
-                                pwdInputController.text,
-                              );
+                            if (!model.busy) {
+                              model.signInWithGoogle();
                             }
                           },
-                        )
+                        ),
+                        HorizontalLine(centerText: "OR",),
+                        InputField(
+                          placeholder:
+                              AppLocalizations.of(context).translate('email'),
+                          isReadOnly: model.busy,
+                          controller: emailInputController,
+                          textInputType: TextInputType.emailAddress,
+                        ),
+                        verticalSpaceSmall,
+                        InputField(
+                          isReadOnly: model.busy,
+                          placeholder: AppLocalizations.of(context)
+                              .translate('password'),
+                          password: true,
+                          controller: pwdInputController,
+                        ),
+                        verticalSpaceMedium,
+                        Row(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            BusyButton(
+                              title: AppLocalizations.of(context)
+                                  .translate('login'),
+                              enabled: !model.busy,
+                              onPressed: () {
+                                if (_loginFormKey.currentState.validate()) {
+                                  model.login(
+                                    emailInputController.text,
+                                    pwdInputController.text,
+                                  );
+                                }
+                              },
+                            )
+                          ],
+                        ),
+                        SizedBox(
+                          height: 20.0,
+                        ),
+                        Text(
+                          AppLocalizations.of(context)
+                              .translate('dontHaveAccount'),
+                          style: TextStyle(
+                              color: Theme.of(context).colorScheme.primary),
+                        ),
+                        FlatButton(
+                          child: Text(
+                            AppLocalizations.of(context)
+                                .translate('registerHere'),
+                            style: TextStyle(
+                                color: Theme.of(context).colorScheme.primary),
+                          ),
+                          onPressed: () {
+                            Navigator.pushNamed(context, AppRoutes.register);
+                          },
+                        ),
+                        SizedBox(
+                          height: 20.0,
+                        ),
                       ],
                     ),
-                    SizedBox(
-                      height: 20.0,
-                    ),
-                    Text(
-                      AppLocalizations.of(context).translate('dontHaveAccount'),
-                      style: TextStyle(
-                          color: Theme.of(context).colorScheme.primary),
-                    ),
-                    FlatButton(
-                      child: Text(
-                        AppLocalizations.of(context).translate('registerHere'),
-                        style: TextStyle(
-                            color: Theme.of(context).colorScheme.primary),
-                      ),
-                      onPressed: () {
-                        Navigator.pushNamed(context, AppRoutes.register);
-                      },
-                    ),
-                    SizedBox(
-                      height: 20.0,
-                    ),
-                    GoogleSignInButton(
-                      onPressed: () {
-                        if (!model.busy) {
-                          model.signInWithGoogle();
-                        }
-                      },
-                    ),
-                    SizedBox(
-                      height: 5.0,
-                    ),
-                  ],
+                  ),
                 ),
               ),
             ),
-          ),
-        ),
-      ));
+          ));
     });
   }
 }

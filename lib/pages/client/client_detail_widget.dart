@@ -45,8 +45,9 @@ class _ClientDetailWidgetState extends State<ClientDetailWidget>
     ];
 
     PaymentModel paymentModel = Provider.of<PaymentModel>(context);
-    List<Payment> payments =
-        paymentModel.getPaymentsByClientId(widget.client.id);
+    List<Payment> payments = widget.client == null
+        ? []
+        : paymentModel.getPaymentsByClientId(widget.client.id);
     return widget.client == null
         ? Center(
             child: Text('Client Details'),
