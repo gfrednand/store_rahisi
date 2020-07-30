@@ -1,7 +1,7 @@
 name: storeRahisi
 description: Store Rahisi App, from App Rahisi Software Series.
 
-version: 1.0.0+2
+version: 99.99.99+99
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
