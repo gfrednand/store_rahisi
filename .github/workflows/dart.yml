@@ -1,7 +1,7 @@
 on:
   push:
-    tags:
-    - 'v*'
+    branches: [ master ]
+
 name:  Build and Release apk
 jobs:
   version:
