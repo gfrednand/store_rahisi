@@ -49,7 +49,7 @@ app.*.symbols
 **/android/gradlew.bat
 **/android/local.properties
 **/android/**/GeneratedPluginRegistrant.java
-# **/android/key.properties
+**/android/key.properties
 
 
 # iOS/XCode related

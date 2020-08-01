@@ -1,9 +1,8 @@
-name: Store Rahisi PlayStore Release
-
 on:
   push:
-    branches: [ master ]
-
+    tags:
+    - 'v*'
+name:  Build and Release apk
 jobs:
   version:
     name: Create version number
@@ -12,7 +11,7 @@ jobs:
     - uses: actions/checkout@v1
     - name: Fetch all history for all tags and branches
       run: |
-        git config remote.origin.url https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/${{ github.repository }}
+        git config remote.origin.url https://x-access-token:${{ secrets.TOKEN }}@github.com/${{ github.repository }}
         git fetch --prune --depth=10000
     - name: Install GitVersion
       uses: gittools/actions/gitversion/setup@v0.9.3
@@ -29,7 +28,7 @@ jobs:
         name: gitversion
         path: version.txt
   build:
-    name: Build APK and Create release
+    name: Build APK and Create Release
     needs: [ version ]
     runs-on: ubuntu-latest
     steps:
@@ -47,27 +46,29 @@ jobs:
         path: version1.txt
     - name: Update version in YAML
       run: sed -i 's/99.99.99+99/${{ steps.version.outputs.content }}+${{ github.run_number }}/g' pubspec.yaml
-    - name: Update KeyStore password in gradle properties
-      run: sed -i 's/#{KEYSTORE_PASS}#/${{ secrets.KEYSTORE_PASS }}/g' android/key.properties
-    - name: Update KeyStore key password in gradle properties
-      run: sed -i 's/#{KEYSTORE_KEY_PASS}#/${{ secrets.KEYSTORE_KEY_PASS }}/g' android/key.properties
     - uses: actions/setup-java@v1
       with:
         java-version: '12.x'
+    - run: echo $SIGNING_KEY | base64 -d > android/app/key.jks
+      env:
+        SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
     - uses: subosito/flutter-action@v1
       with:
-        flutter-version: '1.17.0'
+        flutter-version: '1.7.8+hotfix.4'
     - run: flutter pub get
     # - run: flutter test
     - run: flutter build apk --release --split-per-abi
     - run: flutter build appbundle
-    - name: Create a Release in GitHub
+      env:
+        KEY_STORE_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
+        KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+        ALIAS: ${{ secrets.ALIAS }}
+        KEY_PATH: key.jks
+    - name: Create a Release in Github
       uses: ncipollo/release-action@v1
       with:
         artifacts: "build/app/outputs/apk/release/*.apk,build/app/outputs/bundle/release/app-release.aab"
-        token: ${{ secrets.GH_TOKEN }}
-        tag: ${{ steps.version.outputs.content }}
-        commit: ${{ github.sha }}
+        token: ${{ secrets.TOKEN }}
     - name: Upload app bundle
       uses: actions/upload-artifact@v2
       with:
