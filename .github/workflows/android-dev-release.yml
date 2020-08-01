@@ -1,8 +1,8 @@
 on:
   push:
-    branches: [ master ]
+    branches: [ dev ]
 
-name:  Build and Release apk
+name:  Build Dev
 jobs:
   version:
     name: Create version number
@@ -74,28 +74,6 @@ jobs:
       with:
         artifacts: "build/app/outputs/flutter-apk/*.apk,build/app/outputs/bundle/release/app-release.aab"
         token: ${{ secrets.TOKEN }}
-        tag: ${{ steps.version.outputs.content }}
+        tag: ${{ steps.version.o
         commit: ${{ github.sha }}
-    - name: Upload app bundle
-      uses: actions/upload-artifact@v2
-      with:
-        name: appbundle
-        path: build/app/outputs/bundle/release/app-release.aab
-  release:
-    name: Release app to internal track
-    needs: [ build ]
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v1
-    - name: Get appbundle from artifacts
-      uses: actions/download-artifact@v2
-      with:
-        name: appbundle
-    - name: Release app to internal track
-      uses: r0adkll/upload-google-play@v1
-      with:
-        serviceAccountJsonPlainText: ${{ secrets.PLAYSTORE_ACCOUNT_KEY }}
-        packageName: com.apprahisi.store
-        releaseFile: app-release.aab
-        track: production
-        whatsNewDirectory: /distribution/whatsnew
+        prerelease: true
