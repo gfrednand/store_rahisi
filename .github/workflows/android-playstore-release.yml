@@ -76,13 +76,13 @@ jobs:
         token: ${{ secrets.TOKEN }}
         tag: ${{ steps.version.outputs.content }}
         commit: ${{ github.sha }}
-    - name: Upload app bundle
+    - name: Upload app Bundle
       uses: actions/upload-artifact@v2
       with:
         name: appbundle
         path: build/app/outputs/bundle/release/app-release.aab
   release:
-    name: Release app to Beta track
+    name: Release app to Internal Track
     needs: [ build ]
     runs-on: ubuntu-latest
     steps:
@@ -91,11 +91,11 @@ jobs:
       uses: actions/download-artifact@v2
       with:
         name: appbundle
-    - name: Release app to beta Track
+    - name: Release app to Internal Track
       uses: r0adkll/upload-google-play@v1
       with:
         serviceAccountJsonPlainText: ${{ secrets.PLAYSTORE_ACCOUNT_KEY }}
         packageName: com.apprahisi.store
         releaseFile: app-release.aab
-        track: beta
-        whatsNewDirectory: /distribution/whatsnew
+        track: internal
+        whatsNewDirectory: distribution/whatsnew

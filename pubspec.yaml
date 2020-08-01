@@ -55,6 +55,7 @@ flutter:
     - assets/i18n/en.json
     - assets/i18n/sw.json
     - assets/images/
+    - assets/images/
 
 
 
