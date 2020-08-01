@@ -97,5 +97,5 @@ jobs:
         serviceAccountJsonPlainText: ${{ secrets.PLAYSTORE_ACCOUNT_KEY }}
         packageName: com.apprahisi.store
         releaseFile: app-release.aab
-        track: internal
-        whatsNewDirectory: distribution/whatsnew
+        track: production
+        whatsNewDirectory: /distribution/whatsnew
