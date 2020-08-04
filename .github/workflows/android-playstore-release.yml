@@ -82,7 +82,7 @@ jobs:
         name: appbundle
         path: build/app/outputs/bundle/release/app-release.aab
   release:
-    name: Release app to Internal Track
+    name: Release app to Production Track
     needs: [ build ]
     runs-on: ubuntu-latest
     steps:
@@ -91,11 +91,11 @@ jobs:
       uses: actions/download-artifact@v2
       with:
         name: appbundle
-    - name: Release app to Internal Track
+    - name: Release app to Production Track
       uses: r0adkll/upload-google-play@v1
       with:
         serviceAccountJsonPlainText: ${{ secrets.PLAYSTORE_ACCOUNT_KEY }}
         packageName: com.apprahisi.store
         releaseFile: app-release.aab
-        track: internal
+        track: production
         whatsNewDirectory: distribution/whatsnew
