@@ -82,7 +82,7 @@ jobs:
         name: appbundle
         path: build/app/outputs/bundle/release/app-release.aab
   release:
-    name: Release app to Beta Track
+    name: Release App to Beta Track
     needs: [ build ]
     runs-on: ubuntu-latest
     steps:
